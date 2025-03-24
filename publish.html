@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Publish | UW Social</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav>
+    <ul class="navbar">
+      <li>
+        <img src="images/logo.png" alt="UW Social Logo" class="logo">
+      </li>
+      <li><a href="index.html">🏠 HOME</a></li>
+      <li><a href="events.html">🎪 Events</a></li>
+      <li><a href="publish.html">🚀 Publish New</a></li>
+      <li><a href="me.html">🧍 Me</a></li>
+    </ul>
+  </nav>
+
+  <div class="publish-container">
+    <h2>📣 Publish New Event</h2>
+
+    <form class="publish-form">
+      <label for="title">📌 活动名称</label>
+      <input type="text" id="title" placeholder="例如：社团招新大会" />
+
+      <label for="audience">🎯 发布对象</label>
+      <select id="audience">
+        <option value="all">全体社区用户</option>
+        <option value="student-org">学生组织成员</option>
+        <option value="international">国际学生</option>
+        <option value="hfs">宿舍区用户</option>
+      </select>
+
+      <label for="desc">📝 活动描述</label>
+      <textarea id="desc" rows="5" placeholder="详细介绍一下你的活动..."></textarea>
+
+      <label for="location">📍 地点</label>
+      <input type="text" id="location" placeholder="例如：图书馆三楼、体育馆 A 区" />
+
+      <label for="contact">📞 联系方式</label>
+      <input type="text" id="contact" placeholder="微信 / 邮箱 / 电话" />
+
+      <button type="submit">🚀 发布活动</button>
+    </form>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,441 @@
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 40px;
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #666;
+  }
+  
+  h2 {
+    margin-top: 40px;
+    color: #222;
+  }
+  
+  form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    max-width: 500px;
+    margin: 20px auto;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  button {
+    background-color:#b388eb;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #b388eb;
+  }
+
+  .navbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #b388eb;
+  list-style: none;
+  margin: 0 auto;             /* 居中 */
+  padding: 40px 0;
+  width: 95%; 
+  height: 60px;                /* 不要贴满屏幕，留点边距 */
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  }
+  
+  .navbar li {
+    margin: 0 20px;
+  }
+  
+  .navbar a {
+    color:rgb(247, 237, 127);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 25px;
+    transition: color 0.2s ease;
+  }
+  
+  .navbar a:hover {
+    color: #ffdd57;
+  }
+
+  .logo-container {
+    position: absolute;
+    left: -100px; /* 控制 Logo 左移，让它部分超出 */
+    top: -25px; /* 让 Logo 往上移，部分超出 */
+    height: 200px; /* 让 Logo 更大 */
+    width: auto;
+    z-index: -1;
+    overflow: hidden; /* 裁切掉超出的部分 */
+  }
+
+  .logo {
+    height: 350px;  /* 调整 Logo 大小 */
+    width: auto;
+    margin-left: -128px;
+    margin-top: -7px;
+    margin-right: -60px;
+  }
+
+  .section-title {
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: "";
+    width: 20px;
+    height: 3px;
+    background-color: #b388eb;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 4px;
+  }
+
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    max-width: 280px;
+    width: 100%;
+    transition: transform 0.2s;
+    line-height: 1;
+  }
+
+  .card p {
+    line-height: 1.4;
+    margin-bottom: 6px;  /* 控制段落之间的间距 */
+  }
+
+  .card img {
+    margin-bottom: 12px;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 18px;
+  }
+  
+  .card button {
+    margin-top: 12px;
+    background-color:  #b388eb;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  
+  .card button:hover {
+    background-color:  #b388eb;
+  }
+
+  .event-card {
+    max-width: 180px;
+    padding: 16px;
+    font-size: 14px;
+  }
+  
+  .event-card h3 {
+    font-size: 16px;
+  }
+  
+  .event-card p {
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+
+  .events-layout {
+    display: flex;
+    gap: 30px;
+    padding: 40px;
+    align-items: flex-start;
+  }
+  
+  .sidebar {
+    width: 220px;
+    background-color: #f5f0ff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+  
+  .sidebar h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #6a0dad;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 25px;
+  }
+  
+  .sidebar a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .sidebar a:hover {
+    color: #6a0dad;
+    font-weight: 600;
+  }
+  
+  .events-main {
+    flex: 1;
+    margin-top: 0;        /* 确保没有上边距 */
+    padding-top: 0; 
+  }
+
+  .publish-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .publish-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 26px;
+    color: #6a0dad;
+  }
+  
+  .publish-form label {
+    display: block;
+    margin-top: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .publish-form input,
+  .publish-form textarea,
+  .publish-form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .publish-form button {
+    margin-top: 24px;
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s ease;
+  }
+  
+  .publish-form button:hover {
+    background-color: #5a00b0;
+  }
+
+  .profile-layout {
+    display: flex;
+    gap: 30px;
+    padding: 40px;
+  }
+  
+  /* 侧边栏 */
+  .profile-sidebar {
+    width: 250px;
+    background-color: #f5f0ff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .profile-card {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: -20px;
+  }
+  
+  /* 个人管理菜单 */
+  .profile-menu h3 {
+    font-size: 18px;
+    color: #6a0dad;
+  }
+  
+  .profile-menu ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .profile-menu li {
+    margin-bottom: 8px;
+  }
+  
+  .profile-menu a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .profile-menu a:hover {
+    color: #6a0dad;
+    font-weight: 600;
+  }
+  
+  /* 右侧动态内容 */
+  .profile-main {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* 隐藏未选中的内容 */
+  .hidden {
+    display: none;
+  }
+
+  .profile-info, .profile-tags, .profile-hobbies, .profile-posts {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .profile-tags ul, .profile-hobbies ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .profile-tags li, .profile-hobbies li {
+    background: #f5f0ff;
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 5px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #6a0dad;
+  }
+  
+  .edit-btn {
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .profile-posts .post {
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .achievement-badge {
+    display: flex;
+    align-items: center;
+    background: #b388eb;
+    padding: 1px 5px; /* 适当减少 padding，使卡片更紧凑 */
+    border-radius: 12px;
+    min-height: 70px; /* 让卡片更短 */
+    max-height: 70px;
+    max-width: 600px; /* 适当限制宽度 */
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+  
+  .achievement-badge img {
+    height: 90px; /* 让 Logo 变大 */
+    margin-right: 15px; /* 增加右侧间距 */
+    margin-bottom: -5px;
+  }
+  
+  .achievement-badge p {
+    font-size: 18px;
+    color: #444;
+    text-align: left;
+    flex: 1; /* 让文字在右侧占据剩余空间 */
+  }
+
+
+
+  
