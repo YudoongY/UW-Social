@@ -13,7 +13,40 @@
 </head>
 
 <body>
-    <nav-bar></nav-bar>
+    <nav-bar>    // Navbar Component
+    class Navbar extends HTMLElement {
+      constructor() {
+        super();
+        this.innerHTML = `
+          <nav>
+            <ul class="navbar">
+              <li>
+                <img src="images/logo.png" alt="UW Social Logo" class="logo">
+              </li>
+              <li><a href="index.html">🏠 HOME</a></li>
+              <li><a href="events.html">🎪 Events</a></li>
+              <li><a href="publish.html">🚀 Publish New</a></li>
+              <li><a href="achievements.html">🏆 Achievements</a></li>
+              <li id="auth-buttons">
+                <a href="#" onclick="googleLogin(); return false;">🔑 Login</a>
+              </li>
+              <li id="user-profile" style="display: none;">
+                <a href="me.html">🧍 Profile</a>
+              </li>
+            </ul>
+          </nav>
+    
+          <!-- User Info Display -->
+          <div id="user-info" style="display: none; position: fixed; top: 80px; right: 20px; background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+            <p>Welcome, <span id="user-name"></span>!</p>
+            <a href="#" onclick="logout(); return false;" class="logout-link">Logout</a>
+          </div>
+        `;
+      }
+    }
+    
+    // Register the custom element
+    customElements.define('nav-bar', Navbar);</nav-bar>
 
     <div class="main-content">
       <h1>Welcome to UW Social! 🎓</h1>
