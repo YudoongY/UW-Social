@@ -83,6 +83,16 @@
     // Login function
     function googleLogin() {
       const provider = new firebase.auth.GoogleAuthProvider();
+      
+      // Add scopes if needed
+      provider.addScope('https://www.googleapis.com/auth/userinfo.email');
+      provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+      
+      // Set custom parameters
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+
       firebase.auth().signInWithPopup(provider)
         .then((result) => {
           const user = result.user;
@@ -91,7 +101,26 @@
         })
         .catch((error) => {
           console.error('Login failed:', error);
-          alert('Login failed, please try again');
+          let errorMessage = 'Login failed: ';
+          
+          switch (error.code) {
+            case 'auth/popup-blocked':
+              errorMessage += 'Popup was blocked by the browser. Please allow popups for this site.';
+              break;
+            case 'auth/popup-closed-by-user':
+              errorMessage += 'Login was cancelled.';
+              break;
+            case 'auth/cancelled-popup-request':
+              errorMessage += 'Another login attempt is in progress.';
+              break;
+            case 'auth/network-request-failed':
+              errorMessage += 'Network error. Please check your internet connection.';
+              break;
+            default:
+              errorMessage += error.message;
+          }
+          
+          alert(errorMessage);
         });
     }
 
