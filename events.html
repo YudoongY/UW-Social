@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <title>Events | UW Social</title>
   <link rel="stylesheet" href="style.css" />
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
 </head>
 
 <body>
@@ -15,12 +20,17 @@
         <li><a href="index.html">🏠 HOME</a></li>
         <li><a href="events.html">🎪 Events</a></li>
         <li><a href="publish.html">🚀 Publish New</a></li>
-        <li><a href="me.html">🧍 Me</a></li>
+        <li id="auth-buttons">
+          <button onclick="googleLogin()" class="login-btn">Google Login</button>
+        </li>
+        <li id="user-profile" style="display: none;">
+          <a href="me.html">🧍 Profile</a>
+        </li>
       </ul>
     </nav>
 
     <div class="events-layout">
-        <!-- 左侧分类 -->
+        <!-- Left Sidebar -->
         <aside class="sidebar">
           <h3>📂 Categories</h3>
           <ul>
@@ -31,35 +41,94 @@
           </ul>
         </aside>
       
-        <!-- 右侧活动卡片 -->
+        <!-- Main Content -->
         <main class="events-main">
-          <div class="section-title"><h2>🎯 All Events !!</h1></div>
+          <div class="section-title"><h2>🎯 All Events !!</h2></div>
       
           <section class="cards-container">
             <div class="card event-card">
-                <img src="images/study.jpg" alt="自习图" />
-                <h3>📚 期中备考自习</h3>
-                <p>📅 时间：3月30日</p>
-                <p>📍 地点：图书馆四楼</p>
-                <p>一起复习考试吧~</p>
-                <button>立即参加</button>
+                <img src="images/study.jpg" alt="Study Session" />
+                <h3>📚 Midterm Study Session</h3>
+                <p>📅 Date: March 30th</p>
+                <p>📍 Location: Library 4th Floor</p>
+                <p>Join us for group study!</p>
+                <div class="card-buttons">
+                  <button class="join-btn">Quickly Join in</button>
+                  <button class="review-btn" onclick="goToReview('study-session')">Review</button>
+                </div>
               </div>
           
               <div class="card event-card">
-                <img src="images/club.jpg" alt="社团招新" />
-                <h3>🧲 社团招新大会</h3>
-                <p>📅 时间：4月1日</p>
-                <p>📍 地点：学生活动中心</p>
-                <p>几十个社团等你来pick！</p>
-                <button>立即参加</button>
+                <img src="images/club.jpg" alt="Club Fair" />
+                <h3>🧲 Club Fair</h3>
+                <p>📅 Date: April 1st</p>
+                <p>📍 Location: Student Center</p>
+                <p>Explore dozens of clubs!</p>
+                <div class="card-buttons">
+                  <button class="join-btn">Quickly Join in</button>
+                  <button class="review-btn" onclick="goToReview('club-fair')">Review</button>
+                </div>
               </div>
-            <!-- 活动卡片照旧放这里 -->
           </section>
         </main>
       </div>
   
-    
-    </section>
-  </body>
+    <!-- User Info Display -->
+    <div id="user-info" style="display: none; position: fixed; top: 80px; right: 20px; background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+      <p>Welcome, <span id="user-name"></span>!</p>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </div>
 
+    <script>
+    // Login function
+    function googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const user = result.user;
+          console.log('Login successful:', user);
+          document.getElementById('user-name').textContent = user.displayName;
+        })
+        .catch((error) => {
+          console.error('Login failed:', error);
+          alert('Login failed, please try again');
+        });
+    }
+
+    // Logout function
+    function logout() {
+      firebase.auth().signOut()
+        .then(() => {
+          console.log('Logout successful');
+        })
+        .catch((error) => {
+          console.error('Logout failed:', error);
+        });
+    }
+
+    // Navigate to Review page
+    function goToReview(eventId) {
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        alert('Please login first to leave a review!');
+        return;
+      }
+      window.location.href = `review.html?eventId=${eventId}`;
+    }
+
+    // Monitor auth state
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        document.getElementById('auth-buttons').style.display = 'none';
+        document.getElementById('user-profile').style.display = 'block';
+        document.getElementById('user-info').style.display = 'block';
+        document.getElementById('user-name').textContent = user.displayName;
+      } else {
+        document.getElementById('auth-buttons').style.display = 'block';
+        document.getElementById('user-profile').style.display = 'none';
+        document.getElementById('user-info').style.display = 'none';
+      }
+    });
+    </script>
+  </body>
 </html>
