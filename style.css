@@ -2,7 +2,7 @@ body {
     font-family: 'Helvetica Neue', sans-serif;
     background-color: #f9f9f9;
     margin: 0;
-    padding: 40px;
+    padding: 0;
     line-height: 1.6;
     color: #333;
   }
@@ -57,20 +57,28 @@ body {
     background-color: #b388eb;
   }
 
+  /* Navbar styles */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #b388eb;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
   .navbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: #b388eb;
-  list-style: none;
-  margin: 0 auto;             /* 居中 */
-  padding: 40px 0;
-  width: 95%; 
-  height: 60px;                /* 不要贴满屏幕，留点边距 */
-  border-radius: 0 0 16px 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  position: relative;
-  overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    list-style: none;
+    margin: 0;
+    padding: 0 20px;
+    height: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
   }
   
   .navbar li {
@@ -78,33 +86,56 @@ body {
   }
   
   .navbar a {
-    color:rgb(247, 237, 127);
+    color: rgb(247, 237, 127);
     text-decoration: none;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 18px;
     transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
   }
   
   .navbar a:hover {
     color: #ffdd57;
   }
 
-  .logo-container {
-    position: absolute;
-    left: -100px; /* 控制 Logo 左移，让它部分超出 */
-    top: -25px; /* 让 Logo 往上移，部分超出 */
-    height: 200px; /* 让 Logo 更大 */
+  .logo {
+    height: 40px;
     width: auto;
-    z-index: -1;
-    overflow: hidden; /* 裁切掉超出的部分 */
+    margin-right: 20px;
   }
 
-  .logo {
-    height: 350px;  /* 调整 Logo 大小 */
-    width: auto;
-    margin-left: -128px;
-    margin-top: -7px;
-    margin-right: -60px;
+  /* User info display */
+  #user-info {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+
+  #user-info p {
+    margin: 0 0 10px 0;
+    color: #333;
+  }
+
+  .logout-link {
+    color: #b388eb;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .logout-link:hover {
+    color: #8e44ad;
+  }
+
+  /* Main content spacing */
+  .main-content {
+    padding: 20px;
+    margin-top: 80px;
   }
 
   .section-title {
