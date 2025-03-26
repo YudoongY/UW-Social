@@ -58,69 +58,130 @@
           </section>
         </main>
       </div>
-  
-    <!-- User Info Display -->
-    <div id="user-info" style="display: none; position: fixed; top: 80px; right: 20px; background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-      <p>Welcome, <span id="user-name"></span>!</p>
-      <button onclick="logout()" class="logout-btn">Logout</button>
-    </div>
+
+    <style>
+    .events-layout {
+      display: flex;
+      margin-top: 60px; /* Add space for fixed navbar */
+      min-height: calc(100vh - 60px);
+    }
+
+    .sidebar {
+      width: 250px;
+      padding: 20px;
+      background: #f5f5f5;
+      border-right: 1px solid #ddd;
+    }
+
+    .sidebar h3 {
+      color: #4b2e83;
+      margin-bottom: 20px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 10px;
+    }
+
+    .sidebar a {
+      color: #666;
+      text-decoration: none;
+      display: block;
+      padding: 8px;
+      border-radius: 5px;
+    }
+
+    .sidebar a:hover {
+      background: #e0e0e0;
+      color: #4b2e83;
+    }
+
+    .events-main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+      color: #4b2e83;
+      font-size: 2em;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .event-card {
+      width: 300px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .event-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .event-card h3 {
+      color: #4b2e83;
+      margin: 15px;
+    }
+
+    .event-card p {
+      color: #666;
+      margin: 5px 15px;
+    }
+
+    .card-buttons {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px;
+      gap: 10px;
+    }
+
+    .join-btn, .review-btn {
+      flex: 1;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .join-btn {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .review-btn {
+      background: #2196F3;
+      color: white;
+    }
+
+    .join-btn:hover {
+      background: #45a049;
+    }
+
+    .review-btn:hover {
+      background: #1976D2;
+    }
+    </style>
 
     <script>
-    // Login function
-    function googleLogin() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      
-      // Add scopes if needed
-      provider.addScope('https://www.googleapis.com/auth/userinfo.email');
-      provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-      
-      // Set custom parameters
-      provider.setCustomParameters({
-        prompt: 'select_account'
-      });
-
-      firebase.auth().signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          console.log('Login successful:', user);
-          document.getElementById('user-name').textContent = user.displayName;
-        })
-        .catch((error) => {
-          console.error('Login failed:', error);
-          let errorMessage = 'Login failed: ';
-          
-          switch (error.code) {
-            case 'auth/popup-blocked':
-              errorMessage += 'Popup was blocked by the browser. Please allow popups for this site.';
-              break;
-            case 'auth/popup-closed-by-user':
-              errorMessage += 'Login was cancelled.';
-              break;
-            case 'auth/cancelled-popup-request':
-              errorMessage += 'Another login attempt is in progress.';
-              break;
-            case 'auth/network-request-failed':
-              errorMessage += 'Network error. Please check your internet connection.';
-              break;
-            default:
-              errorMessage += error.message;
-          }
-          
-          alert(errorMessage);
-        });
-    }
-
-    // Logout function
-    function logout() {
-      firebase.auth().signOut()
-        .then(() => {
-          console.log('Logout successful');
-        })
-        .catch((error) => {
-          console.error('Logout failed:', error);
-        });
-    }
-
     // Navigate to Review page
     function goToReview(eventId) {
       const user = firebase.auth().currentUser;
@@ -130,20 +191,6 @@
       }
       window.location.href = `review.html?eventId=${eventId}`;
     }
-
-    // Monitor auth state
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        document.getElementById('auth-buttons').style.display = 'none';
-        document.getElementById('user-profile').style.display = 'block';
-        document.getElementById('user-info').style.display = 'block';
-        document.getElementById('user-name').textContent = user.displayName;
-      } else {
-        document.getElementById('auth-buttons').style.display = 'block';
-        document.getElementById('user-profile').style.display = 'none';
-        document.getElementById('user-info').style.display = 'none';
-      }
-    });
     </script>
   </body>
 </html>
