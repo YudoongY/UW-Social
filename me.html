@@ -2,131 +2,146 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>My Profile | UW Social</title>
+  <title>My Profile - UW Social</title>
   <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script> <!-- 连接 JS -->
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="user-data.js"></script>
+  <script src="navbar.js" defer></script>
 </head>
 <body>
+  <nav-bar></nav-bar>
 
-  <nav>
-    <ul class="navbar">
-        <li>
-            <img src="images/logo.png" alt="UW Social Logo" class="logo">
-        </li>
-      <li><a href="index.html">🏠 HOME</a></li>
-      <li><a href="events.html">🎪 Events</a></li>
-      <li><a href="publish.html">🚀 Publish New</a></li>
-      <li><a href="me.html">🧍 Me</a></li>
-    </ul>
-  </nav>
-
-  <div class="profile-layout">
-
-    <!-- 左侧：个人信息 + 侧边菜单 -->
-    <aside class="profile-sidebar">
-      <div class="profile-card">
-        <img src="images/uwdog.png" alt="User Avatar" class="avatar">
-        <h2>👤 Username</h2>
-        <p>📍 UW Seattle</p>
+  <div class="main-content">
+    <h1>My Profile</h1>
+    <div class="profile-container">
+      <div class="profile-header">
+        <img id="profile-image" src="images/default-avatar.png" alt="Profile Image">
+        <h2 id="profile-nickname">Loading...</h2>
       </div>
-
-      <div class="profile-menu">
-        <h3>📋 个人管理</h3>
-        <ul>
-          <li><a href="#" onclick="showSection('friends')">👥 我的好友</a></li>
-          <li><a href="#" onclick="showSection('recommendations')">✨ 可能认识的人</a></li>
-          <li><a href="#" onclick="showSection('published')">📅 已发布的活动</a></li>
-          <li><a href="#" onclick="showSection('participated')">🎯 已参与的活动</a></li>
-        </ul>
-      </div>
-    </aside>
-
-    <!-- 右侧：个人信息 & 朋友圈动态 -->
-    <main class="profile-main">
-
-      <!-- 默认页面（基本信息 & 朋友圈） -->
-      <div id="default-content">
-        <h2>👋 欢迎来到你的个人主页！</h2>
-        
-        <!-- 个人信息 -->
-        <div class="profile-info">
-          <h3>📄 基本信息</h3>
-          <p>🎂 年龄：21</p>
-          <p>🎓 专业：计算机科学 & 数学</p>
-          <p>📞 联系方式：email@uw.edu</p>
+      
+      <div class="profile-section">
+        <h3>My Tags</h3>
+        <div id="profile-tags" class="tags-container">
+          <!-- Tags will be loaded here -->
         </div>
-
-        <!-- 个人标签 -->
-        <div class="profile-tags">
-          <h3> 个人标签</h3>
-          <ul>
-            <li> 计算机科学 & 数学</li>
-            <li> 宿舍: McCarty Hall</li>
-            <li> 学生组织: Drama Club</li>
-          </ul>
-          <button class="edit-btn">✏️ 编辑标签</button>
-        </div>
-
-        <!-- 个人爱好 -->
-        <div class="profile-hobbies">
-          <h3>🎯 个人爱好</h3>
-          <ul>
-            <li>🎵 音乐</li>
-            <li>🏀 篮球</li>
-            <li>📖 阅读</li>
-          </ul>
-          <button class="edit-btn">✏️ 编辑爱好</button>
-        </div>
-
-        <!-- 朋友圈动态 -->
-        <div class="profile-posts">
-          <h3>📝 朋友圈动态</h3>
-          <div class="post">
-            <p>📅 3月20日</p>
-            <p>✨ 今天在图书馆复习了一整天，感觉收获满满！📖💡</p>
-          </div>
-          <div class="post">
-            <p>📅 3月15日</p>
-            <p>🏀 昨天的篮球赛超棒！希望下次还能有这样的比赛！🔥</p>
-          </div>
-        </div>
-
-        <div class="achievements">
-            <h2>🏆 你的成就</h2>
-            <div class="achievement-badge">
-              <img src="images/logo.png" alt="UW Social Badge">
-              <p>🎉 恭喜！你已发布 3 个活动！</p>
-            </div>
-            <div class="achievement-badge">
-              <img src="images/logo.png" alt="UW Social Badge">
-              <p>🤝 你已结交 5 位新朋友！</p>
-            </div>
-          </div>
-
       </div>
 
-      <!-- 其余动态页面（好友、活动等） -->
-      <div id="friends" class="profile-section hidden">
-        <h3>👥 我的好友</h3>
-        <ul>
-          <li>🧑‍💻 Alex (计算机专业)</li>
-          <li>🎨 Emily (设计师)</li>
-          <li>🎵 John (音乐社成员)</li>
-        </ul>
+      <div class="profile-section">
+        <h3>My Achievements</h3>
+        <div id="profile-achievements" class="achievements-container">
+          <!-- Achievements will be loaded here -->
+        </div>
       </div>
 
-      <div id="recommendations" class="profile-section hidden">
-        <h3>✨ 你可能认识的人</h3>
-        <ul>
-          <li>🔍 Sophia (商学院)</li>
-          <li>🔍 David (国际学生)</li>
-          <li>🔍 Mia (人工智能方向)</li>
-        </ul>
+      <div class="profile-section">
+        <h3>My Events</h3>
+        <div id="profile-events" class="events-container">
+          <!-- Events will be loaded here -->
+        </div>
       </div>
-
-    </main>
-
+    </div>
   </div>
 
+  <style>
+    .profile-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    #profile-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+
+    .profile-section {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .profile-section h3 {
+      color: #4b2e83;
+      margin-bottom: 15px;
+    }
+
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      background: #e8e8e8;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 0.9em;
+    }
+
+    .achievements-container, .events-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+  </style>
+
+  <script>
+    // 检查用户登录状态
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const userData = await userDataManager.getUserData(user.uid);
+          if (userData) {
+            // 更新页面内容
+            document.getElementById('profile-nickname').textContent = userData.nickname || 'Set Nickname';
+            if (userData.profileImage) {
+              document.getElementById('profile-image').src = userData.profileImage;
+            }
+
+            // 显示标签
+            const tagsContainer = document.getElementById('profile-tags');
+            userData.tags.forEach(tag => {
+              const tagElement = document.createElement('span');
+              tagElement.className = 'tag';
+              tagElement.textContent = tag;
+              tagsContainer.appendChild(tagElement);
+            });
+
+            // 显示成就
+            const achievementsContainer = document.getElementById('profile-achievements');
+            userData.achievements.forEach(achievement => {
+              const achievementElement = document.createElement('div');
+              achievementElement.className = 'achievement-card';
+              achievementElement.innerHTML = `
+                <h4>${achievement.name}</h4>
+                <p>${achievement.description}</p>
+                <small>Earned: ${new Date(achievement.earnedDate).toLocaleDateString()}</small>
+              `;
+              achievementsContainer.appendChild(achievementElement);
+            });
+          }
+        } catch (error) {
+          console.error('Error loading user data:', error);
+        }
+      } else {
+        // 用户未登录，重定向到首页
+        window.location.href = 'index.html';
+      }
+    });
+  </script>
 </body>
 </html>

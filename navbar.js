@@ -11,6 +11,7 @@ class Navbar extends HTMLElement {
           <li><a href="index.html">🏠 HOME</a></li>
           <li><a href="events.html">🎪 Events</a></li>
           <li><a href="publish.html">🚀 Publish New</a></li>
+          <li><a href="achievements.html">🏆 Achievements</a></li>
           <li id="auth-buttons">
             <a href="#" onclick="googleLogin(); return false;">🔑 Login</a>
           </li>
@@ -28,9 +29,6 @@ class Navbar extends HTMLElement {
     `;
   }
 }
-
-// Register the custom element
-customElements.define('nav-bar', Navbar);
 
 // Auth functions
 function googleLogin() {
@@ -98,4 +96,17 @@ firebase.auth().onAuthStateChanged((user) => {
     document.getElementById('user-profile').style.display = 'none';
     document.getElementById('user-info').style.display = 'none';
   }
-}); 
+});
+
+// 确保 Firebase 初始化完成后再注册导航栏组件
+function initializeNavbar() {
+  if (firebase.apps.length > 0 && !customElements.get('nav-bar')) {
+    customElements.define('nav-bar', Navbar);
+  } else {
+    // 如果 Firebase 还没有初始化完成，等待一下再试
+    setTimeout(initializeNavbar, 100);
+  }
+}
+
+// 开始初始化
+initializeNavbar(); 
