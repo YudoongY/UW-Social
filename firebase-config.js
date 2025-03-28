@@ -1,6 +1,6 @@
 // Firebase 配置
 const firebaseConfig = {
-  apiKey: "AIzaSyBAfbwkUozrOjK7nt3ak9skVY98CRrLGeE",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "uw-social-ae4c7.firebaseapp.com",
   projectId: "uw-social-ae4c7",
   storageBucket: "uw-social-ae4c7.firebasestorage.app",
