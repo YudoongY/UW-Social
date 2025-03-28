@@ -6,7 +6,7 @@ class Navbar extends HTMLElement {
       <nav>
         <ul class="navbar">
           <li>
-            <img src="images/logo.png" alt="UW Social Logo" class="logo">
+            <img src="images/logo1.png" alt="UW Social Logo" class="logo">
           </li>
           <li><a href="index.html">🏠 HOME</a></li>
           <li><a href="events.html">🎪 Events</a></li>
