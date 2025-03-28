@@ -34,11 +34,9 @@ class Navbar extends HTMLElement {
 function googleLogin() {
   const provider = new firebase.auth.GoogleAuthProvider();
   
-  // Add scopes if needed
   provider.addScope('https://www.googleapis.com/auth/userinfo.email');
   provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
   
-  // Set custom parameters
   provider.setCustomParameters({
     prompt: 'select_account'
   });
@@ -51,25 +49,7 @@ function googleLogin() {
     })
     .catch((error) => {
       console.error('Login failed:', error);
-      let errorMessage = 'Login failed: ';
-      
-      switch (error.code) {
-        case 'auth/popup-blocked':
-          errorMessage += 'Popup was blocked by the browser. Please allow popups for this site.';
-          break;
-        case 'auth/popup-closed-by-user':
-          errorMessage += 'Login was cancelled.';
-          break;
-        case 'auth/cancelled-popup-request':
-          errorMessage += 'Another login attempt is in progress.';
-          break;
-        case 'auth/network-request-failed':
-          errorMessage += 'Network error. Please check your internet connection.';
-          break;
-        default:
-          errorMessage += error.message;
-      }
-      
+      let errorMessage = 'Login failed: ' + error.message;
       alert(errorMessage);
     });
 }
@@ -98,15 +78,7 @@ firebase.auth().onAuthStateChanged((user) => {
   }
 });
 
-// 确保 Firebase 初始化完成后再注册导航栏组件
-function initializeNavbar() {
-  if (firebase.apps.length > 0 && !customElements.get('nav-bar')) {
-    customElements.define('nav-bar', Navbar);
-  } else {
-    // 如果 Firebase 还没有初始化完成，等待一下再试
-    setTimeout(initializeNavbar, 100);
-  }
+// 注册导航栏组件
+if (!customElements.get('nav-bar')) {
+  customElements.define('nav-bar', Navbar);
 }
-
-// 开始初始化
-initializeNavbar(); 
