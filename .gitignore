@@ -1,1 +1,22 @@
+# 配置文件
+config.js
+
+# 环境变量文件
 .env
+.env.local
+.env.*.local
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 依赖目录
+node_modules/
+dist/
+build/
