@@ -16,7 +16,7 @@ class Navbar extends HTMLElement {
             <a href="#" onclick="googleLogin(); return false;">🔑 Login</a>
           </li>
           <li id="user-profile" style="display: none;">
-            <a href="me.html">🧍 Profile</a>
+            <a href="profile.html">🧍 Profile</a>
           </li>
         </ul>
       </nav>
