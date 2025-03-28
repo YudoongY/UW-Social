@@ -112,11 +112,17 @@ function loadNavbar() {
 // 初始化所有依赖
 async function initializeDependencies() {
   try {
+    console.log('Starting to load dependencies...');
     await loadFirebaseSDK();
+    console.log('Firebase SDK loaded');
     await loadAppConfig();
+    console.log('App config loaded');
     await initializeFirebase();
+    console.log('Firebase initialized');
     await loadUserData();
+    console.log('User data loaded');
     await loadNavbar();
+    console.log('Navbar loaded');
   } catch (error) {
     console.error('Failed to initialize dependencies:', error);
     // 显示错误信息给用户
@@ -129,5 +135,5 @@ async function initializeDependencies() {
   }
 }
 
-// 当 DOM 加载完成后初始化
-document.addEventListener('DOMContentLoaded', initializeDependencies); 
+// 立即开始加载依赖
+initializeDependencies(); 
