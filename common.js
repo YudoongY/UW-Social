@@ -42,7 +42,13 @@ function loadAppConfig() {
     // 加载配置文件
     const script = document.createElement('script');
     script.src = 'config.js';
-    script.onload = resolve;
+    script.onload = () => {
+      if (!window.appConfig || !window.appConfig.firebase) {
+        reject(new Error('Invalid configuration'));
+      } else {
+        resolve();
+      }
+    };
     script.onerror = reject;
     document.head.appendChild(script);
   });
@@ -57,12 +63,13 @@ function initializeFirebase() {
       return;
     }
 
-    // 加载 Firebase 配置
-    const script = document.createElement('script');
-    script.src = 'firebase-config.js';
-    script.onload = resolve;
-    script.onerror = reject;
-    document.head.appendChild(script);
+    // 初始化 Firebase
+    try {
+      firebase.initializeApp(window.appConfig.firebase);
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 
@@ -112,6 +119,13 @@ async function initializeDependencies() {
     await loadNavbar();
   } catch (error) {
     console.error('Failed to initialize dependencies:', error);
+    // 显示错误信息给用户
+    const errorDiv = document.createElement('div');
+    errorDiv.style.color = 'red';
+    errorDiv.style.textAlign = 'center';
+    errorDiv.style.padding = '20px';
+    errorDiv.textContent = 'Failed to load application. Please refresh the page.';
+    document.body.insertBefore(errorDiv, document.body.firstChild);
   }
 }
 
