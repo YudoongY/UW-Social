@@ -66,20 +66,29 @@ body {
     z-index: 1000;
     background-color: #b388eb;
     padding: 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* 增加底部间距 */
   }
+
+  .header-space {
+    height: 55px; /* 根据导航栏高度调整 */
+}
 
   .navbar {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between; /* 使内容两边对齐 */
     list-style: none;
-    margin: 0;
+    margin: 20px;
     padding: 0 20px;
-    height: 60px;
-    max-width: 1200px;
-    margin: 0 auto;
+    height: 100px;
+    width: 96%;
+    margin: auto;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    overflow: hidden;
   }
+
   
   .navbar li {
     margin: 0 20px;
@@ -89,7 +98,7 @@ body {
     color: rgb(247, 237, 127);
     text-decoration: none;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 25px;
     transition: color 0.2s ease;
     display: flex;
     align-items: center;
@@ -99,11 +108,42 @@ body {
     color: #ffdd57;
   }
 
+  .logo-container {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+}
+
   .logo {
-    height: 40px;
+    z-index: 1;
+    height: 270px;
     width: auto;
-    margin-right: 20px;
+    margin-left: -120px;
+    margin-bottom: -12px;
+    position: relative;
   }
+
+  .login-item {
+    margin-left: auto !important; /* 将 Login 挤到右侧 */
+    margin-right: 17px;
+}
+
+  .login-link {
+    font-size: 17px !important; /* 字体变小 */
+    color: white !important;    /* 字体变白 */
+    padding: 5px 10px;
+    text-decoration: none;
+    margin-top: -40px;
+    margin-right: -10px;
+}
+
+  .login-link:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* 添加悬停效果 */
+    border-radius: 5px;
+}
 
   /* User info display */
   #user-info {
@@ -165,9 +205,12 @@ body {
   }
   
   .card {
+    display: flex;
+    flex-direction: column;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    height: auto;          /* 自动高度 */ 
     padding: 20px;
     max-width: 280px;
     width: 100%;
@@ -193,12 +236,23 @@ body {
   .card:hover {
     transform: translateY(-5px);
   }
+
+  .card-content {
+    flex-grow: 1;            /* 内容区域自动扩展 */
+}
   
   .card h3 {
     margin-top: 0;
     margin-bottom: 8px;
     font-size: 18px;
   }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: auto;
+}
   
   .card button {
     margin-top: 12px;
@@ -220,6 +274,7 @@ body {
     max-width: 180px;
     padding: 16px;
     font-size: 14px;
+    max-height: 300px;
   }
   
   .event-card h3 {
@@ -355,7 +410,7 @@ body {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    margin-bottom: -20px;
+    margin-top: 50px;
   }
   
   /* 个人管理菜单 */
