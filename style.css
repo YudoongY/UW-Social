@@ -67,12 +67,8 @@ body {
     background-color: #b388eb;
     padding: 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px; /* 增加底部间距 */
+    margin-bottom: 100px; /* 增加底部间距 */
   }
-
-  .header-space {
-    height: 55px; /* 根据导航栏高度调整 */
-}
 
   .navbar {
     display: flex;
@@ -84,12 +80,20 @@ body {
     height: 100px;
     width: 96%;
     margin: auto;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
     overflow: hidden;
   }
 
-  
+  .nav-items {
+    display: flex;
+    justify-content: center;  /* 居中对齐 */
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-auth {
+    margin-left: auto;  /* 将登录/登出按钮靠右 */
+  }
+
   .navbar li {
     margin: 0 20px;
   }
@@ -131,20 +135,7 @@ body {
     margin-right: 17px;
 }
 
-  .login-link {
-    font-size: 17px !important; /* 字体变小 */
-    color: white !important;    /* 字体变白 */
-    padding: 5px 10px;
-    text-decoration: none;
-    margin-top: -40px;
-    margin-right: -10px;
-}
-
-  .login-link:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* 添加悬停效果 */
-    border-radius: 5px;
-}
-
+  
   /* User info display */
   #user-info {
     position: fixed;
@@ -162,14 +153,24 @@ body {
     color: #333;
   }
 
-  .logout-link {
-    color: #b388eb;
-    text-decoration: none;
+  .login-link {
+    margin-left: auto !important; /* 将 Login 挤到右侧 */
+    margin-right: 17px;
+    color: Yellow;
     font-weight: bold;
+    text-decoration: none;
+    margin-left: 10px;
   }
 
-  .logout-link:hover {
-    color: #8e44ad;
+  logout-link {
+    color: #6a0dad;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 10px;
+  }
+  
+  .login-link:hover, .logout-link:hover {
+    color: white;
   }
 
   /* Main content spacing */
@@ -379,7 +380,7 @@ body {
     border-radius: 8px;
     cursor: pointer;
     width: 100%;
-    transition: background 0.2s ease;
+    transition: 0.2s ease;
   }
   
   .publish-form button:hover {
@@ -405,6 +406,18 @@ body {
     text-align: center;
     margin-bottom: 20px;
   }
+
+  .right-align { /*导航栏profile*/
+    margin-left: auto;
+  }
+
+  #profile-link { /*导航栏profile*/
+    color: yellow;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 auto;
+  }
+
   
   .avatar {
     width: 80px;
