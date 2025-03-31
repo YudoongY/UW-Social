@@ -1,0 +1,566 @@
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #666;
+  }
+  
+  h2 {
+    margin-top: 40px;
+    color: #222;
+  }
+  
+  form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    max-width: 500px;
+    margin: 20px auto;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  button {
+    background-color:#b388eb;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #b388eb;
+  }
+
+  /* Navbar styles */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #b388eb;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 100px; /* 增加底部间距 */
+  }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 使内容两边对齐 */
+    list-style: none;
+    margin: 20px;
+    padding: 0 20px;
+    height: 100px;
+    width: 96%;
+    margin: auto;
+    overflow: hidden;
+  }
+
+  .nav-items {
+    display: flex;
+    justify-content: center;  /* 居中对齐 */
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-auth {
+    margin-left: auto;  /* 将登录/登出按钮靠右 */
+  }
+
+  .navbar li {
+    margin: 0 20px;
+  }
+  
+  .navbar a {
+    color: rgb(247, 237, 127);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 25px;
+    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar a:hover {
+    color: #ffdd57;
+  }
+
+  .logo-container {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+}
+
+  .logo {
+    z-index: 1;
+    height: 270px;
+    width: auto;
+    margin-left: -120px;
+    margin-bottom: -12px;
+    position: relative;
+  }
+
+  .login-item {
+    margin-left: auto !important; /* 将 Login 挤到右侧 */
+    margin-right: 17px;
+}
+
+  
+  /* User info display */
+  #user-info {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+
+  #user-info p {
+    margin: 0 0 10px 0;
+    color: #333;
+  }
+
+  #logout-button {
+    width: 43px;
+    font-size: 0.8rem; /* 单独设置Logout按钮大小 */
+    background-color: #b18cfc;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  #logout-button:hover {
+    background-color: #a379f8;
+  }
+  
+  .logout-link:hover {
+    color: white;
+  }
+
+  /* Main content spacing */
+  .main-content {
+    padding: 20px;
+    margin-top: 80px;
+  }
+
+  .section-title {
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: "";
+    width: 20px;
+    height: 3px;
+    background-color: #b388eb;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 4px;
+  }
+
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+  .card {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    height: auto;          /* 自动高度 */ 
+    padding: 20px;
+    max-width: 280px;
+    width: 100%;
+    transition: transform 0.2s;
+    line-height: 1;
+  }
+
+  .card p {
+    line-height: 1.4;
+    margin-bottom: 6px;  /* 控制段落之间的间距 */
+  }
+
+  .card img {
+    margin-bottom: 12px;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card-content {
+    flex-grow: 1;            /* 内容区域自动扩展 */
+}
+  
+  .card h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 18px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: auto;
+}
+  
+  .card button {
+    margin-top: 12px;
+    background-color:  #b388eb;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  
+  .card button:hover {
+    background-color:  #b388eb;
+  }
+
+  .event-card {
+    max-width: 180px;
+    padding: 16px;
+    font-size: 14px;
+    max-height: 300px;
+  }
+  
+  .event-card h3 {
+    font-size: 16px;
+  }
+  
+  .event-card p {
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+
+  .events-layout {
+    display: flex;
+    gap: 30px;
+    padding: 40px;
+    align-items: flex-start;
+  }
+
+  .join-button, .join-now-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .join-button:hover, .join-now-button:hover {
+    background-color: #45a049;
+  }
+  
+  .event-detail {
+    margin: 20px;
+  }
+  
+  .event-card {
+    margin: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .sidebar {
+    width: 220px;
+    background-color: #f5f0ff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+  
+  .sidebar h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #6a0dad;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 25px;
+  }
+  
+  .sidebar a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .sidebar a:hover {
+    color: #6a0dad;
+    font-weight: 600;
+  }
+  
+  .events-main {
+    flex: 1;
+    margin-top: 0;        /* 确保没有上边距 */
+    padding-top: 0; 
+  }
+
+  .publish-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .publish-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 26px;
+    color: #6a0dad;
+  }
+  
+  .publish-form label {
+    display: block;
+    margin-top: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .publish-form input,
+  .publish-form textarea,
+  .publish-form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .publish-form button {
+    margin-top: 24px;
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.2s ease;
+  }
+  
+  .publish-form button:hover {
+    background-color: #5a00b0;
+  }
+
+  .profile-layout {
+    display: flex;
+    gap: 30px;
+    padding: 40px;
+  }
+  
+  /* 侧边栏 */
+  .profile-sidebar {
+    width: 250px;
+    background-color: #f5f0ff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .profile-card {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .right-align { /*导航栏profile*/
+    margin-left: auto;
+  }
+
+  #profile-link { /*导航栏profile*/
+    color: yellow;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 auto;
+  }
+
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-top: 50px;
+  }
+  
+  /* 个人管理菜单 */
+  .profile-menu h3 {
+    font-size: 18px;
+    color: #6a0dad;
+  }
+  
+  .profile-menu ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .profile-menu li {
+    margin-bottom: 8px;
+  }
+  
+  .profile-menu a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .profile-menu a:hover {
+    color: #6a0dad;
+    font-weight: 600;
+  }
+  
+  /* 右侧动态内容 */
+  .profile-main {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* 隐藏未选中的内容 */
+  .hidden {
+    display: none;
+  }
+
+  .profile-info, .profile-tags, .profile-hobbies, .profile-posts {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .profile-tags ul, .profile-hobbies ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .profile-tags li, .profile-hobbies li {
+    background: #f5f0ff;
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 5px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #6a0dad;
+  }
+  
+  .edit-btn {
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .profile-posts .post {
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .achievement-badge {
+    display: flex;
+    align-items: center;
+    background: #b388eb;
+    padding: 1px 5px; /* 适当减少 padding，使卡片更紧凑 */
+    border-radius: 12px;
+    min-height: 70px; /* 让卡片更短 */
+    max-height: 70px;
+    max-width: 600px; /* 适当限制宽度 */
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+  
+  .achievement-badge img {
+    height: 90px; /* 让 Logo 变大 */
+    margin-right: 15px; /* 增加右侧间距 */
+    margin-bottom: -5px;
+  }
+  
+  .achievement-badge p {
+    font-size: 18px;
+    color: #444;
+    text-align: left;
+    flex: 1; /* 让文字在右侧占据剩余空间 */
+  }
+
+
+
+  

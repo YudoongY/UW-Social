@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile - UW Social</title>
+  <link rel="stylesheet" href="style.css" />
+  
+  <!-- 公共依赖 -->
+  <script src="common.js"></script>
+</head>
+<body>
+    <nav-bar></nav-bar>
+
+  <div class="profile-layout">
+
+    <!-- 左侧：个人信息 + 侧边菜单 -->
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <img src="images/uwdog.png" alt="User Avatar" class="avatar">
+        <h2>👤 Username</h2>
+        <p>📍 UW Seattle</p>
+      </div>
+
+      <div class="profile-menu">
+        <h3>📋 Personal Management</h3>
+        <ul>
+          <li><a href="#" onclick="showSection('friends')">👥 My Friends</a></li>
+          <li><a href="#" onclick="showSection('recommendations')">✨ People You May Know</a></li>
+          <li><a href="#" onclick="showSection('published')">📅 Published Events</a></li>
+          <li><a href="#" onclick="showSection('participated')">🎯 Participated Events</a></li>
+          <li><a href="#" onclick="showSection('achievements')">🏆 Your Achievement</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Right side: Personal info & Social feed -->
+    <main class="profile-main">
+
+      <!-- Default page (Basic info & Social feed) -->
+      <div id="default-content">
+        <h2>👋 This is your profile!</h2>
+        
+        <!-- Personal information -->
+        <div class="profile-info">
+          <h3>📄 Basic Information</h3>
+          <p>🎂 Age: 21</p>
+          <p>🎓 Major: Computer Science & Math</p>
+          <p>📞 Contact: email@uw.edu</p>
+        </div>
+
+        <!-- Personal tags -->
+        <div class="profile-tags">
+          <h3>🏷️ Personal Tags</h3>
+          <ul>
+            <li>💻 Computer Science & Math</li>
+            <li>🏠 Dorm: McCarty Hall</li>
+            <li>🎭 Organization: Drama Club</li>
+          </ul>
+          <button class="edit-btn">✏️ Edit Tags</button>
+        </div>
+
+        <!-- Personal hobbies -->
+        <div class="profile-hobbies">
+          <h3>🎯 Personal Hobbies</h3>
+          <ul>
+            <li>🎵 Music</li>
+            <li>🏀 Basketball</li>
+            <li>📖 Reading</li>
+          </ul>
+          <button class="edit-btn">✏️ Edit Hobbies</button>
+        </div>
+
+        <!-- Social feed -->
+        <!-- <div class="profile-posts">
+          <h3>📝 My Social Posts</h3>
+          <div class="post">
+            <p>📅 March 20th</p>
+            <p>✨ I spent the whole day studying in the library today, and I feel very satisfied! 📖💡</p>
+          </div>
+          <div class="post">
+            <p>📅 March 15th</p>
+            <p>🏀 Yesterday's basketball game was amazing! I hope there will be more games like this! 🔥</p>
+          </div>
+        </div> -->
+
+        <div class="achievements">
+          <h2>🏆 Your Achievements</h2>
+          <div class="achievement-badge">
+            <img src="images/logo.png" alt="UW Social Badge">
+            <p>🎉 Congratulations! You have published 3 events!</p>
+          </div>
+          <div class="achievement-badge">
+            <img src="images/logo1.png" alt="UW Social Badge">
+            <p>🤝 You have made 5 new friends!</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Other dynamic pages (friends, events, etc.) -->
+      <div id="friends" class="profile-section hidden">
+        <h3>👥 My Friends</h3>
+        <ul>
+          <li>🧑‍💻 Alex (Computer Science)</li>
+          <li>🎨 Emily (Designer)</li>
+          <li>🎵 John (Music Club Member)</li>
+        </ul>
+      </div>
+
+      <div id="recommendations" class="profile-section hidden">
+        <h3>✨ People You May Know</h3>
+        <ul>
+          <li>🔍 Sophia (Business School)</li>
+          <li>🔍 David (International Student)</li>
+          <li>🔍 Mia (Artificial Intelligence)</li>
+        </ul>
+      </div>
+
+    </main>
+
+  </div>
+
+</body>
+</html>
