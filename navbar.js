@@ -35,28 +35,25 @@ this.innerHTML = `
 // Auth functions
 function googleLogin() {
   const provider = new firebase.auth.GoogleAuthProvider();
-
-
+  
   provider.addScope('https://www.googleapis.com/auth/userinfo.email');
   provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-
+  
+  provider.setCustomParameters({ prompt: 'select_account' });
+  
   firebase.auth().signInWithPopup(provider)
     .then((result) => {
       const user = result.user;
       console.log('Login successful:', user);
       document.getElementById('user-name').textContent = user.displayName;
       
-      // 准备要发送到后端的用户数据
+      // 构造用户数据：仅保留 id 和 name
       const userData = {
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        // 将当前时间转换为 ISO 字符串格式
-        lastLogin: new Date().toISOString()
+        id: user.uid,
+        name: user.displayName
       };
-
-      // 调用后端 API，将用户数据保存到 MySQL 数据库中
+      
+      // 发送 POST 请求到后端接口，存储用户数据
       fetch('http://localhost:8080/api/users', {
         method: 'POST',
         headers: {
@@ -71,13 +68,13 @@ function googleLogin() {
       .catch(error => {
         console.error('Error storing user data:', error);
       });
-      
     })
     .catch((error) => {
       console.error('Login failed:', error);
       alert('Login failed: ' + error.message);
     });
 }
+
 
 function logout() {
   firebase.auth().signOut()
