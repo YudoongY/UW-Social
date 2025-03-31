@@ -10,6 +10,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  base: '/UW-Social/',
   server: {
     port: 3000,
     proxy: {

@@ -2,7 +2,9 @@ import axios from 'axios'
 
 // 创建axios实例
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
+  baseURL: import.meta.env.PROD 
+    ? 'https://alanvanderboom.com/UW-Social'  // 替换为您的实际域名
+    : 'http://localhost:8080/api',       // 开发环境API地址
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
