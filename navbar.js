@@ -42,8 +42,36 @@ function googleLogin() {
 
   firebase.auth().signInWithPopup(provider)
     .then((result) => {
-      console.log('Login successful:', result.user.displayName);
-      // 不手动调用状态更新，依赖onAuthStateChanged自动触发
+      const user = result.user;
+      console.log('Login successful:', user);
+      document.getElementById('user-name').textContent = user.displayName;
+      
+      // 准备要发送到后端的用户数据
+      const userData = {
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        // 将当前时间转换为 ISO 字符串格式
+        lastLogin: new Date().toISOString()
+      };
+
+      // 调用后端 API，将用户数据保存到 MySQL 数据库中
+      fetch('http://localhost:8080/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('User data stored in backend:', data);
+      })
+      .catch(error => {
+        console.error('Error storing user data:', error);
+      });
+      
     })
     .catch((error) => {
       console.error('Login failed:', error);
