@@ -153,23 +153,23 @@ body {
     color: #333;
   }
 
-  .login-link {
-    margin-left: auto !important; /* 将 Login 挤到右侧 */
-    margin-right: 17px;
-    color: Yellow;
-    font-weight: bold;
+  #logout-button {
+    width: 43px;
+    font-size: 0.8rem; /* 单独设置Logout按钮大小 */
+    background-color: #b18cfc;
+    color: white;
     text-decoration: none;
-    margin-left: 10px;
-  }
-
-  logout-link {
-    color: #6a0dad;
     font-weight: bold;
-    text-decoration: none;
-    margin-left: 10px;
+    padding: 4px 8px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
   }
   
-  .login-link:hover, .logout-link:hover {
+  #logout-button:hover {
+    background-color: #a379f8;
+  }
+  
+  .logout-link:hover {
     color: white;
   }
 
@@ -292,6 +292,32 @@ body {
     gap: 30px;
     padding: 40px;
     align-items: flex-start;
+  }
+
+  .join-button, .join-now-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .join-button:hover, .join-now-button:hover {
+    background-color: #45a049;
+  }
+  
+  .event-detail {
+    margin: 20px;
+  }
+  
+  .event-card {
+    margin: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
   }
   
   .sidebar {

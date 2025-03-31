@@ -22,7 +22,7 @@ this.innerHTML = `
           <a href="profile.html">👨‍🎓 Profile</a>
         <div id="user-info">
           Welcome, <span id="user-name"></span>!
-          <a href="#" onclick="logout(); return false;" class="logout-link">Logout</a>
+          <a href="#" onclick="logout(); return false;" class="logout-link" id="logout-button">Logout</a>
         </div>
         </div>
       </div>
@@ -76,6 +76,7 @@ firebase.auth().onAuthStateChanged((user) => {
   const userProfile = document.getElementById('user-profile');
   const userInfo = document.getElementById('user-info');
   const userNameElement = document.getElementById('user-name');
+  const logoutButton = document.getElementById('logout-button');
 
   if (user) {
     // 登录状态
