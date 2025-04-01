@@ -3,14 +3,16 @@
     <ul class="navbar">
       <div class="nav-items">
         <li>
-          <img src="/images/logo1.png" alt="UW Social Logo" class="logo">
+          <router-link to="/">
+            <img src="/images/logo1.png" alt="UW Social Logo" class="logo">
+          </router-link>
         </li>
         <li><router-link to="/">🏠 HOME</router-link></li>
         <li><router-link to="/events">🎪 Events</router-link></li>
         <li><router-link to="/publish">🚀 Publish New</router-link></li>
 
         <div v-if="!userStore.isLoggedIn" class="auth-buttons">
-          <a href="#" @click.prevent="handleGoogleLogin" class="login-link">🔑 Login</a>
+          <router-link to="/login" class="login-link">🔑 Login</router-link>
         </div>
 
         <div v-else class="user-profile">
@@ -31,14 +33,6 @@ import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const router = useRouter()
-
-const handleGoogleLogin = async () => {
-  try {
-    await userStore.loginWithGoogle()
-  } catch (error) {
-    console.error('登录失败:', error)
-  }
-}
 
 const handleLogout = async () => {
   try {
