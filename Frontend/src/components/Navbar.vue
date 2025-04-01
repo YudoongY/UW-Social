@@ -15,12 +15,12 @@
           <router-link to="/login" class="login-link">🔑 Login</router-link>
         </div>
 
-        <div v-else class="user-profile">
+        <div class="user-profile">
           <router-link to="/profile">👨‍🎓 Profile</router-link>
-          <div class="user-info">
-            Welcome, {{ userStore.userProfile?.displayName }}!
+          <template v-if="userStore.isLoggedIn">
+            <span class="welcome-text">Welcome, {{ userStore.userProfile?.displayName }}!</span>
             <a href="#" @click.prevent="handleLogout" class="logout-link">Logout</a>
-          </div>
+          </template>
         </div>
       </div>
     </ul>

@@ -1,135 +1,79 @@
 <template>
-  <div class="main-content">
-    <h1>Welcome to UW Social! 🎓</h1>
-    <p>This is your social hub — find events, make friends, and share your ideas.</p>
-
-    <div class="section-title">
-      <h2>🔥 New Events!!</h2>
+  <div class="home-page">
+    <div class="hero-section">
+      <h1>欢迎来到 UW Social</h1>
+      <p>发现精彩活动，结识新朋友</p>
+      <router-link to="/publish" class="cta-button">
+        <span class="icon">🚀</span>
+        发布新活动
+      </router-link>
     </div>
-    <section class="cards-container">
-      <div v-for="event in events" :key="event.id" class="card">
-        <img :src="event.image || '/images/default.jpg'" :alt="event.title" />
-        <h3>{{ event.title }}</h3>
-        <p>📅 Date: {{ event.date }}</p>
-        <p>🏫 Location: {{ event.location }}</p>
-        <p>{{ event.description }}</p>
-        <button @click="joinEvent(event.id)">Quickly Join In</button>
-      </div>
-    </section>
+
+    <div class="events-section">
+      <h2>最新活动</h2>
+      <EventList />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useUserStore } from '../stores/user'
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
-
-interface Event {
-  id: string
-  title: string
-  date: string
-  location: string
-  description: string
-  image?: string
-}
-
-const userStore = useUserStore()
-const events = ref<Event[]>([])
-const db = getFirestore()
-
-onMounted(async () => {
-  try {
-    const querySnapshot = await getDocs(collection(db, 'events'))
-    events.value = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Event))
-  } catch (error) {
-    console.error('获取活动列表失败:', error)
-  }
-})
-
-const joinEvent = (eventId: string) => {
-  // TODO: 实现加入活动的逻辑
-  console.log('加入活动:', eventId)
-}
+import EventList from '../components/EventList.vue';
 </script>
 
 <style scoped>
-.main-content {
-  padding: 20px;
-  margin-top: 60px; /* Add space for fixed navbar */
+.home-page {
+  min-height: calc(100vh - 100px);
+  margin-top: 100px;
 }
 
-h1 {
-  text-align: center;
-  color: #4b2e83;
-  margin-bottom: 20px;
-}
-
-p {
-  text-align: center;
-  color: #666;
-  margin-bottom: 30px;
-}
-
-.section-title {
-  text-align: center;
-  margin: 30px 0;
-}
-
-.section-title h2 {
-  color: #4b2e83;
-  font-size: 2em;
-}
-
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-}
-
-.card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  padding: 20px;
-  width: 300px;
-  text-align: center;
-}
-
-.card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 5px;
-  margin-bottom: 15px;
-}
-
-.card h3 {
-  color: #4b2e83;
-  margin-bottom: 10px;
-}
-
-.card p {
-  color: #666;
-  margin: 5px 0;
-  text-align: left;
-}
-
-.card button {
-  background: #4CAF50;
+.hero-section {
+  background: linear-gradient(135deg, #b388eb 0%, #9c6ad6 100%);
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 15px;
+  padding: 4rem 2rem;
+  text-align: center;
 }
 
-.card button:hover {
-  background: #45a049;
+.hero-section h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  color: #b388eb;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: transform 0.3s;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+}
+
+.icon {
+  font-size: 1.2rem;
+}
+
+.events-section {
+  padding: 4rem 2rem;
+  background: #f5f5f5;
+}
+
+.events-section h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 2rem;
 }
 </style> 
