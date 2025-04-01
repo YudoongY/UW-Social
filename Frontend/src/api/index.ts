@@ -3,7 +3,7 @@ import axios from 'axios'
 // 创建axios实例
 const api = axios.create({
   baseURL: import.meta.env.PROD 
-    ? 'https://alanvanderboom.com/UW-Social'  // 替换为您的实际域名
+    ? 'https://alanvanderboom.com/api'  // 生产环境API地址
     : 'http://localhost:8080/api',       // 开发环境API地址
   timeout: 10000,
   headers: {
@@ -32,7 +32,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // 处理未授权错误
       localStorage.removeItem('token')
-      window.location.href = '/login'
+      window.location.href = '/UW-Social/login'
     }
     return Promise.reject(error)
   }
