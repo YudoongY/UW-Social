@@ -1,32 +1,32 @@
 <template>
   <div class="event-form">
-    <h2>发布新活动</h2>
+    <h2>Publish New Event</h2>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
-        <label for="title">活动标题</label>
+        <label for="title">Event Title</label>
         <input
           id="title"
           v-model="formData.title"
           type="text"
           required
-          placeholder="输入活动标题"
+          placeholder="Enter event title"
         >
       </div>
 
       <div class="form-group">
-        <label for="description">活动描述</label>
+        <label for="description">Description</label>
         <textarea
           id="description"
           v-model="formData.description"
           required
-          placeholder="详细描述你的活动"
+          placeholder="Describe your event in detail"
           rows="4"
         ></textarea>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="date">日期</label>
+          <label for="date">Date</label>
           <input
             id="date"
             v-model="formData.date"
@@ -36,7 +36,7 @@
         </div>
 
         <div class="form-group">
-          <label for="time">时间</label>
+          <label for="time">Time</label>
           <input
             id="time"
             v-model="formData.time"
@@ -47,51 +47,51 @@
       </div>
 
       <div class="form-group">
-        <label for="location">地点</label>
+        <label for="location">Location</label>
         <input
           id="location"
           v-model="formData.location"
           type="text"
           required
-          placeholder="活动地点"
+          placeholder="Event location"
         >
       </div>
 
       <div class="form-group">
-        <label for="category">类别</label>
+        <label for="category">Category</label>
         <select id="category" v-model="formData.category" required>
-          <option value="">选择类别</option>
-          <option value="academic">学术</option>
-          <option value="social">社交</option>
-          <option value="sports">运动</option>
-          <option value="cultural">文化</option>
-          <option value="other">其他</option>
+          <option value="">Select category</option>
+          <option value="academic">Academic</option>
+          <option value="social">Social</option>
+          <option value="sports">Sports</option>
+          <option value="cultural">Cultural</option>
+          <option value="other">Other</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="maxParticipants">最大参与人数（可选）</label>
+        <label for="maxParticipants">Max Participants (Optional)</label>
         <input
           id="maxParticipants"
           v-model="formData.maxParticipants"
           type="number"
           min="1"
-          placeholder="不设置则无限制"
+          placeholder="No limit if not set"
         >
       </div>
 
       <div class="form-group">
-        <label for="tags">标签（用逗号分隔）</label>
+        <label for="tags">Tags (comma separated)</label>
         <input
           id="tags"
           v-model="tagsInput"
           type="text"
-          placeholder="例如：学习,社交,运动"
+          placeholder="e.g., study, social, sports"
         >
       </div>
 
       <button type="submit" class="submit-btn" :disabled="isSubmitting">
-        {{ isSubmitting ? '发布中...' : '发布活动' }}
+        {{ isSubmitting ? 'Publishing...' : 'Publish Event' }}
       </button>
     </form>
   </div>
