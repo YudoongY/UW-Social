@@ -2,17 +2,15 @@
   <nav>
     <ul class="navbar">
       <div class="nav-items">
-        <li>
-          <router-link to="/">
-            <img src="/images/logo1.png" alt="UW Social Logo" class="logo">
-          </router-link>
-        </li>
-        <li><router-link to="/">🏠 HOME</router-link></li>
-        <li><router-link to="/events">🎪 Events</router-link></li>
-        <li><router-link to="/publish">🚀 Publish New</router-link></li>
-
-        <div v-if="!userStore.isLoggedIn" class="auth-buttons">
-          <router-link to="/login" class="login-link">🔑 Login</router-link>
+        <div class="nav-left">
+          <li>
+            <router-link to="/">
+              <img src="/images/logo1.png" alt="UW Social Logo" class="logo">
+            </router-link>
+          </li>
+          <li><router-link to="/">🏠 Home</router-link></li>
+          <li><router-link to="/events">🎪 Events</router-link></li>
+          <li><router-link to="/publish">🚀 Publish New</router-link></li>
         </div>
 
         <div class="user-profile">
@@ -71,9 +69,22 @@ nav {
 
 .nav-items {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-left {
+  display: flex;
   align-items: center;
   gap: 20px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
 }
 
 .logo {
@@ -81,7 +92,7 @@ nav {
   width: auto;
 }
 
-a {
+a, .welcome-text {
   color: white;
   text-decoration: none;
   font-weight: bold;
@@ -91,15 +102,10 @@ a:hover {
   color: #f0f0f0;
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: white;
-}
-
 .logout-link {
   color: #ffeb3b;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .logout-link:hover {
