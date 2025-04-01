@@ -14,18 +14,17 @@ import EventList from '../components/EventList.vue';
 <style scoped>
 .home-page {
   min-height: calc(100vh - 100px);
-  margin-top: 100px;
 }
 
 .events-section {
-  padding: 4rem 2rem;
+  padding: 1rem;
   background: #f5f5f5;
 }
 
 .events-section h2 {
   text-align: center;
   color: #333;
-  margin-bottom: 2rem;
-  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
 }
 </style> 
