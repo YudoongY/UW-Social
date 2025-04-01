@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '../stores/user'
 
 const routes = [
   {
@@ -16,6 +17,17 @@ const routes = [
     name: 'Profile',
     component: () => import('../views/Profile.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/events',
+    name: 'Events',
+    component: () => import('../views/Events.vue')
+  },
+  {
+    path: '/publish',
+    name: 'Publish',
+    component: () => import('../views/Publish.vue'),
+    meta: { requiresAuth: true }
   }
 ]
 
@@ -26,8 +38,12 @@ const router = createRouter({
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  // 这里可以添加认证逻辑
-  next()
+  const userStore = useUserStore()
+  if (to.meta.requiresAuth && !userStore.isLoggedIn) {
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router 

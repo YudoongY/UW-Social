@@ -1,104 +1,135 @@
 <template>
-  <div class="home">
-    <el-container>
-      <el-header>
-        <h1>欢迎来到 UW Social</h1>
-      </el-header>
-      <el-main>
-        <el-row :gutter="20">
-          <el-col :span="16">
-            <el-card class="feed-card">
-              <template #header>
-                <div class="card-header">
-                  <span>动态列表</span>
-                  <el-button type="primary">发布新动态</el-button>
-                </div>
-              </template>
-              <!-- 动态列表将在这里显示 -->
-              <div class="feed-item" v-for="i in 5" :key="i">
-                <el-card shadow="hover">
-                  <h3>示例动态 {{ i }}</h3>
-                  <p>这是一条示例动态内容...</p>
-                  <div class="feed-actions">
-                    <el-button type="text">点赞</el-button>
-                    <el-button type="text">评论</el-button>
-                    <el-button type="text">分享</el-button>
-                  </div>
-                </el-card>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card class="user-card">
-              <template #header>
-                <div class="card-header">
-                  <span>个人信息</span>
-                </div>
-              </template>
-              <div class="user-info" v-if="userStore.isLoggedIn">
-                <el-avatar :size="64" src="https://placeholder.com/150"></el-avatar>
-                <h3>{{ userStore.userProfile?.name || '用户名' }}</h3>
-                <p>这里是个人简介...</p>
-              </div>
-              <div v-else>
-                <el-button type="primary" @click="$router.push('/login')">登录</el-button>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-main>
-    </el-container>
+  <div class="main-content">
+    <h1>Welcome to UW Social! 🎓</h1>
+    <p>This is your social hub — find events, make friends, and share your ideas.</p>
+
+    <div class="section-title">
+      <h2>🔥 New Events!!</h2>
+    </div>
+    <section class="cards-container">
+      <div v-for="event in events" :key="event.id" class="card">
+        <img :src="event.image || '/images/default.jpg'" :alt="event.title" />
+        <h3>{{ event.title }}</h3>
+        <p>📅 Date: {{ event.date }}</p>
+        <p>🏫 Location: {{ event.location }}</p>
+        <p>{{ event.description }}</p>
+        <button @click="joinEvent(event.id)">Quickly Join In</button>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
+import { getFirestore, collection, getDocs } from 'firebase/firestore'
+
+interface Event {
+  id: string
+  title: string
+  date: string
+  location: string
+  description: string
+  image?: string
+}
 
 const userStore = useUserStore()
+const events = ref<Event[]>([])
+const db = getFirestore()
+
+onMounted(async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'events'))
+    events.value = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Event))
+  } catch (error) {
+    console.error('获取活动列表失败:', error)
+  }
+})
+
+const joinEvent = (eventId: string) => {
+  // TODO: 实现加入活动的逻辑
+  console.log('加入活动:', eventId)
+}
 </script>
 
 <style scoped>
-.home {
-  max-width: 1200px;
-  margin: 0 auto;
+.main-content {
+  padding: 20px;
+  margin-top: 60px; /* Add space for fixed navbar */
+}
+
+h1 {
+  text-align: center;
+  color: #4b2e83;
+  margin-bottom: 20px;
+}
+
+p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.section-title h2 {
+  color: #4b2e83;
+  font-size: 2em;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
   padding: 20px;
 }
 
-.el-header {
-  text-align: center;
-  padding: 20px 0;
-}
-
-.feed-card {
-  margin-bottom: 20px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.feed-item {
-  margin-bottom: 20px;
-}
-
-.feed-actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
-
-.user-card {
-  position: sticky;
-  top: 20px;
-}
-
-.user-info {
+.card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  width: 300px;
   text-align: center;
 }
 
-.user-info h3 {
-  margin: 10px 0;
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  color: #4b2e83;
+  margin-bottom: 10px;
+}
+
+.card p {
+  color: #666;
+  margin: 5px 0;
+  text-align: left;
+}
+
+.card button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.card button:hover {
+  background: #45a049;
 }
 </style> 

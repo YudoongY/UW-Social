@@ -1,52 +1,48 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import { ref } from 'vue'
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User } from 'firebase/auth'
 
-interface UserState {
-  user: any | null
-  isAuthenticated: boolean
-}
+export const useUserStore = defineStore('user', () => {
+  const isLoggedIn = ref(false)
+  const userProfile = ref<User | null>(null)
+  const auth = getAuth()
 
-export const useUserStore = defineStore('user', {
-  state: (): UserState => ({
-    user: null,
-    isAuthenticated: false
-  }),
-  
-  actions: {
-    async login(credentials: { email: string; password: string }) {
-      try {
-        // 这里添加登录逻辑
-        this.isAuthenticated = true
-      } catch (error) {
-        console.error('Login failed:', error)
-        throw error
-      }
-    },
+  // 初始化用户状态
+  onAuthStateChanged(auth, (user) => {
+    isLoggedIn.value = !!user
+    userProfile.value = user
+  })
 
-    async logout() {
-      try {
-        // 这里添加登出逻辑
-        this.user = null
-        this.isAuthenticated = false
-      } catch (error) {
-        console.error('Logout failed:', error)
-        throw error
-      }
-    },
-
-    async fetchUserProfile() {
-      try {
-        const response = await axios.get('/api/users/profile')
-        this.user = response.data
-      } catch (error) {
-        console.error('Failed to fetch user profile:', error)
-        throw error
-      }
+  // Google 登录
+  const loginWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
+      userProfile.value = result.user
+      isLoggedIn.value = true
+      return result.user
+    } catch (error) {
+      console.error('登录失败:', error)
+      throw error
     }
-  },
+  }
 
-  getters: {
-    userProfile: (state) => state.user,
-    isLoggedIn: (state) => state.isAuthenticated
+  // 退出登录
+  const logout = async () => {
+    try {
+      await signOut(auth)
+      userProfile.value = null
+      isLoggedIn.value = false
+    } catch (error) {
+      console.error('退出失败:', error)
+      throw error
+    }
+  }
+
+  return {
+    isLoggedIn,
+    userProfile,
+    loginWithGoogle,
+    logout
   }
 }) 

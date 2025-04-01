@@ -1,24 +1,30 @@
 <template>
-  <el-config-provider>
+  <div class="app-container">
+    <Navbar />
     <router-view></router-view>
-  </el-config-provider>
+  </div>
 </template>
 
 <script setup lang="ts">
-// 组件逻辑
+import Navbar from './components/Navbar.vue'
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  padding: 0;
-  background-color: #f5f7fa;
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.app-container {
+  min-height: 100vh;
+  padding-top: 100px; /* 为固定导航栏留出空间 */
 }
 </style> 
