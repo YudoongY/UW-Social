@@ -3,13 +3,11 @@
     <!-- 左侧：个人信息 + 侧边菜单 -->
     <aside class="profile-sidebar">
       <div class="profile-card">
-        <img src="/images/uwdog.png" alt="User Avatar" class="avatar">
+        <AvatarUpload />
         <h2>👤 {{ userStore.userProfile?.displayName || 'User' }}</h2>
-        <p>📍 UW Seattle</p>
       </div>
 
       <div class="profile-menu">
-        <h3>📋 Personal Management</h3>
         <ul>
           <li><a href="#" @click="showSection('friends')">👥 My Friends</a></li>
           <li><a href="#" @click="showSection('recommendations')">✨ People You May Know</a></li>
@@ -126,6 +124,7 @@ import { ref, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
+import AvatarUpload from '../components/AvatarUpload.vue'
 
 interface Event {
   id: string
@@ -192,10 +191,9 @@ onMounted(async () => {
 <style scoped>
 .profile-layout {
   display: flex;
-  margin-top: 60px;
-  min-height: calc(100vh - 60px);
-  padding: 20px;
-  gap: 20px;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 100px;
 }
 
 .profile-sidebar {
@@ -205,137 +203,149 @@ onMounted(async () => {
 
 .profile-card {
   background: white;
-  border-radius: 10px;
-  padding: 20px;
+  border-radius: 15px;
+  padding: 1.5rem;
   text-align: center;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 60px;
-  margin-bottom: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
 }
 
 .profile-card h2 {
-  color: #4b2e83;
-  margin-bottom: 10px;
+  margin-top: 1rem;
+  color: #333;
+  font-size: 1.2rem;
 }
 
 .profile-menu {
   background: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.profile-menu h3 {
-  color: #4b2e83;
-  margin-bottom: 15px;
+  border-radius: 15px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .profile-menu ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .profile-menu li {
-  margin-bottom: 10px;
+  margin: 0.5rem 0;
 }
 
 .profile-menu a {
-  color: #666;
-  text-decoration: none;
   display: block;
-  padding: 8px;
-  border-radius: 5px;
+  padding: 0.8rem 1rem;
+  color: #333;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s;
 }
 
 .profile-menu a:hover {
-  background: #f5f5f5;
-  color: #4b2e83;
+  background-color: #f0f0f0;
 }
 
 .profile-main {
-  flex: 1;
+  flex-grow: 1;
   background: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.profile-info, .profile-tags, .profile-hobbies {
-  margin-bottom: 30px;
+.profile-info {
+  margin-bottom: 2rem;
 }
 
-.profile-info h3, .profile-tags h3, .profile-hobbies h3 {
-  color: #4b2e83;
-  margin-bottom: 15px;
+.profile-info h3,
+.profile-tags h3,
+.profile-hobbies h3 {
+  color: #333;
+  margin-bottom: 1rem;
 }
 
-.profile-info p, .profile-tags ul, .profile-hobbies ul {
+.profile-info p {
+  margin: 0.5rem 0;
   color: #666;
-  margin-bottom: 10px;
+}
+
+.profile-tags ul,
+.profile-hobbies ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.profile-tags li,
+.profile-hobbies li {
+  background: #f0f0f0;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
 }
 
 .edit-btn {
-  background: #4b2e83;
+  margin-top: 1rem;
+  background: #b388eb;
   color: white;
   border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
   cursor: pointer;
-  margin-top: 10px;
+  transition: background-color 0.3s;
 }
 
 .edit-btn:hover {
-  background: #3a1f63;
+  background: #9c6ad6;
 }
 
 .achievements {
-  margin-top: 40px;
+  margin-top: 2rem;
 }
 
 .achievement-badge {
-  background: #f5f5f5;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 15px;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 1rem;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 1rem 0;
 }
 
 .achievement-badge img {
   width: 50px;
   height: 50px;
-  border-radius: 25px;
+  border-radius: 50%;
+}
+
+.achievement-badge p {
+  margin: 0;
+  color: #666;
 }
 
 .profile-section {
-  display: none;
-}
-
-.profile-section:not([v-show="false"]) {
-  display: block;
+  padding: 1rem;
 }
 
 .event-card {
-  background: #f5f5f5;
+  background: #f8f9fa;
+  padding: 1rem;
   border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 15px;
+  margin: 1rem 0;
 }
 
 .event-card h4 {
-  color: #4b2e83;
-  margin-bottom: 10px;
+  margin: 0 0 0.5rem 0;
+  color: #333;
 }
 
 .event-card p {
+  margin: 0.25rem 0;
   color: #666;
-  margin: 5px 0;
 }
 </style> 
