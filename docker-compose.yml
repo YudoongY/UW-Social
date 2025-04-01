@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./Backend/demo
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_URL=jdbc:mysql://database-1.c9ios0g8snh0.us-west-2.rds.amazonaws.com:3306/UW_Social?useSSL=true&serverTimezone=UTC
+      - DB_USERNAME=GGBond114514
+      - DB_PASSWORD=Wuxiuyuan2006
+      - JWT_SECRET=your-jwt-secret-key
+      - CORS_ALLOWED_ORIGINS=https://alanvanderboom.com
+    restart: unless-stopped 
