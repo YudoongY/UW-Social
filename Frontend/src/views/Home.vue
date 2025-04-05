@@ -1,5 +1,10 @@
 <template>
-  <div class="home-page">
+  <div>
+    <nav-bar></nav-bar>
+    <!-- 仅在首页渲染 Welcome -->
+    <div v-if="$route.path === '/'" class="welcome-container">
+      <Welcome />
+    </div>
     <div class="events-section">
       <h2>Latest Events</h2>
       <EventList />
@@ -8,10 +13,16 @@
 </template>
 
 <script setup lang="ts">
-import EventList from '../components/EventList.vue';
+import Welcome from '@/components/Welcome.vue';  // 修正路径
+import EventList from '@/components/EventList.vue';  // 统一用绝对路径
 </script>
 
 <style scoped>
+.home-page, .welcome-container {
+  margin: 0;
+  padding: 0;
+  }
+  
 .home-page {
   min-height: calc(100vh - 100px);
 }

@@ -11,7 +11,7 @@ import { computed } from 'vue';
 import { useUserStore } from '../stores/user';
 
 const userStore = useUserStore();
-const defaultAvatar = '/images/default-avatar.png';
+const defaultAvatar = '/public/images/default-avatar.jpg';
 
 const userAvatar = computed(() => {
   return userStore.userProfile?.photoURL || defaultAvatar;

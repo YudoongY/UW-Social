@@ -62,9 +62,10 @@
         <select id="category" v-model="formData.category" required>
           <option value="">Select category</option>
           <option value="academic">Academic</option>
-          <option value="social">Social</option>
-          <option value="sports">Sports</option>
-          <option value="cultural">Cultural</option>
+          <option value="club">Club</option>
+          <option value="HFS">HFS</option>
+          <option value="interest">Interest</option>
+          <option value="culture">Culture</option>
           <option value="other">Other</option>
         </select>
       </div>
@@ -145,11 +146,11 @@ const handleSubmit = async () => {
     };
 
     await addDoc(collection(db, 'events'), eventData);
-    alert('活动发布成功！');
+    alert('sucessfully publish!');
     router.push('/events');
   } catch (error) {
-    console.error('发布活动失败:', error);
-    alert('发布活动失败，请重试');
+    console.error('OOh…You Fail', error);
+    alert('OOh…You Fail');
   } finally {
     isSubmitting.value = false;
   }

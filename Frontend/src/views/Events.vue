@@ -1,10 +1,10 @@
 <template>
   <div class="events-page">
     <div class="events-header">
-      <h1>活动列表</h1>
+      <h1>Event List🔥</h1>
       <router-link to="/publish" class="publish-btn">
         <span class="icon">🚀</span>
-        发布新活动
+        Publish new event
       </router-link>
     </div>
     <EventList />
@@ -17,8 +17,9 @@ import EventList from '../components/EventList.vue';
 
 <style scoped>
 .events-page {
-  padding: 2rem;
-  margin-top: 100px;
+  padding: 0rem;
+  margin-top: 50px;
+  margin-left:100px;
   min-height: calc(100vh - 100px);
   background: #f5f5f5;
 }
@@ -50,6 +51,7 @@ h1 {
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.3s;
+  margin-right: 50px;
 }
 
 .publish-btn:hover {

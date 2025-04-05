@@ -9,6 +9,7 @@
 
       <div class="profile-menu">
         <ul>
+          <li><a href="#" @click="showSection('default')">🏠 Profile Home</a></li>
           <li><a href="#" @click="showSection('friends')">👥 My Friends</a></li>
           <li><a href="#" @click="showSection('recommendations')">✨ People You May Know</a></li>
           <li><a href="#" @click="showSection('published')">📅 Published Events</a></li>
@@ -27,7 +28,6 @@
         <!-- 个人信息 -->
         <div class="profile-info">
           <h3>📄 Basic Information</h3>
-          <p>🎂 Age: 21</p>
           <p>🎓 Major: Computer Science & Math</p>
           <p>📞 Contact: {{ userStore.userProfile?.email }}</p>
         </div>
@@ -40,7 +40,6 @@
             <li>🏠 Dorm: McCarty Hall</li>
             <li>🎭 Organization: Drama Club</li>
           </ul>
-          <button class="edit-btn">✏️ Edit Tags</button>
         </div>
 
         <!-- 个人爱好 -->
@@ -51,7 +50,7 @@
             <li>🏀 Basketball</li>
             <li>📖 Reading</li>
           </ul>
-          <button class="edit-btn">✏️ Edit Hobbies</button>
+          <button class="edit-btn" @click="goToEditProfile">✏️ Edit Profile</button>
         </div>
 
         <div class="achievements">
@@ -121,6 +120,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { reactive } from 'vue';
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
@@ -167,6 +167,14 @@ const showSection = (section: string) => {
   currentSection.value = section
 }
 
+const state = reactive({
+  currentSection: 'default',  // 默认显示个人主页
+});
+
+function goToEditProfile() {
+  router.push('/profile/edit');
+}
+
 onMounted(async () => {
   if (!userStore.isLoggedIn) {
     router.push('/login')
@@ -193,7 +201,7 @@ onMounted(async () => {
   display: flex;
   gap: 2rem;
   padding: 2rem;
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .profile-sidebar {
@@ -255,6 +263,7 @@ onMounted(async () => {
 }
 
 .profile-info {
+  margin-top: 20px;
   margin-bottom: 2rem;
 }
 
@@ -262,7 +271,8 @@ onMounted(async () => {
 .profile-tags h3,
 .profile-hobbies h3 {
   color: #333;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .profile-info p {
@@ -290,6 +300,7 @@ onMounted(async () => {
 
 .edit-btn {
   margin-top: 1rem;
+  margin-bottom: 2rem;
   background: #b388eb;
   color: white;
   border: none;

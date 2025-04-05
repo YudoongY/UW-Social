@@ -19,6 +19,11 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/profile/edit',
+    name: 'EditProfile',
+    component: () => import('@/components/EditProfile.vue'),
+  },
+  {
     path: '/events',
     name: 'Events',
     component: () => import('../views/Events.vue')
@@ -28,13 +33,19 @@ const routes = [
     name: 'Publish',
     component: () => import('../views/Publish.vue'),
     meta: { requiresAuth: true }
-  }
-]
+  },
+  {
+    path: '/:pathMatch(.*)*', 
+    redirect: '/'
+  },
+];
 
 const router = createRouter({
-  history: createWebHistory('/UW-Social/'),
+  history: createWebHistory("/UW-Social/"),
   routes
 })
+
+
 
 // 路由守卫
 router.beforeEach((to, from, next) => {

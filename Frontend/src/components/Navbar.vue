@@ -2,6 +2,7 @@
   <nav>
     <ul class="navbar">
       <div class="nav-items">
+      <div class="left-link">
         <div class="nav-left">
           <li>
             <router-link to="/">
@@ -12,13 +13,16 @@
           <li><router-link to="/events">🎪 Events</router-link></li>
           <li><router-link to="/publish">🚀 Publish New</router-link></li>
         </div>
+        </div>
 
+        <div class="right-link">
         <div class="user-profile">
           <router-link to="/profile">👨‍🎓 Profile</router-link>
           <template v-if="userStore.isLoggedIn">
             <span class="welcome-text">Welcome, {{ userStore.userProfile?.displayName }}!</span>
             <a href="#" @click.prevent="handleLogout" class="logout-link">Logout</a>
           </template>
+        </div>
         </div>
       </div>
     </ul>
@@ -54,6 +58,7 @@ nav {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .navbar {
   display: flex;
   align-items: center;
@@ -74,6 +79,15 @@ nav {
   width: 100%;
 }
 
+.nav-items .left-link a {
+  font-size:1.5rem;
+  margin: 30px; 
+}
+
+.nav-items .right-link a {
+  font-size: 1rem;
+}
+
 .nav-left {
   display: flex;
   align-items: center;
@@ -88,8 +102,11 @@ nav {
 }
 
 .logo {
-  height: 50px;
+  height: 210px;
   width: auto;
+  margin-bottom: -50px;
+  margin-right: 10px;
+  margin-left: -50px;
 }
 
 a, .welcome-text {

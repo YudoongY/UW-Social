@@ -1,6 +1,6 @@
 <template>
   <div class="card event-card">
-    <img :src="event.imageUrl || '/images/default-event.jpg'" :alt="event.title" />
+    <img :src="event.imageUrl ? event.imageUrl : '/images/default-event.jpg'" alt="event.title" />
     <h3>{{ event.title }}</h3>
     <p>📅 Date: {{ formatDate(event.date) }}</p>
     <p>📍 Location: {{ event.location }}</p>
@@ -9,7 +9,7 @@
       <button 
         class="join-btn" 
         @click="handleJoin"
-        :disabled="isFull"
+        :disabled="isFull || isParticipant"
       >
         {{ getButtonText }}
       </button>
@@ -30,11 +30,14 @@ const props = defineProps<{
 const userStore = useUserStore()
 
 const isParticipant = computed(() => {
-  return props.event.participants.includes(userStore.userProfile?.uid || '')
+  return Array.isArray(props.event?.participants) &&
+         props.event.participants.includes(userStore.userProfile?.uid || '');
 })
 
 const isFull = computed(() => {
-  return props.event.maxParticipants && props.event.participants.length >= props.event.maxParticipants
+  return props.event.maxParticipants && 
+         Array.isArray(props.event.participants) &&
+         props.event.participants.length >= props.event.maxParticipants
 })
 
 const getButtonText = computed(() => {
@@ -52,7 +55,9 @@ const formatDate = (date: string) => {
 }
 
 const handleJoin = async () => {
-  // TODO: 实现参加活动的逻辑
+  if (isFull.value) return
+  console.log('Joining event...')
+  // TODO: 执行加入活动逻辑
 }
 
 const goToReview = (eventId: string) => {

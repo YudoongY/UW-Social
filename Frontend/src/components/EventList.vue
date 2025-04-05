@@ -6,6 +6,7 @@
     <div v-else-if="events.length === 0" class="no-events">
       暂无活动
     </div>
+    <div v-if="events.length"></div>
     <div v-else class="events-grid">
       <EventCard
         v-for="event in events"
