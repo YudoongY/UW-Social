@@ -17,9 +17,9 @@
 
         <div class="right-link">
         <div class="user-profile">
-          <template v-if="userStore.isLoggedIn">
+          <template v-if="userStore.isLoggedIn && userStore.userProfile?.displayName">
             <router-link to="/profile">👨‍🎓 Profile</router-link>
-            <span class="welcome-text">Welcome, {{ userStore.userProfile?.displayName }}!</span>
+            <span class="welcome-text">Welcome, {{ userStore.userProfile.displayName }}!</span>
             <a href="#" @click.prevent="handleLogout" class="logout-link">Logout</a>
           </template>
           <template v-else>
