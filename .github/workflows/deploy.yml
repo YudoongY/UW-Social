@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ Stable-version ]
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -34,9 +34,9 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-        branches: gh-pages  # 部署分支
-        folder: dist      # 构建输出文件夹
-        token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main  # 部署分支改为 main
+          folder: dist  # 构建输出文件夹
+          token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
