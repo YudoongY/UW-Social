@@ -35,7 +35,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: main  # 部署分支改为 main
-          folder: dist  # 构建输出文件夹
+          folder: Frontend/dist  # 构建输出文件夹
           token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Setup Pages
