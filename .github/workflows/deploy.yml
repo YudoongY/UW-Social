@@ -30,6 +30,13 @@ jobs:
         run: |
           cd Frontend
           npm run build
+      
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+        branches: gh-pages  # 部署分支
+        folder: dist      # 构建输出文件夹
+        token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
