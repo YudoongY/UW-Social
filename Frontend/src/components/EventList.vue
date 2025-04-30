@@ -1,45 +1,23 @@
 <template>
   <div class="event-list">
-    <div v-if="loading" class="loading">Loading events...</div>
-    <div v-else-if="events.length === 0" class="no-events">No events found.</div>
+    <div v-if="eventStore.events.length === 0" class="loading">Loading events...</div>
     <div v-else class="events-grid">
-      <EventCard v-for="event in events" :key="event.id" :event="event" />
+      <EventCard v-for="event in eventStore.events" :key="event.id" :event="event" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { onMounted } from 'vue';
+import { useEventStore } from '@/stores/event';
 import EventCard from './EventCard.vue';
-import type { Event } from '../types/event';
 
-const events = ref<Event[]>([]);
-const loading = ref(true);
-
-const fetchEvents = async () => {
-  try {
-    console.log('Fetching events...');
-    const eventsCollection = collection(db, 'events');
-    const eventsQuery = query(eventsCollection, orderBy('createdAt', 'desc'));
-    const querySnapshot = await getDocs(eventsQuery);
-
-    events.value = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as Event[];
-
-    console.log('Fetched events:', events.value);
-  } catch (error) {
-    console.error('Failed to fetch events:', error);
-  } finally {
-    loading.value = false;
-  }
-};
+const eventStore = useEventStore();
 
 onMounted(() => {
-  fetchEvents();
+  if (eventStore.events.length === 0) {
+    eventStore.fetchEvents();
+  }
 });
 </script>
 

@@ -35,10 +35,11 @@ const isParticipant = computed(() => {
 })
 
 const isFull = computed(() => {
-  return props.event.maxParticipants && 
+  return props.event.maxParticipants !== undefined &&
+         props.event.maxParticipants !== null &&
          Array.isArray(props.event.participants) &&
-         props.event.participants.length >= props.event.maxParticipants
-})
+         props.event.participants.length >= props.event.maxParticipants;
+});
 
 const getButtonText = computed(() => {
   if (isFull.value) return 'Full'

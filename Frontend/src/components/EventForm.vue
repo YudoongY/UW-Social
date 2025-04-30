@@ -102,12 +102,14 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
+import { useEventStore } from '../stores/event';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import type { Event } from '../types/event';
 
 const router = useRouter();
 const userStore = useUserStore();
+const eventStore = useEventStore();
 const isSubmitting = ref(false);
 
 const formData = ref({
@@ -117,7 +119,7 @@ const formData = ref({
   time: '',
   location: '',
   category: '',
-  maxParticipants: undefined as number | undefined,
+  maxParticipants: null as number | null, // 默认值为 null
   tags: [] as string[]
 });
 
@@ -145,11 +147,16 @@ const handleSubmit = async () => {
       participants: []
     };
 
+    // 如果 maxParticipants 为 null，则移除该字段
+    if (eventData.maxParticipants === null) {
+      delete eventData.maxParticipants;
+    }
+
     await addDoc(collection(db, 'events'), eventData);
     alert('Successfully published!');
 
-    // 调用 fetchEvents 更新事件列表
-    await fetchEvents();
+    // 更新全局事件列表
+    await eventStore.fetchEvents();
 
     router.push('/events');
   } catch (error) {
