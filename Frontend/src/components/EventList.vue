@@ -1,18 +1,9 @@
 <template>
   <div class="event-list">
-    <div v-if="loading" class="loading">
-      加载中...
-    </div>
-    <div v-else-if="events.length === 0" class="no-events">
-      暂无活动
-    </div>
-    <div v-if="events.length"></div>
+    <div v-if="loading" class="loading">Loading events...</div>
+    <div v-else-if="events.length === 0" class="no-events">No events found.</div>
     <div v-else class="events-grid">
-      <EventCard
-        v-for="event in events"
-        :key="event.id"
-        :event="event"
-      />
+      <EventCard v-for="event in events" :key="event.id" :event="event" />
     </div>
   </div>
 </template>
@@ -29,18 +20,19 @@ const loading = ref(true);
 
 const fetchEvents = async () => {
   try {
-    const eventsQuery = query(
-      collection(db, 'events'),
-      orderBy('createdAt', 'desc')
-    );
-    
+    console.log('Fetching events...');
+    const eventsCollection = collection(db, 'events');
+    const eventsQuery = query(eventsCollection, orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(eventsQuery);
+
     events.value = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     })) as Event[];
+
+    console.log('Fetched events:', events.value);
   } catch (error) {
-    console.error('获取活动列表失败:', error);
+    console.error('Failed to fetch events:', error);
   } finally {
     loading.value = false;
   }
@@ -82,4 +74,4 @@ onMounted(() => {
     grid-template-columns: repeat(3, 1fr);
   }
 }
-</style> 
+</style>

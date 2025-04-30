@@ -130,7 +130,7 @@ const tagsInput = computed({
 
 const handleSubmit = async () => {
   if (!userStore.userProfile) {
-    alert('请先登录');
+    alert('Please log in to publish an event!');
     return;
   }
 
@@ -139,18 +139,22 @@ const handleSubmit = async () => {
     const eventData: Omit<Event, 'id'> = {
       ...formData.value,
       organizerId: userStore.userProfile.uid,
-      organizerName: userStore.userProfile.displayName || '匿名用户',
+      organizerName: userStore.userProfile.displayName || 'Anonymous',
       organizerAvatar: userStore.userProfile.photoURL || '',
       createdAt: new Date().toISOString(),
       participants: []
     };
 
     await addDoc(collection(db, 'events'), eventData);
-    alert('sucessfully publish!');
+    alert('Successfully published!');
+
+    // 调用 fetchEvents 更新事件列表
+    await fetchEvents();
+
     router.push('/events');
   } catch (error) {
-    console.error('OOh…You Fail', error);
-    alert('OOh…You Fail');
+    console.error('Failed to publish event:', error);
+    alert('Failed to publish event.');
   } finally {
     isSubmitting.value = false;
   }
@@ -226,4 +230,4 @@ textarea {
   background: #ccc;
   cursor: not-allowed;
 }
-</style> 
+</style>
