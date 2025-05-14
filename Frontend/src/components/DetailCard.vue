@@ -28,7 +28,7 @@ export default {
 	border: 1px solid #ddd;
 	border-radius: 8px;
 	padding: 16px;
-	margin: 8px 0;
+	margin: 0.5rem 0;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	background-color: white;
 	z-index: 1050; /* 设置 z-index 值 */
