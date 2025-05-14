@@ -3,8 +3,8 @@
     <div class="events-header">
       <h1>Event List🔥</h1>
       <router-link to="/publish" class="publish-btn">
-        <span class="icon">🚀</span>
-        Publish new event
+        <!-- <span class="icon">🚀</span> -->
+        🚀 Publish new event
       </router-link>
     </div>
     <!-- 监听 open-card 事件 -->

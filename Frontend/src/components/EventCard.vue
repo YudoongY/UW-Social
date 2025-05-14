@@ -9,13 +9,14 @@
 </template>
 
 <script setup lang="ts">
+import { useEventDialogStore } from '@/stores/eventDialog';
 import type { Event } from '../types/event';
 
 const props = defineProps<{
   event: Event;
 }>();
 
-const emit = defineEmits(['open-card']);
+const eventDialogStore = useEventDialogStore();
 
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString('zh-CN', {
@@ -26,8 +27,8 @@ const formatDate = (date: string) => {
 };
 
 const handleCardClick = () => {
-  console.log('Card clicked:', props.event); // 添加日志以确认点击事件
-  emit('open-card', props.event);
+  console.log('Card clicked:', props.event);
+  eventDialogStore.openDialog(props.event);
 };
 </script>
 
