@@ -1,7 +1,7 @@
 <template>
   <div class="events-page">
     <div class="events-header">
-      <h1>Event List🔥</h1>
+      <h2>Event List🔥</h2>
       <router-link to="/publish" class="publish-btn">
         <!-- <span class="icon">🚀</span> -->
         🚀 Publish new event
@@ -39,8 +39,8 @@ watch(selectedEvent, (newValue) => {
 <style scoped>
 .events-page {
   padding: 0rem;
-  margin-top: 50px;
-  margin-left: 100px;
+  margin-top: 0px;
+  margin-left: 0px;
   min-height: calc(100vh - 100px);
   background: #f5f5f5;
 }

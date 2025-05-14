@@ -51,7 +51,7 @@ body {
 }
 
 .app-container {
-  padding-top: 50px; /* 让出导航栏的空间 */
+  padding-top: 100px; /* 让出导航栏的空间 */
   min-height: calc(var(--vh, 1vh) * 100); /* 保持全屏 */
   box-sizing: border-box;
 }
