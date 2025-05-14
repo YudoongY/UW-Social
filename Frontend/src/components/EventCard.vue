@@ -2,9 +2,9 @@
   <div class="card event-card" @click="handleCardClick">
     <img :src="event.imageUrl ? event.imageUrl : '/images/default-event.jpg'" alt="event.title" />
     <h3>{{ event.title }}</h3>
-    <p>📅 Date: {{ formatDate(event.date) }}</p>
-    <p>📍 Location: {{ event.location }}</p>
-    <p>{{ event.description }}</p>
+    <p>📅 {{ formatDate(event.date) }}</p>
+    <p>📍 {{ event.location }}</p>
+    <p class="description">{{ event.description }}</p>
   </div>
 </template>
 
@@ -66,5 +66,14 @@ const handleCardClick = () => {
   color: #666;
   margin: 8px 0;
   font-size: 0.9em;
+}
+
+.event-card .description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  height: 4.5em; /* Adjust based on font size and line height */
 }
 </style>
