@@ -6,6 +6,7 @@ import App from './App.vue'
 import router from './router'
 import './firebase' // 确保 Firebase 初始化
 import { ElDialog } from 'element-plus';
+import './assets/form.css';
 
 const app = createApp(App)
 

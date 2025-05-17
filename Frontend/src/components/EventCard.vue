@@ -2,8 +2,11 @@
   <div class="card event-card" @click="handleCardClick">
     <img :src="event.imageUrl ? event.imageUrl : '/images/default-event.jpg'" alt="event.title" />
     <h3>{{ event.title }}</h3>
-    <p>📅 {{ formatDate(event.date) }}</p>
-    <p>📍 {{ event.location }}</p>
+    <p class="event-time">
+      Starts at {{ formatDate(event.startime) }}<br>
+      Ends at {{ formatDate(event.endtime) }}
+    </p>
+    <p>🗺️ {{ event.location }}</p>
     <p class="description">{{ event.description }}</p>
   </div>
 </template>
@@ -18,16 +21,25 @@ const props = defineProps<{
 
 const eventDialogStore = useEventDialogStore();
 
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+// 只显示年月日和小时分钟
+const formatDate = (ts: any) => {
+  if (!ts) return '';
+  const date = typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
+  // 获取时间和日期部分
+  const time = date.toLocaleTimeString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
   });
+  const day = date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  return `${time} ${day}`;
 };
 
 const handleCardClick = () => {
-  console.log('Card clicked:', props.event);
   eventDialogStore.openDialog(props.event);
 };
 </script>
@@ -67,6 +79,14 @@ const handleCardClick = () => {
   color: #666;
   margin: 8px 0;
   font-size: 0.9em;
+}
+
+.event-time {
+  font-size: 1.05em;
+  font-weight: bold;
+  color: #2a4d8f;
+  margin: 10px 0 6px 0;
+  line-height: 1.5;
 }
 
 .event-card .description {

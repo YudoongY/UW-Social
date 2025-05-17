@@ -18,28 +18,48 @@
         <textarea
           id="description"
           v-model="formData.description"
+          type="text"
           required
-          placeholder="Describe your event in detail"
-          rows="4"
+          :placeholder="descriptionPlaceholder"
+          rows="3"
         ></textarea>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="date">Date</label>
+          <label for="startDate">Start Date</label>
           <input
-            id="date"
-            v-model="formData.date"
+            id="startDate"
+            v-model="formData.startDate"
             type="date"
             required
           >
         </div>
-
         <div class="form-group">
-          <label for="time">Time</label>
+          <label for="startTime">Start Time</label>
           <input
-            id="time"
-            v-model="formData.time"
+            id="startTime"
+            v-model="formData.startTime"
+            type="time"
+            required
+          >
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="endDate">End Date</label>
+          <input
+            id="endDate"
+            v-model="formData.endDate"
+            type="date"
+            required
+          >
+        </div>
+        <div class="form-group">
+          <label for="endTime">End Time</label>
+          <input
+            id="endTime"
+            v-model="formData.endTime"
             type="time"
             required
           >
@@ -92,7 +112,7 @@
       </div>
 
       <button type="submit" class="submit-btn" :disabled="isSubmitting">
-        {{ isSubmitting ? 'Publishing...' : 'Publish Event' }}
+        {{ isSubmitting ? 'Publishing...' : 'Publish!' }}
       </button>
     </form>
   </div>
@@ -103,7 +123,7 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { useEventStore } from '../stores/event';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc,Timestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import type { Event } from '../types/event';
 
@@ -115,11 +135,13 @@ const isSubmitting = ref(false);
 const formData = ref({
   title: '',
   description: '',
-  date: '',
-  time: '',
+  startDate: '',
+  startTime: '',
+  endDate: '',
+  endTime: '',
   location: '',
   category: '',
-  maxParticipants: null as number | null, // 默认值为 null
+  maxParticipants: null as number | null,
   tags: [] as string[]
 });
 
@@ -130,6 +152,13 @@ const tagsInput = computed({
   }
 });
 
+// 新增：动态 placeholder
+const descriptionPlaceholder = computed(() =>
+  formData.value.title
+    ? `Come and enjoy ${formData.value.title}!`
+    : 'Describe your event here...'
+);
+
 const handleSubmit = async () => {
   if (!userStore.userProfile) {
     alert('Please log in to publish an event!');
@@ -138,19 +167,33 @@ const handleSubmit = async () => {
 
   isSubmitting.value = true;
   try {
+    const start = new Date(`${formData.value.startDate}T${formData.value.startTime}`);
+    const end = new Date(`${formData.value.endDate}T${formData.value.endTime}`);
+    if (start >= end) {
+      alert('End time must be after start time.');
+      return;
+    }
+    // Prepare eventData with maxParticipants as number or undefined
+    const {
+      maxParticipants,
+      ...restFormData
+    } = formData.value;
+
     const eventData: Omit<Event, 'id'> = {
-      ...formData.value,
+      title: formData.value.title,
+      description: formData.value.description,
+      location: formData.value.location,
+      category: formData.value.category,
+      tags: formData.value.tags,
+      startime: Timestamp.fromDate(start),
+      endtime: Timestamp.fromDate(end),
+      maxParticipants: formData.value.maxParticipants,
       organizerId: userStore.userProfile.uid,
       organizerName: userStore.userProfile.displayName || 'Anonymous',
       organizerAvatar: userStore.userProfile.photoURL || '',
       createdAt: new Date().toISOString(),
-      participants: []
+      participants: [],
     };
-
-    // 如果 maxParticipants 为 null，则移除该字段
-    if (eventData.maxParticipants === null) {
-      delete eventData.maxParticipants;
-    }
 
     await addDoc(collection(db, 'events'), eventData);
     alert('Successfully published!');
@@ -184,57 +227,20 @@ h2 {
   text-align: center;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
 label {
   display: block;
   margin-bottom: 0.5rem;
   color: #666;
   font-weight: 500;
 }
-
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
+#description::placeholder {
+  font-weight: 500;
+}
+#title,
+#description,
+#location {
+  /* font-weight: 600; */
+  border-width: 2px;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.submit-btn {
-  width: 100%;
-  padding: 1rem;
-  background: #b388eb;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.submit-btn:hover {
-  background: #9c6ad6;
-}
-
-.submit-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
 </style>

@@ -110,7 +110,7 @@ nav {
 .logo {
   height: 60px;
   width: auto;
-  margin: 0 10px;
+  margin: 5px 10px 0 10px;
 }
 
 a, .welcome-text {

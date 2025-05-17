@@ -2,8 +2,8 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  date: string;
-  time: string;
+  startime: any;
+  endtime: any;
   location: string;
   category: string;
   imageUrl?: string;
@@ -12,6 +12,6 @@ export interface Event {
   organizerAvatar: string;
   createdAt: string;
   participants: string[];
-  maxParticipants?: number;
+  maxParticipants: number | null;
   tags: string[];
 } 
