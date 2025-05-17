@@ -1,48 +1,95 @@
 <template>
-  <div class="events-page">
-    <div class="events-header">
-      <h2>Event List🔥</h2>
-      <router-link to="/publish" class="publish-btn">
-        <!-- <span class="icon">🚀</span> -->
-        🚀 Publish new event
-      </router-link>
-    </div>
-    <!-- 监听 open-card 事件 -->
-    <EventList @open-card="openCard" />
+  <div class="events-page-with-sidebar">
+    <el-container>
+      <el-aside width="200px" class="sidebar">
+        <el-menu
+          :default-active="categoryFilter"
+          @select="handleCategorySelect"
+          class="category-menu"
+        >
+          <el-menu-item index="">All</el-menu-item>
+          <el-menu-item index="academic">Academic</el-menu-item>
+          <el-menu-item index="club">Club</el-menu-item>
+          <el-menu-item index="sports">Sports</el-menu-item>
+          <el-menu-item index="videogames">Videogames</el-menu-item>
+          <el-menu-item index="culture">Culture</el-menu-item>
+          <el-menu-item index="interest">Interest</el-menu-item>
+          <el-menu-item index="HFS">HFS</el-menu-item>
+        </el-menu>
+      </el-aside>
+      <el-main>
+        <div class="events-header">
+          <h2>Event List🔥</h2>
+          <router-link to="/publish" class="publish-btn">
+            🚀 Publish new event
+          </router-link>
+        </div>
+        <!-- 监听 open-card 事件 -->
+        <EventList :category="categoryFilter" @open-card="openCard" />
 
-    <!-- 弹窗 -->
-    <ElDialog v-model="isDialogOpen" title="Event Details" class="custom-dialog">
-      <DetailCard v-if="selectedEvent" :event="selectedEvent" />
-    </ElDialog>
+        <!-- 弹窗 -->
+        <ElDialog v-model="isDialogOpen" title="Event Details" class="custom-dialog">
+          <DetailCard v-if="selectedEvent" :event="selectedEvent" />
+        </ElDialog>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import EventList from '../components/EventList.vue';
 import DetailCard from '../components/DetailCard.vue';
 
 const isDialogOpen = ref(false);
 const selectedEvent = ref(null);
+const categoryFilter = ref('');
 
-const openCard = (event: null) => {
-  console.log('Event received in openCard:', event); // 添加日志以确认事件接收
+const openCard = (event: any) => {
   selectedEvent.value = event;
   isDialogOpen.value = true;
 };
 
-watch(selectedEvent, (newValue) => {
-  console.log('Selected Event:', newValue);
-});
+const handleCategorySelect = (key: string) => {
+  categoryFilter.value = key;
+};
 </script>
 
 <style scoped>
-.events-page {
-  padding: 0rem;
-  margin-top: 0px;
-  margin-left: 0px;
+.events-page-with-sidebar {
   min-height: calc(100vh - 100px);
   background: #f5f5f5;
+}
+.sidebar {
+  background: #f6f7fb;
+  border-right: none;
+  min-height: 100vh;
+  padding-top: 2rem;
+  box-shadow: 2px 0 8px rgba(180, 140, 255, 0.08);
+  border-radius: 0 20px 20px 0;
+}
+
+.category-menu {
+  border: none;
+  background: transparent;
+  padding: 0 0.5rem;
+}
+
+.el-menu-item {
+  border-radius: 8px !important;
+  margin: 0.5rem 0;
+  font-weight: 500;
+  font-size: 1.08rem;
+  color: #6c63ff !important;
+  transition: background 0.2s, color 0.2s;
+}
+
+.el-menu-item.is-active,
+.el-menu-item:hover {
+  background: linear-gradient(90deg, #b388eb 0%, #6c63ff 100%) !important;
+  color: #fff !important;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.08);
 }
 
 .events-header {
@@ -55,6 +102,12 @@ watch(selectedEvent, (newValue) => {
   margin-right: auto;
 }
 
+.events-header h2 {
+  color: #6c63ff;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
 h1 {
   color: #333;
   margin: 0;
@@ -65,18 +118,20 @@ h1 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #b388eb;
-  color: white;
+  background: linear-gradient(90deg, #b388eb 0%, #6c63ff 100%);
+  color: #fff;
   padding: 0.8rem 1.5rem;
   border-radius: 25px;
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.3s;
   margin-right: 50px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.08);
 }
 
 .publish-btn:hover {
-  background: #9c6ad6;
+  background: linear-gradient(90deg, #9c6ad6 0%, #6c63ff 100%);
 }
 
 .icon {

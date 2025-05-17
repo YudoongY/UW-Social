@@ -10,10 +10,10 @@
       <div class="profile-menu">
         <ul>
           <li><a href="#" @click="showSection('default')">🏠 Profile Home</a></li>
-          <!-- <li><a href="#" @click="showSection('friends')">👥 My Friends</a></li>
-          <li><a href="#" @click="showSection('recommendations')">✨ People You May Know</a></li> -->
+          <li><a href="#" @click="showSection('friends')">👥 My Friends</a></li>
+          <li><a href="#" @click="showSection('recommendations')">✨ People You May Know</a></li>
           <li><a href="#" @click="showSection('published')">📅 Published Events</a></li>
-          <!-- <li><a href="#" @click="showSection('participated')">🎯 Participated Events</a></li> -->
+          <li><a href="#" @click="showSection('participated')">🎯 Participated Events</a></li>
           <li><a href="#" @click="showSection('achievements')">🏆 Your Achievement</a></li>
         </ul>
       </div>

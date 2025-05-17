@@ -14,6 +14,7 @@
 <script setup lang="ts">
 import { useEventDialogStore } from '../stores/eventDialog';
 import type { Event } from '../types/event';
+import '../assets/eventcard.css';
 
 const props = defineProps<{
   event: Event;
@@ -43,58 +44,3 @@ const handleCardClick = () => {
   eventDialogStore.openDialog(props.event);
 };
 </script>
-
-<style scoped>
-.card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin: 15px;
-  width: 300px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-}
-
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-}
-
-.event-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-.event-card h3 {
-  margin: 10px 0;
-  color: #333;
-  font-size: 1.2em;
-}
-
-.event-card p {
-  color: #666;
-  margin: 8px 0;
-  font-size: 0.9em;
-}
-
-.event-time {
-  font-size: 1.05em;
-  font-weight: bold;
-  color: #2a4d8f;
-  margin: 10px 0 6px 0;
-  line-height: 1.5;
-}
-
-.event-card .description {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
-  -webkit-box-orient: vertical;
-  height: 4.5em; /* Adjust based on font size and line height */
-}
-</style>

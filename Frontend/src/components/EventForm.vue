@@ -83,10 +83,12 @@
           <option value="">Select category</option>
           <option value="academic">Academic</option>
           <option value="club">Club</option>
-          <option value="HFS">HFS</option>
-          <option value="interest">Interest</option>
+          <option value="sports">Sports</option>
+          <option value="videogames">Videogames</option>
           <option value="culture">Culture</option>
-          <option value="other">Other</option>
+          <option value="interest">Interest</option>
+          <option value="HFS">HFS</option>
+          <!-- <option value="other">Other</option> -->
         </select>
       </div>
 
