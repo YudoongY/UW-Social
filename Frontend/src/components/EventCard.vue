@@ -1,12 +1,12 @@
 <template>
   <div class="card event-card" @click="handleCardClick">
-    <img :src="event.imageUrl ? event.imageUrl : '/images/default-event.jpg'" alt="event.title" />
+    <!-- <img :src="event.imageUrl ? event.imageUrl : '/images/default-event.jpg'" alt="event.title" /> -->
     <h3>{{ event.title }}</h3>
     <p class="event-time">
       Starts at {{ formatDate(event.startime) }}<br>
       Ends at {{ formatDate(event.endtime) }}
     </p>
-    <p>🗺️ {{ event.location }}</p>
+    <p>Location: {{ event.location }}</p>
     <p class="description">{{ event.description }}</p>
   </div>
 </template>

@@ -1,7 +1,6 @@
 <template>
 	<div class="card">
 		<h2 class="card-title">{{ event.title }}</h2>
-		<p class="card-description">{{ event.description }}</p>
 		<p class="event-time">
 			Starts at {{ formatDate(event.startime) }}<br />
 			Ends at {{ formatDate(event.endtime) }}
@@ -10,6 +9,7 @@
 		<p class="card-category">📂 {{ event.category }}</p>
 		<p v-if="event.maxParticipants" class="card-max">👥 Max: {{ event.maxParticipants }}</p>
 		<p v-if="event.tags && event.tags.length" class="card-tags">🏷️ {{ event.tags.join(', ') }}</p>
+		<p class="card-description">{{ event.description }}</p>
 	</div>
 </template>
 

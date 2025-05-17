@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useEventStore } from '@/stores/event';
+import { useEventStore } from '../stores/event';
 import EventCard from './EventCard.vue';
 
 const eventStore = useEventStore();
