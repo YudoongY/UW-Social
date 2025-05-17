@@ -11,7 +11,7 @@
           <el-menu-item index="academic">Academic</el-menu-item>
           <el-menu-item index="club">Club</el-menu-item>
           <el-menu-item index="sports">Sports</el-menu-item>
-          <el-menu-item index="videogames">Videogames</el-menu-item>
+          <el-menu-item index="games">Games</el-menu-item>
           <el-menu-item index="culture">Culture</el-menu-item>
           <el-menu-item index="interest">Interest</el-menu-item>
           <el-menu-item index="HFS">HFS</el-menu-item>
@@ -40,6 +40,7 @@
 import { ref } from 'vue';
 import EventList from '../components/EventList.vue';
 import DetailCard from '../components/DetailCard.vue';
+import '../assets/sidebar.css';
 
 const isDialogOpen = ref(false);
 const selectedEvent = ref(null);
@@ -59,37 +60,6 @@ const handleCategorySelect = (key: string) => {
 .events-page-with-sidebar {
   min-height: calc(100vh - 100px);
   background: #f5f5f5;
-}
-.sidebar {
-  background: #f6f7fb;
-  border-right: none;
-  min-height: 100vh;
-  padding-top: 2rem;
-  box-shadow: 2px 0 8px rgba(180, 140, 255, 0.08);
-  border-radius: 0 20px 20px 0;
-}
-
-.category-menu {
-  border: none;
-  background: transparent;
-  padding: 0 0.5rem;
-}
-
-.el-menu-item {
-  border-radius: 8px !important;
-  margin: 0.5rem 0;
-  font-weight: 500;
-  font-size: 1.08rem;
-  color: #6c63ff !important;
-  transition: background 0.2s, color 0.2s;
-}
-
-.el-menu-item.is-active,
-.el-menu-item:hover {
-  background: linear-gradient(90deg, #b388eb 0%, #6c63ff 100%) !important;
-  color: #fff !important;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.08);
 }
 
 .events-header {

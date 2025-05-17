@@ -47,20 +47,21 @@ onMounted(() => {
 
 .events-grid {
   display: grid;
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  grid-template-columns: repeat(3, 1fr); /* 固定3列 */
+  gap: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem 0;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 900px) {
   .events-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
-@media (min-width: 1200px) {
+@media (max-width: 600px) {
   .events-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
   }
 }
 </style>

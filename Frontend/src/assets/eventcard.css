@@ -5,6 +5,9 @@
   border: none;
   transition: box-shadow 0.2s;
   cursor: pointer; /* 鼠标悬浮时变成小手 */
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1.5rem;
 }
 
 .card.event-card:hover {
@@ -46,4 +49,10 @@
   -webkit-line-clamp: 3; /* Limit to 3 lines */
   -webkit-box-orient: vertical;
   height: 4.5em; /* Adjust based on font size and line height */
+}
+
+.card.event-card h3,
+.card.event-card p {
+  word-break: break-word;
+  overflow-wrap: break-word;
 }

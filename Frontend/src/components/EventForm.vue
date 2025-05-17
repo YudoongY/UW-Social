@@ -84,7 +84,7 @@
           <option value="academic">Academic</option>
           <option value="club">Club</option>
           <option value="sports">Sports</option>
-          <option value="videogames">Videogames</option>
+          <option value="games">Games</option>
           <option value="culture">Culture</option>
           <option value="interest">Interest</option>
           <option value="HFS">HFS</option>

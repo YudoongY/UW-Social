@@ -1,0 +1,31 @@
+.sidebar {
+  background: #f6f7fb;
+  border-right: none;
+  min-height: 100vh;
+  padding-top: 2rem;
+  box-shadow: 2px 0 8px rgba(180, 140, 255, 0.08);
+  border-radius: 0 20px 20px 0;
+}
+
+.category-menu {
+  border: none;
+  background: transparent;
+  padding: 0 0.5rem;
+}
+
+.el-menu-item {
+  border-radius: 8px !important;
+  margin: 0.5rem 0;
+  font-weight: 500;
+  font-size: 1.08rem;
+  color: #6c63ff !important;
+  transition: background 0.2s, color 0.2s;
+}
+
+.el-menu-item.is-active,
+.el-menu-item:hover {
+  background: linear-gradient(90deg, #b388eb 0%, #6c63ff 100%) !important;
+  color: #fff !important;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.08);
+}
