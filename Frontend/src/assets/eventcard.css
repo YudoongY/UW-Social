@@ -34,10 +34,10 @@
   font-size: 0.9em;
 }
 
-.event-time {
-  font-size: 1.05em;
+.event-card .event-time {
+  font-size: 1em;
   font-weight: bold;
-  color: #2a4d8f;
+  color: #1c6fc1; /* 更鲜明的蓝色 */
   margin: 10px 0 6px 0;
   line-height: 1.5;
 }
@@ -55,4 +55,26 @@
 .card.event-card p {
   word-break: break-word;
   overflow-wrap: break-word;
+}
+
+.event-title.category-academic {
+  color: #062e56; /* 深蓝 */
+}
+.event-title.category-club {
+  color: #ff9800; /* 橙色 */
+}
+.event-title.category-sports {
+  color: #43a047; /* 绿色 */
+}
+.event-title.category-videogames {
+  color: #8e24aa; /* 紫色 */
+}
+.event-title.category-culture {
+  color: #e53935; /* 红色 */
+}
+.event-title.category-interest {
+  color: #0097a7; /* 青色 */
+}
+.event-title.category-HFS {
+  color: #6d4c41; /* 棕色 */
 }

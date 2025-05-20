@@ -1,7 +1,7 @@
 <template>
   <div class="card event-card" @click="handleCardClick">
     <!-- <img :src="event.imageUrl ? event.imageUrl : '/images/default-event.jpg'" alt="event.title" /> -->
-    <h3>{{ event.title }}</h3>
+    <h3 :class="['event-title', `category-${event.category}`]">{{ event.title }}</h3>
     <p class="event-time">
       Starts at {{ formatDate(event.startime) }}<br>
       Ends at {{ formatDate(event.endtime) }}
