@@ -57,6 +57,13 @@
   overflow-wrap: break-word;
 }
 
+.event-link a,
+.card-link a {
+  color: #1976d2;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
 .event-title.category-academic {
   color: #062e56; /* 深蓝 */
 }

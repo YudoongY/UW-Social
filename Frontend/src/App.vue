@@ -46,12 +46,12 @@ window.addEventListener('resize', () => {
 body {
   margin: 0;
   font-family: 'Helvetica Neue', sans-serif;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   min-height: 100vh;
 }
 
 .app-container {
-  padding-top: 100px; /* 让出导航栏的空间 */
+  padding-top: 70px; /* 让出导航栏的空间 */
   min-height: calc(var(--vh, 1vh) * 100); /* 保持全屏 */
   box-sizing: border-box;
 }

@@ -10,6 +10,9 @@
 		<p v-if="event.maxParticipants" class="card-max">👥 Max: {{ event.maxParticipants }}</p>
 		<p v-if="event.tags && event.tags.length" class="card-tags">🏷️ {{ event.tags.join(', ') }}</p>
 		<p class="card-description">{{ event.description }}</p>
+				<p v-if="event.link" class="card-link">
+		  <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
+		</p>
 	</div>
 </template>
 

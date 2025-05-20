@@ -8,6 +8,9 @@
     </p>
     <p>Location: {{ event.location }}</p>
     <p class="description">{{ event.description }}</p>
+        <p v-if="event.link" class="event-link">
+      <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
+    </p>
   </div>
 </template>
 

@@ -22,6 +22,7 @@ nav {
   max-width: 1400px;
   margin: auto;
   overflow: hidden;
+  font-size: 1.15rem; /* 新增或调整 */
 }
 
 .nav-items {
@@ -32,13 +33,13 @@ nav {
 }
 
 .nav-items .left-link a {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   margin: 0 15px;
   white-space: nowrap;
 }
 
 .nav-items .right-link a {
-  font-size: 1rem;
+  font-size: 1.10rem;
   white-space: nowrap;
 }
 
@@ -92,4 +93,8 @@ a:hover {
 .login-btn:hover {
   background-color: #ffd700;
   color: #000 !important;
+}
+
+.welcome-text {
+  font-size: 1.08rem;
 }

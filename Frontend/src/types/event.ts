@@ -14,4 +14,5 @@ export interface Event {
   participants: string[];
   maxParticipants: number | null;
   tags: string[];
+  link?: string;
 } 

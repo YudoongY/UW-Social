@@ -113,6 +113,25 @@
         >
       </div>
 
+      <!-- <div class="form-group">
+        <label for="image">Event Image (Optional)</label>
+        <input
+          id="image"
+          type="file"
+          accept="image/*"
+          @change="handleImageUpload"
+        > -->
+
+      <div class="form-group">
+        <label for="link">Event Link (Optional)</label>
+        <input
+          id="link"
+          v-model="formData.link"
+          type="url"
+          placeholder="e.g., https://meeting.com/your-event"
+        >
+      </div>
+
       <button type="submit" class="submit-btn" :disabled="isSubmitting">
         {{ isSubmitting ? 'Publishing...' : 'Publish!' }}
       </button>
@@ -144,7 +163,8 @@ const formData = ref({
   location: '',
   category: '',
   maxParticipants: null as number | null,
-  tags: [] as string[]
+  tags: [] as string[],
+  link: '',
 });
 
 const tagsInput = computed({
@@ -195,6 +215,7 @@ const handleSubmit = async () => {
       organizerAvatar: userStore.userProfile.photoURL || '',
       createdAt: new Date().toISOString(),
       participants: [],
+      link: formData.value.link,
     };
 
     await addDoc(collection(db, 'events'), eventData);

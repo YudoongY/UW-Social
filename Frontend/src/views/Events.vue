@@ -66,7 +66,7 @@ const handleCategorySelect = (key: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 0rem;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
