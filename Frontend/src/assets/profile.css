@@ -158,6 +158,13 @@
   margin: 1rem 0;
   flex: 1;
   min-width: 250px;
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.event-card-horizontal:hover {
+  box-shadow: 0 4px 16px rgba(108, 99, 255, 0.12);
+  background: #f3f0fa;
 }
 
 .event-card h4 {
