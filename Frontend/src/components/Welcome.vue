@@ -19,7 +19,7 @@ const isHomePage = route.path === '/';
   margin: 0;
   padding: 0;
   text-align: center;
-  margin-top: 20px; /* 适当调一下距离，看着舒服点 */
+  margin-top: 20px;
 }
 
   .main-content {

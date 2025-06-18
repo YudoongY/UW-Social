@@ -12,6 +12,7 @@
 				<p v-if="event.link" class="card-link">
 		  <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
 		</p>
+		<!-- Edit button and delete button should be here. -->
 	</div>
 </template>
 
