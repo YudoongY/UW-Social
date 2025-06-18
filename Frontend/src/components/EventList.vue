@@ -38,7 +38,7 @@ const filteredEvents = computed(() => {
   return events.slice().sort((a, b) => {
     const aTime = typeof a.startime?.toDate === 'function' ? a.startime.toDate() : new Date(a.startime);
     const bTime = typeof b.startime?.toDate === 'function' ? b.startime.toDate() : new Date(b.startime);
-    return bTime.getTime() - aTime.getTime();
+    return aTime.getTime() - bTime.getTime();
   });
 });
 
