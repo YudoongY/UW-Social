@@ -41,7 +41,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory("/UW-Social/"),
+  history: createWebHistory("/"),
   routes
 })
 

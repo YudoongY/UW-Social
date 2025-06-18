@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/AnnieYe17/UW-social/issues"
   },
-  "homepage": "https://github.com/AnnieYe17/UW-social#readme"
+  "homepage": "https://github.com/AnnieYe17/UW-social#readme",
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4"
+  }
 }
