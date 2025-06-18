@@ -62,6 +62,10 @@ const handleCategorySelect = (key: string) => {
   background: #f5f5f5;
 }
 
+.events-page-with-sidebar .el-main {
+  margin-left: 160px; /* 与 sidebar 宽度一致 */
+}
+
 .events-header {
   display: flex;
   justify-content: space-between;

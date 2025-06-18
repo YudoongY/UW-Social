@@ -81,12 +81,12 @@
         <label for="category">Category</label>
         <select id="category" v-model="formData.category" required>
           <option value="">Select category</option>
-          <option value="academic">Academic</option>
-          <option value="club">Club</option>
-          <option value="sports">Sports</option>
-          <option value="games">Games</option>
-          <option value="culture">Culture</option>
-          <option value="interest">Interest</option>
+          <option value="Academic">Academic</option>
+          <option value="Club">Club</option>
+          <option value="Sports">Sports</option>
+          <option value="Games">Games</option>
+          <option value="Culture">Culture</option>
+          <option value="Interest">Interest</option>
           <option value="HFS">HFS</option>
           <!-- <option value="other">Other</option> -->
         </select>

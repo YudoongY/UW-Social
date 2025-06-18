@@ -2,14 +2,13 @@
 	<div class="card">
 		<h2 class="card-title">{{ event.title }}</h2>
 		<p class="event-time">
-			Starts at {{ formatDate(event.startime) }}<br />
-			Ends at {{ formatDate(event.endtime) }}
+			{{ formatDate(event.startime) }}--{{ formatDate(event.endtime) }}
 		</p>
 		<p class="card-location"> Location: {{ event.location }}</p>
 		<p class="card-category">📂 {{ event.category }}</p>
 		<p v-if="event.maxParticipants" class="card-max">👥 Max: {{ event.maxParticipants }}</p>
 		<p v-if="event.tags && event.tags.length" class="card-tags">🏷️ {{ event.tags.join(', ') }}</p>
-		<p class="card-description">{{ event.description }}</p>
+		<p class="card-description" v-html="formatDescription(event.description)"></p>
 				<p v-if="event.link" class="card-link">
 		  <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
 		</p>
@@ -28,17 +27,24 @@ const props = defineProps<{
 const formatDate = (ts: any) => {
     if (!ts) return '';
     const date = typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
-    const time = date.toLocaleTimeString(undefined, {
+    // 获取小时、分钟和 AM/PM
+    let [time, ampm] = date.toLocaleTimeString(undefined, {
         hour: '2-digit',
         minute: '2-digit',
         hour12: true,
-    });
+    }).split(' ');
+    ampm = ampm?.toLowerCase() || '';
+    // 获取月和日
     const day = date.toLocaleDateString(undefined, {
-        year: 'numeric',
         month: '2-digit',
         day: '2-digit',
     });
-    return `${time} ${day}`;
+    return `${time}${ampm} ${day}`;
+};
+
+const formatDescription = (desc: string) => {
+    if (!desc) return '';
+    return desc.replace(/\n/g, '<br>');
 };
 </script>
 
