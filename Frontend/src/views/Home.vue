@@ -36,7 +36,7 @@ import EventList from '@/components/EventList.vue';
 .events-section h2 {
   text-align: center;
   color: #333;
-  margin-bottom: 0.5rem;
+  margin-bottom: -0.5rem;
   font-size: 1.5rem;
 }
 </style>

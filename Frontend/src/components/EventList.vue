@@ -51,7 +51,7 @@ onMounted(() => {
 
 <style scoped>
 .event-list {
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .loading,
@@ -65,7 +65,7 @@ onMounted(() => {
 .events-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 固定3列 */
-    gap: 2rem;
+    gap: 2rem 1.2rem;
     width: 100%;
     box-sizing: border-box;
     padding: 1rem 0;
