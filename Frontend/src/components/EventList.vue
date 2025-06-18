@@ -21,47 +21,64 @@ const props = defineProps<{ category?: string }>();
 const eventStore = useEventStore();
 
 const filteredEvents = computed(() => {
-  if (!props.category) return eventStore.events;
-  return eventStore.events.filter(e => e.category === props.category);
+  let events = !props.category
+    ? eventStore.events
+    : eventStore.events.filter(e => e.category === props.category);
+
+  // 只显示未过期活动
+  const now = new Date();
+  events = events.filter(e => {
+    const end = typeof e.endtime?.toDate === 'function'
+      ? e.endtime.toDate()
+      : new Date(e.endtime);
+    return end > now;
+  });
+
+  // 按开始时间倒序
+  return events.slice().sort((a, b) => {
+    const aTime = typeof a.startime?.toDate === 'function' ? a.startime.toDate() : new Date(a.startime);
+    const bTime = typeof b.startime?.toDate === 'function' ? b.startime.toDate() : new Date(b.startime);
+    return bTime.getTime() - aTime.getTime();
+  });
 });
 
 onMounted(() => {
-  if (eventStore.events.length === 0) {
-    eventStore.fetchEvents();
-  }
+    if (eventStore.events.length === 0) {
+        eventStore.fetchEvents();
+    }
 });
 </script>
 
 <style scoped>
 .event-list {
-  padding: 2rem;
+    padding: 2rem;
 }
 
 .loading,
 .no-events {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-  font-size: 1.1rem;
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-size: 1.1rem;
 }
 
 .events-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 固定3列 */
-  gap: 2rem;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 1rem 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 固定3列 */
+    gap: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1rem 0;
 }
 
 @media (max-width: 900px) {
-  .events-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    .events-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 @media (max-width: 600px) {
-  .events-grid {
-    grid-template-columns: 1fr;
-  }
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
