@@ -12,7 +12,7 @@
           type="text"
           placeholder="Find any campus events you like..."
           class="home-search-input"
-          title="search by event title, tag, or organizer"
+          title="search by event title, tag, or organizer's name"
         />
         <button @click="handleHomeSearch" class="home-search-btn">🔍</button>
       </div>
@@ -71,8 +71,8 @@ function handleHomeSearch() {
   margin: 32px 0 24px 0;
 }
 .home-search-input {
-  width: 420px;
-  max-width: 90vw;
+  width: 40vw;           /* 占据屏幕一半宽度 */
+  max-width: 700px;      /* 可根据需要调整最大宽度 */
   padding: 1.1rem 1.5rem;
   font-size: 1.2rem;
   border-radius: 32px 0 0 32px;

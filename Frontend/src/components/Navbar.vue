@@ -23,6 +23,7 @@
                 type="text"
                 placeholder="Search events..."
                 class="navbar-search-input"
+                title="type in event title, tag, or organizer's name"
               />
             </div>
           </div>

@@ -33,6 +33,7 @@ const filteredEvents = computed(() => {
     events = events.filter(e =>
       e.title.toLowerCase().includes(q) ||
       e.description.toLowerCase().includes(q) ||
+      (e.location && e.location.toLowerCase().includes(q)) ||
       (e.tags && e.tags.join(',').toLowerCase().includes(q)) ||
       (e.organizerName && e.organizerName.toLowerCase().includes(q))
     );
