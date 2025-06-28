@@ -91,9 +91,16 @@ onMounted(() => {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-@media (max-width: 600px) {
+@media (max-width: 576px) {
+    .event-list {
+        padding: 0.2rem; /* 左右边距几乎为0 */
+    }
     .events-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem 0.5rem;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.2rem 0;
     }
 }
 </style>

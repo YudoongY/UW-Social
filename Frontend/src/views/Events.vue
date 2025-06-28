@@ -37,14 +37,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import EventList from '../components/EventList.vue';
 import DetailCard from '../components/DetailCard.vue';
 import '../assets/sidebar.css';
 
+const route = useRoute();
 const isDialogOpen = ref(false);
 const selectedEvent = ref(null);
-const categoryFilter = ref('');
+const categoryFilter = ref(route.query.category || '');
+
+watch(
+  () => route.query.category,
+  (val) => {
+    categoryFilter.value = val || '';
+  }
+);
 
 const openCard = (event: any) => {
   selectedEvent.value = event;

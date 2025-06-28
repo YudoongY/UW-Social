@@ -1,6 +1,5 @@
 <template>
   <div>
-    <NavBar></NavBar>
     <!-- 仅在首页渲染 Welcome -->
     <div v-if="$route.path === '/'" class="welcome-container">
       <Welcome />
