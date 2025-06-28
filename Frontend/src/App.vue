@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <Navbar />
+    <MobileNav v-if="isMobile" />
+    <Navbar v-else />
     <div class="content">
       <router-view></router-view>
     </div>
@@ -14,17 +15,41 @@
 
 <script setup lang="ts">
 import Navbar from './components/Navbar.vue';
+import MobileNav from '@/components/mobile/MobileNav.vue';
 import { useEventDialogStore } from './stores/eventDialog.ts';
 import DetailCard from '@/components/DetailCard.vue';
+import { onMounted, ref, onUnmounted } from 'vue';
+
+const isMobile = ref(window.innerWidth <= 576);
+
+function updateIsMobile() {
+  isMobile.value = window.innerWidth <= 576;
+}
+
+onMounted(() => {
+  updateIsMobile();
+  window.addEventListener('resize', updateIsMobile);
+
+  // 动态设置视口高度，解决移动端 100vh 问题
+  const setVh = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
+  setVh();
+  window.addEventListener('resize', setVh);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateIsMobile);
+  window.removeEventListener('resize', setVh);
+});
 
 const eventDialogStore = useEventDialogStore();
-
-// 动态设置视口高度，解决移动端 100vh 问题
-window.addEventListener('resize', () => {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-});
 </script>
+
+function ref(arg0: boolean) {
+  throw new Error('Function not implemented.');
+}
 
 <style scoped>
 .custom-dialog {
@@ -34,6 +59,7 @@ window.addEventListener('resize', () => {
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 </style>
 
 <style>

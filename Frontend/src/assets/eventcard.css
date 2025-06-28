@@ -105,3 +105,17 @@
   word-break: break-all;
   max-width: 100%;
 }
+
+@media (max-width: 576px) {
+  .card.event-card {
+    padding: 0.7rem 0.4rem; /* 更窄的内边距 */
+    border-radius: 10px;
+  }
+  .event-title {
+    font-size: 1em; /* 标题字体更小 */
+  }
+  .event-card p {
+    font-size: 0.85em; /* 正文字体略小 */
+    margin: 6px 0;
+  }
+}

@@ -16,14 +16,29 @@
 import { computed, onMounted } from 'vue';
 import { useEventStore } from '../stores/event';
 import EventCard from './EventCard.vue';
+import { useRoute } from 'vue-router';
 
 const props = defineProps<{ category?: string }>();
 const eventStore = useEventStore();
+const route = useRoute();
 
 const filteredEvents = computed(() => {
   let events = !props.category
     ? eventStore.events
     : eventStore.events.filter(e => e.category === props.category);
+
+  // 搜索过滤
+  const q = (route.query.q as string || '').toLowerCase();
+  if (q) {
+    events = events.filter(e =>
+      e.title.toLowerCase().includes(q) ||
+      e.description.toLowerCase().includes(q) ||
+      (e.location && e.location.toLowerCase().includes(q)) ||
+      (e.tags && e.tags.join(',').toLowerCase().includes(q)) ||
+      (e.organizerName && e.organizerName.toLowerCase().includes(q))
+    );
+    //考虑更精细的筛选，比如按时间，比如tags selection，比如直接输入09/25搜索09月25日的活动
+  }
 
   // 只显示未过期活动
   const now = new Date();
@@ -69,7 +84,7 @@ onMounted(() => {
 .events-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 固定3列 */
-    gap: 2rem 1.2rem;
+    gap: 2.1rem 1.5rem;
     width: 100%;
     box-sizing: border-box;
     padding: 1rem 0;
@@ -80,9 +95,16 @@ onMounted(() => {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-@media (max-width: 600px) {
+@media (max-width: 576px) {
+    .event-list {
+        padding: 0.2rem; /* 左右边距几乎为0 */
+    }
     .events-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem 0.5rem;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.2rem 0;
     }
 }
 </style>
