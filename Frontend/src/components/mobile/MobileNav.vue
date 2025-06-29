@@ -54,7 +54,7 @@ const router = useRouter();
 
 function handleMobileSearch() {
   if (mobileSearch.value.trim()) {
-    router.push({ path: "/events", query: { q: mobileSearch.value.trim() } });
+    router.push({ path: "/", query: { q: mobileSearch.value.trim() } });
     mobileSearch.value = "";
   }
 }
