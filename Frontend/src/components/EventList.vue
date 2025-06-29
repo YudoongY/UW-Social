@@ -1,6 +1,6 @@
 <template>
   <div class="event-list">
-    <div v-if="filteredEvents.length === 0" class="loading">No events found.</div>
+    <div v-if="filteredEvents.length === 0" class="loading">No events found. You may need a VPN.</div>
     <div v-else class="events-grid">
       <EventCard
         v-for="event in filteredEvents"

@@ -198,7 +198,7 @@ function selectCategory(key: string) {
 
 .category-btn.active,
 .category-btn:active {
-  background: #c64c6c; /* 姑且用这个颜色 */
+  background: #f8db00; /* 姑且用这个颜色 */
   color: #fff;
 }
 

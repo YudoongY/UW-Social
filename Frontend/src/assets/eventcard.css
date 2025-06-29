@@ -61,7 +61,7 @@
 }
 
 .event-card .event-time {
-  font-size: 1em;
+  /* font-size: 1em; */
   font-weight: bold;
   color: #1c6fc1; /* 更鲜明的蓝色 */
   margin: 10px 0 6px 0;
@@ -112,7 +112,7 @@
     border-radius: 10px;
   }
   .event-title {
-    font-size: 1em; /* 标题字体更小 */
+    font-size: 0.3em; /* 标题字体更小 */
   }
   .event-card p {
     font-size: 0.85em; /* 正文字体略小 */
