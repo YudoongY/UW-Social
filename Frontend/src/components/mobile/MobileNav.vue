@@ -73,7 +73,7 @@ const categories = [
   { key: "club", label: "Club", icon: "club.svg" },
   { key: "sports", label: "Sports", icon: "sports.svg" },
   { key: "games", label: "Games", icon: "games.svg" },
-  { key: "culture", label: "Culture", icon: "culture.svg" },
+  { key: "culture", label: "Culture", icon: "culture.svg" }, // Problem here
   { key: "interest", label: "Interest", icon: "interest.svg" },
   { key: "hfs", label: "HFS", icon: "hfs.svg" },
 ];
