@@ -7,9 +7,8 @@ const routes = [
     path: '/',
     name: 'Home',
     component: isMobile()
-      ? () => import('@/components/mobile/MobileEvents.vue')
-      : () => import('@/views/Events.vue')
-
+      ? () => import('@/components/mobile/MobileHome.vue')
+      : () => import('@/views/Home.vue')
   },
   {
     path: '/login',
