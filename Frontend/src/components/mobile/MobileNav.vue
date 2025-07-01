@@ -54,7 +54,7 @@ const router = useRouter();
 
 function handleMobileSearch() {
   if (mobileSearch.value.trim()) {
-    router.push({ path: "/events", query: { q: mobileSearch.value.trim() } });
+    router.push({ path: "/", query: { q: mobileSearch.value.trim() } });
     mobileSearch.value = "";
   }
 }
@@ -73,7 +73,7 @@ const categories = [
   { key: "club", label: "Club", icon: "club.svg" },
   { key: "sports", label: "Sports", icon: "sports.svg" },
   { key: "games", label: "Games", icon: "games.svg" },
-  { key: "culture", label: "Culture", icon: "culture.svg" },
+  { key: "culture", label: "Culture", icon: "culture.svg" }, // Problem here
   { key: "interest", label: "Interest", icon: "interest.svg" },
   { key: "hfs", label: "HFS", icon: "hfs.svg" },
 ];
@@ -198,7 +198,7 @@ function selectCategory(key: string) {
 
 .category-btn.active,
 .category-btn:active {
-  background: #c64c6c; /* 姑且用这个颜色 */
+  background: #f8db00; /* 姑且用这个颜色 */
   color: #fff;
 }
 

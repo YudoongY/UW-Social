@@ -1,5 +1,5 @@
 <template>
-  <div class="mobile-events-page">
+  <div class="mobile-home-page">
     <!-- 事件列表 -->
     <EventList :category="selectedCategory" />
   </div>
@@ -27,7 +27,7 @@ function selectCategory(key: string) {
 </script>
 
 <style scoped>
-.mobile-events-page {
+.mobile-home-page {
   padding-top: 1.4rem; /* 留出顶部导航栏空间 */
   background: #f5f5f5;
   min-height: 100vh;
