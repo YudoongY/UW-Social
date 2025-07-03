@@ -23,6 +23,9 @@ const eventStore = useEventStore();
 const route = useRoute();
 
 const filteredEvents = computed(() => {
+  // Revert to this if using unsorted ordering
+  //   if (!props.category) return eventStore.events;
+  // return eventStore.events.filter(e => e.category === props.category);
   let events = !props.category
     ? eventStore.events
     : eventStore.events.filter(e => e.category === props.category);
@@ -48,10 +51,6 @@ const filteredEvents = computed(() => {
       : new Date(e.endtime);
     return end > now;
   });
-
-  // Revert to this if using unsorted ordering
-  //   if (!props.category) return eventStore.events;
-  // return eventStore.events.filter(e => e.category === props.category);
 
   // 按开始时间倒序
   return events.slice().sort((a, b) => {
