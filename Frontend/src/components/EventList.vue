@@ -23,6 +23,9 @@ const eventStore = useEventStore();
 const route = useRoute();
 
 const filteredEvents = computed(() => {
+  // Revert to this if using unsorted ordering
+  //   if (!props.category) return eventStore.events;
+  // return eventStore.events.filter(e => e.category === props.category);
   let events = !props.category
     ? eventStore.events
     : eventStore.events.filter(e => e.category === props.category);
