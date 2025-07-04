@@ -88,4 +88,27 @@ const formatDescription = (desc: string) => {
 	color: #555;
 	margin-bottom: 4px;
 }
+
+@media (max-width: 576px) {
+  .card {
+    width: 90vw;         /* Almost full viewport width */
+    max-width: 98vw;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+  }
+  .el-dialog, .custom-dialog {
+    width: 98vw !important;
+    max-width: 98vw !important;
+    min-width: unset !important;
+    margin: 0 auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+  .el-dialog__body {
+    padding: 10px !important;
+  }
+}
 </style>
