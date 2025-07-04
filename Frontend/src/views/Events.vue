@@ -37,14 +37,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import EventList from '../components/EventList.vue';
 import DetailCard from '../components/DetailCard.vue';
 import '../assets/sidebar.css';
 
+const route = useRoute();
 const isDialogOpen = ref(false);
 const selectedEvent = ref(null);
-const categoryFilter = ref('');
+const categoryFilter = ref(route.query.category || '');
+
+watch(
+  () => route.query.category,
+  (val) => {
+    categoryFilter.value = val || '';
+  }
+);
 
 const openCard = (event: any) => {
   selectedEvent.value = event;
@@ -62,10 +71,14 @@ const handleCategorySelect = (key: string) => {
   background: #f5f5f5;
 }
 
+.events-page-with-sidebar .el-main {
+  margin-left: 160px; /* 与 sidebar 宽度一致 */
+}
+
 .events-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; /* 保证按钮和标题垂直居中 */
   margin-bottom: 0rem;
   max-width: 1200px;
   margin-left: auto;
@@ -95,7 +108,7 @@ h1 {
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.3s;
-  margin-right: 50px;
+  margin-right: 0; /* 去掉原来的 margin-right: 50px; */
   border: none;
   box-shadow: 0 2px 8px rgba(108, 99, 255, 0.08);
 }

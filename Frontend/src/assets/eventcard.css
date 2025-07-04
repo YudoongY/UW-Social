@@ -23,10 +23,36 @@
 }
 
 .event-card h3 {
-  margin: 10px 0;
-  color: #333;
+  margin: 2px 0 5px 0;
   font-size: 1.2em;
 }
+
+.event-title {
+  color: #2d0975; /* 深蓝 */
+}
+/*
+.event-title.category-academic {
+  color: #062e56; // 深蓝
+}
+.event-title.category-club {
+  color: #ff9800; // 橙色
+}
+.event-title.category-sports {
+  color: #43a047; // 绿色
+}
+.event-title.category-videogames {
+  color: #8e24aa; // 紫色
+}
+.event-title.category-culture {
+  color: #e53935; // 红色
+}
+.event-title.category-interest {
+  color: #0097a7; // 青色
+}
+.event-title.category-HFS {
+  color: #6d4c41; // 棕色
+}
+*/
 
 .event-card p {
   color: #666;
@@ -35,7 +61,7 @@
 }
 
 .event-card .event-time {
-  font-size: 1em;
+  /* font-size: 1em; */
   font-weight: bold;
   color: #1c6fc1; /* 更鲜明的蓝色 */
   margin: 10px 0 6px 0;
@@ -46,9 +72,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
   -webkit-box-orient: vertical;
-  height: 4.5em; /* Adjust based on font size and line height */
 }
 
 .card.event-card h3,
@@ -59,29 +84,38 @@
 
 .event-link a,
 .card-link a {
-  color: #1976d2;
+  color: #2440b3;
   text-decoration: underline;
   word-break: break-all;
 }
 
-.event-title.category-academic {
-  color: #062e56; /* 深蓝 */
+.event-link a:hover,
+.card-link a:hover,
+.event-link a:active,
+.card-link a:active {
+  color: #4e6ef2;
 }
-.event-title.category-club {
-  color: #ff9800; /* 橙色 */
+
+.event-link {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;    /* 只显示一行 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  max-width: 100%;
 }
-.event-title.category-sports {
-  color: #43a047; /* 绿色 */
-}
-.event-title.category-videogames {
-  color: #8e24aa; /* 紫色 */
-}
-.event-title.category-culture {
-  color: #e53935; /* 红色 */
-}
-.event-title.category-interest {
-  color: #0097a7; /* 青色 */
-}
-.event-title.category-HFS {
-  color: #6d4c41; /* 棕色 */
+
+@media (max-width: 576px) {
+  .card.event-card {
+    padding: 0.7rem 0.4rem; /* 更窄的内边距 */
+    border-radius: 10px;
+  }
+  .event-title {
+    font-size: 0.3em; /* 标题字体更小 */
+  }
+  .event-card p {
+    font-size: 0.85em; /* 正文字体略小 */
+    margin: 6px 0;
+  }
 }

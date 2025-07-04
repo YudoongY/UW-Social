@@ -2,7 +2,7 @@
   <div v-if="isHomePage" class="welcome-container">
     <div class="main-content">
       <h1>Welcome to UW Social! 🎓</h1>
-      <p>This is your social hub - find events, make friends, and share your ideas.</p>
+      <!-- <p>This is your social hub - find events, make friends, and share your ideas.</p> -->
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@ const isHomePage = route.path === '/';
   margin: 0;
   padding: 0;
   text-align: center;
-  margin-top: 20px; /* 适当调一下距离，看着舒服点 */
+  margin-top: 20px;
 }
 
   .main-content {

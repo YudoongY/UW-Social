@@ -1,6 +1,6 @@
 <template>
   <div class="event-list">
-    <div v-if="filteredEvents.length === 0" class="loading">No events found.</div>
+    <div v-if="filteredEvents.length === 0" class="loading">No events found. You may need a VPN.</div>
     <div v-else class="events-grid">
       <EventCard
         v-for="event in filteredEvents"
@@ -16,14 +16,32 @@
 import { computed, onMounted } from 'vue';
 import { useEventStore } from '../stores/event';
 import EventCard from './EventCard.vue';
+import { useRoute } from 'vue-router';
 
 const props = defineProps<{ category?: string }>();
 const eventStore = useEventStore();
+const route = useRoute();
 
 const filteredEvents = computed(() => {
+  // Revert to this if using unsorted ordering
+  //   if (!props.category) return eventStore.events;
+  // return eventStore.events.filter(e => e.category === props.category);
   let events = !props.category
     ? eventStore.events
     : eventStore.events.filter(e => e.category === props.category);
+
+  // 搜索过滤
+  const q = (route.query.q as string || '').toLowerCase();
+  if (q) {
+    events = events.filter(e =>
+      e.title.toLowerCase().includes(q) ||
+      e.description.toLowerCase().includes(q) ||
+      (e.location && e.location.toLowerCase().includes(q)) ||
+      (e.tags && e.tags.join(',').toLowerCase().includes(q)) ||
+      (e.organizerName && e.organizerName.toLowerCase().includes(q))
+    );
+    //考虑更精细的筛选，比如按时间，比如tags selection，比如直接输入09/25搜索09月25日的活动
+  }
 
   // 只显示未过期活动
   const now = new Date();
@@ -33,6 +51,10 @@ const filteredEvents = computed(() => {
       : new Date(e.endtime);
     return end > now;
   });
+
+  // Revert to this if using unsorted ordering
+  //   if (!props.category) return eventStore.events;
+  // return eventStore.events.filter(e => e.category === props.category);
 
   // 按开始时间倒序
   return events.slice().sort((a, b) => {
@@ -51,7 +73,7 @@ onMounted(() => {
 
 <style scoped>
 .event-list {
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .loading,
@@ -65,7 +87,7 @@ onMounted(() => {
 .events-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 固定3列 */
-    gap: 2rem;
+    gap: 2.1rem 1.5rem;
     width: 100%;
     box-sizing: border-box;
     padding: 1rem 0;
@@ -76,9 +98,16 @@ onMounted(() => {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-@media (max-width: 600px) {
+@media (max-width: 576px) {
+    .event-list {
+        padding: 0.2rem; /* 左右边距几乎为0 */
+    }
     .events-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem 0.5rem;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.2rem 0;
     }
 }
 </style>

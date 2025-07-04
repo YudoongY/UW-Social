@@ -1,10 +1,16 @@
 .sidebar {
+  position: fixed;
+  top: 80px; /* 如果你的导航栏高度是80px，否则调整为实际高度 */
+  left: 0;
+  width: 163px;
+  height: calc(100vh - 80px); /* 减去导航栏高度 */
   background: #f6f7fb;
   border-right: none;
-  min-height: 100vh;
   padding-top: 2rem;
   box-shadow: 2px 0 8px rgba(180, 140, 255, 0.08);
   border-radius: 0 20px 20px 0;
+  z-index: 100;
+  overflow-y: auto;
 }
 
 .category-menu {
