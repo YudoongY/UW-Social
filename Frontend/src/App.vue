@@ -85,4 +85,30 @@ body {
 .content {
   padding: 10px; /* 正文和边缘的距离 */
 }
+
+@media (max-width: 576px) {
+  /* 方法1：通过覆盖CSS变量 */
+  .el-dialog {
+    --el-dialog-width: 95vw !important;
+    --el-dialog-margin-top: 2vh !important;
+  }
+  
+  /* 方法2：直接覆盖对话框样式 */
+  ::v-deep .el-dialog.custom-dialog {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    min-width: 0 !important;
+    margin: 2vh auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* 对话框内容区域 */
+  ::v-deep .el-dialog__body {
+    padding: 10px !important;
+  }
+}
+
 </style>
