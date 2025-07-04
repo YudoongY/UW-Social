@@ -28,7 +28,12 @@
         <EventList :category="categoryFilter" @open-card="openCard" />
 
         <!-- 弹窗 -->
-        <ElDialog v-model="isDialogOpen" title="Event Details" class="custom-dialog">
+        <ElDialog
+          v-model="isDialogOpen"
+          title="Event Details"
+          class="custom-dialog"
+          :width="'90vw'"
+        >
           <DetailCard v-if="selectedEvent" :event="selectedEvent" />
         </ElDialog>
       </el-main>
@@ -37,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import EventList from '../components/EventList.vue';
 import DetailCard from '../components/DetailCard.vue';
@@ -63,6 +68,15 @@ const openCard = (event: any) => {
 const handleCategorySelect = (key: string) => {
   categoryFilter.value = key;
 };
+
+const dialogWidth = computed(() =>
+  window.innerWidth <= 576 ? '95vw' : '600px'
+);
+
+// Optional: update on resize
+window.addEventListener('resize', () => {
+  dialogWidth.value = window.innerWidth <= 576 ? '95vw' : '600px';
+});
 </script>
 
 <style scoped>
@@ -127,5 +141,26 @@ h1 {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Deep selector for Element Plus dialog */
+::v-deep(.custom-dialog) {
+  margin: 10vh auto !important;
+}
+
+@media (max-width: 576px) {
+  ::v-deep(.el-dialog) {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    min-width: 0 !important;
+    margin: 2vh auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+  ::v-deep(.el-dialog__body) {
+    padding: 10px !important;
+  }
 }
 </style>
