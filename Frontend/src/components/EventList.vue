@@ -52,6 +52,10 @@ const filteredEvents = computed(() => {
     return end > now;
   });
 
+  // Revert to this if using unsorted ordering
+  //   if (!props.category) return eventStore.events;
+  // return eventStore.events.filter(e => e.category === props.category);
+
   // 按开始时间倒序
   return events.slice().sort((a, b) => {
     const aTime = typeof a.startime?.toDate === 'function' ? a.startime.toDate() : new Date(a.startime);
