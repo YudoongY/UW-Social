@@ -83,9 +83,14 @@ export type EventSchedule = OneTimeSchedule | DailySchedule | WeeklySchedule | M
  */
 export function formatEventSchedule(schedule: EventSchedule): string {
   const pad = (n: number) => n.toString().padStart(2, '0');
-  const formatDate = (date: Date) => {
-    if (!(date instanceof Date)) date = new Date(date);
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  const formatDate = (date: Date | string) => {
+    if (typeof date === 'string') {
+      const d = new Date(date);
+      return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+    } else if (date instanceof Date) {
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    }
+    return '';
   };
   const formatTime = (t?: string | Date) => {
     if (!t) return '';

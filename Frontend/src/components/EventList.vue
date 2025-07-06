@@ -44,28 +44,29 @@ const filteredEvents = computed(() => {
   }
 
   // 只显示未过期活动（基于 schedule 字段）
-  const now = new Date();
-  events = events.filter(e => {
-    if (!e.schedule) return false;
-    if (e.schedule.type === 'ONE_TIME') {
-      const end = new Date(e.schedule.endDatetime);
-      return end > now;
-    }
-    // TODO: Add recurring event filtering
-    return true;
-  });
+  // const now = new Date();
+  // events = events.filter(e => {
+  //   if (!e.schedule) return false;
+  //   if (e.schedule.type === 'ONE_TIME') {
+  //     const end = new Date(e.schedule.endDatetime);
+  //     return end > now;
+  //   }
+  //   // TODO: Add recurring event filtering
+  //   return true;
+  // });
 
   // 按开始时间排序（基于 schedule 字段）
-  return events.slice().sort((a, b) => {
-    let aTime = 0, bTime = 0;
-    if (a.schedule?.type === 'ONE_TIME') {
-      aTime = new Date(a.schedule.startDatetime).getTime();
-    }
-    if (b.schedule?.type === 'ONE_TIME') {
-      bTime = new Date(b.schedule.startDatetime).getTime();
-    }
-    return aTime - bTime;
-  });
+  // return events.slice().sort((a, b) => {
+  //   let aTime = 0, bTime = 0;
+  //   if (a.schedule?.type === 'ONE_TIME') {
+  //     aTime = new Date(a.schedule.startDatetime).getTime();
+  //   }
+  //   if (b.schedule?.type === 'ONE_TIME') {
+  //     bTime = new Date(b.schedule.startDatetime).getTime();
+  //   }
+  //   return aTime - bTime;
+  // });
+  return events;
 });
 
 onMounted(() => {
