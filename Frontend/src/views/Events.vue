@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import EventList from '../components/EventList.vue';
 import DetailCard from '../components/DetailCard.vue';
@@ -68,6 +68,15 @@ const openCard = (event: any) => {
 const handleCategorySelect = (key: string) => {
   categoryFilter.value = key;
 };
+
+const dialogWidth = computed(() =>
+  window.innerWidth <= 576 ? '95vw' : '600px'
+);
+
+// Optional: update on resize
+window.addEventListener('resize', () => {
+  dialogWidth.value = window.innerWidth <= 576 ? '95vw' : '600px';
+});
 </script>
 
 <style scoped>
