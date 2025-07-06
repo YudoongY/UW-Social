@@ -130,6 +130,7 @@ import { useRouter } from 'vue-router'
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
 import AvatarUpload from '../components/AvatarUpload.vue'
 import '../assets/profile.css';
+import { formatEventSchedule } from '../types/event';
 
 interface Event {
   id: string
@@ -198,27 +199,7 @@ onMounted(async () => {
     const querySnapshot = await getDocs(q);
     publishedEvents.value = querySnapshot.docs.map(doc => {
       const data = doc.data();
-      let dateStr = '';
-      if (data.schedule && data.schedule.type === 'ONE_TIME') {
-        const start = new Date(data.schedule.startDatetime);
-        const end = new Date(data.schedule.endDatetime);
-        const format = (d) => {
-          let [time, ampm] = d.toLocaleTimeString(undefined, {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-          }).split(' ');
-          ampm = ampm?.toLowerCase() || '';
-          const day = d.toLocaleDateString(undefined, {
-            month: '2-digit',
-            day: '2-digit',
-          });
-          return `${time}${ampm} ${day}`;
-        };
-        dateStr = `${format(start)} -- ${format(end)}`;
-      } else {
-        dateStr = 'Recurring event';
-      }
+      const dateStr = formatEventSchedule(data);
       return {
         id: doc.id,
         title: data.title || '',

@@ -13,6 +13,7 @@
     "axios": "^1.6.2",
     "element-plus": "^2.4.4",
     "firebase": "^10.7.1",
+    "fuse.js": "^7.1.0",
     "pinia": "^2.1.7",
     "vee-validate": "^4.12.4",
     "vue": "^3.3.11",
