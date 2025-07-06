@@ -82,16 +82,36 @@ export type EventSchedule = OneTimeSchedule | DailySchedule | WeeklySchedule | M
  * Formats an EventSchedule into a human-readable string.
  */
 export function formatEventSchedule(schedule: EventSchedule | undefined): string {
-  if (!schedule) return 'old schedule format';
+  if (!schedule) return 'old schedule format'; // TODO: remove this when all schedules are updated to the new format
   const pad = (n: number) => n.toString().padStart(2, '0');
-  const formatDate = (date: Date | string) => {
+  const formatDate = (date: Date | string | { seconds: number; nanoseconds?: number } | any) => {
+    // Handle Firestore Timestamp object: Timestamp(seconds=..., nanoseconds=...)
+    if (typeof date === 'object' && date !== null) {
+      // Firestore Timestamp (plain object)
+      if (
+        (typeof date.seconds === 'number' &&
+          (typeof date.nanoseconds === 'number' || typeof date.nanoseconds === 'undefined'))
+      ) {
+        // Convert seconds to milliseconds
+        const d = new Date(date.seconds * 1000);
+        return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+      }
+      // Firestore Timestamp (string representation)
+      if (
+        typeof date.toDate === 'function' &&
+        typeof date.seconds === 'number'
+      ) {
+        const d = date.toDate();
+        return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+      }
+    }
     if (typeof date === 'string') {
       const d = new Date(date);
       return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
     } else if (date instanceof Date) {
       return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
     }
-    throw new Error(`Invalid date format: ${date}`);
+    throw new Error(`Invalid date format: ${JSON.stringify(date)}`);
   };
   const formatTime = (t?: string | Date) => {
     if (!t) return '';
