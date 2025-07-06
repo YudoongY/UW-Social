@@ -84,7 +84,7 @@ export interface Event {
   title: string;
   description: string;
   schedule: EventSchedule | null; // Can be null for old events without a schedule
-  starttime: any; // Firestore Timestamp
+  startime: any; // Firestore Timestamp
   endtime: any; // Firestore Timestamp
   location: string;
   category: string;
@@ -128,7 +128,7 @@ export function formatEventSchedule(event: Event): string {
   if (!schedule) {
     // Old schedule format
     // One-time events, stored in starttime and endtime fields
-    return `One-time: ${formatDate(event.starttime)} - ${formatDate(event.endtime)}`;
+    return `One-time: ${formatDate(event.startime)} - ${formatDate(event.endtime)}`;
   }
   const pad = (n: number) => n.toString().padStart(2, '0');
   const formatTime = (t?: string | Date) => {
