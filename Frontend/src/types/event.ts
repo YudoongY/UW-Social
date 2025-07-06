@@ -81,7 +81,7 @@ export type EventSchedule = OneTimeSchedule | DailySchedule | WeeklySchedule | M
 /**
  * Formats an EventSchedule into a human-readable string.
  */
-export function formatEventSchedule(schedule: EventSchedule): string {
+export function formatEventSchedule(schedule: EventSchedule | undefined): string {
   if (!schedule) return 'old schedule format';
   const pad = (n: number) => n.toString().padStart(2, '0');
   const formatDate = (date: Date | string) => {
@@ -91,7 +91,7 @@ export function formatEventSchedule(schedule: EventSchedule): string {
     } else if (date instanceof Date) {
       return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
     }
-    return '';
+    throw new Error(`Invalid date format: ${date}`);
   };
   const formatTime = (t?: string | Date) => {
     if (!t) return '';
