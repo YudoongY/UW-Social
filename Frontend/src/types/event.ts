@@ -97,6 +97,7 @@ export function formatEventSchedule(schedule: EventSchedule): string {
     if (typeof t === 'string') return t;
     return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
   };
+  if (!schedule.type) return 'old schedule format';
   switch (schedule.type) {
     case RecurrenceType.ONE_TIME: {
       const start = schedule.startDatetime instanceof Date ? schedule.startDatetime : new Date(schedule.startDatetime);
