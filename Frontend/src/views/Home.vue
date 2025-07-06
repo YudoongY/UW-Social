@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import NavBar from '@/components/Navbar.vue'; // 确保路径正确
+// import NavBar from '@/components/Navbar.vue'; // 确保路径正确
 import Welcome from '@/components/Welcome.vue';
 import EventList from '@/components/EventList.vue';
 import { ref } from 'vue';

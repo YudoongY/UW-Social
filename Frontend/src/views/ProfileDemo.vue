@@ -91,7 +91,7 @@
           <div v-for="event in publishedEvents" :key="event.id" class="event-card-horizontal">
             <h4>{{ event.title }}</h4>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>{{ formatDate(event.date) }}</span>
+              <span>{{ event.date }}</span>
               <span>{{ event.location }}</span>
             </div>
           </div>
@@ -198,13 +198,26 @@ onMounted(async () => {
     const querySnapshot = await getDocs(q);
     publishedEvents.value = querySnapshot.docs.map(doc => {
       const data = doc.data();
-      // 格式化 startime 为 date 字段
       let dateStr = '';
-      if (data.startime) {
-        const dateObj = typeof data.startime.toDate === 'function'
-          ? data.startime.toDate()
-          : new Date(data.startime);
-        dateStr = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      if (data.schedule && data.schedule.type === 'ONE_TIME') {
+        const start = new Date(data.schedule.startDatetime);
+        const end = new Date(data.schedule.endDatetime);
+        const format = (d) => {
+          let [time, ampm] = d.toLocaleTimeString(undefined, {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          }).split(' ');
+          ampm = ampm?.toLowerCase() || '';
+          const day = d.toLocaleDateString(undefined, {
+            month: '2-digit',
+            day: '2-digit',
+          });
+          return `${time}${ampm} ${day}`;
+        };
+        dateStr = `${format(start)} -- ${format(end)}`;
+      } else {
+        dateStr = 'Recurring event';
       }
       return {
         id: doc.id,

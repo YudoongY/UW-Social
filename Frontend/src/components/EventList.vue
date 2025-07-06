@@ -43,24 +43,28 @@ const filteredEvents = computed(() => {
     //考虑更精细的筛选，比如按时间，比如tags selection，比如直接输入09/25搜索09月25日的活动
   }
 
-  // 只显示未过期活动
+  // 只显示未过期活动（基于 schedule 字段）
   const now = new Date();
   events = events.filter(e => {
-    const end = typeof e.endtime?.toDate === 'function'
-      ? e.endtime.toDate()
-      : new Date(e.endtime);
-    return end > now;
+    if (!e.schedule) return false;
+    if (e.schedule.type === 'ONE_TIME') {
+      const end = new Date(e.schedule.endDatetime);
+      return end > now;
+    }
+    // TODO: Add recurring event filtering
+    return true;
   });
 
-  // Revert to this if using unsorted ordering
-  //   if (!props.category) return eventStore.events;
-  // return eventStore.events.filter(e => e.category === props.category);
-
-  // 按开始时间倒序
+  // 按开始时间排序（基于 schedule 字段）
   return events.slice().sort((a, b) => {
-    const aTime = typeof a.startime?.toDate === 'function' ? a.startime.toDate() : new Date(a.startime);
-    const bTime = typeof b.startime?.toDate === 'function' ? b.startime.toDate() : new Date(b.startime);
-    return aTime.getTime() - bTime.getTime();
+    let aTime = 0, bTime = 0;
+    if (a.schedule?.type === 'ONE_TIME') {
+      aTime = new Date(a.schedule.startDatetime).getTime();
+    }
+    if (b.schedule?.type === 'ONE_TIME') {
+      bTime = new Date(b.schedule.startDatetime).getTime();
+    }
+    return aTime - bTime;
   });
 });
 
