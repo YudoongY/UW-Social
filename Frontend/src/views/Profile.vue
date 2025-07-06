@@ -97,7 +97,7 @@
           >
             <h4>{{ event.title }}</h4>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>{{ formatSchedule(event.schedule) }}</span>
+              <span>{{ formatEventSchedule(event.schedule) }}</span>
               <span>{{ event.location }}</span>
             </div>
           </div>
@@ -132,7 +132,7 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 import AvatarUpload from '../components/AvatarUpload.vue'
 import DetailCard from '../components/DetailCard.vue';
 import '../assets/profile.css';
-import type { Event } from '../types/event';
+import { formatEventSchedule, type Event } from '../types/event';
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -150,32 +150,6 @@ const state = reactive({
 function goToEditProfile() {
   router.push('/profile/edit');
 }
-
-
-// Format the event schedule for display
-const formatSchedule = (schedule: any) => {
-  if (!schedule) return '';
-  if (schedule.type === 'ONE_TIME') {
-    const start = new Date(schedule.startDatetime);
-    const end = new Date(schedule.endDatetime);
-    const format = (d: Date) => {
-      let [time, ampm] = d.toLocaleTimeString(undefined, {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      }).split(' ');
-      ampm = ampm?.toLowerCase() || '';
-      const day = d.toLocaleDateString(undefined, {
-        month: '2-digit',
-        day: '2-digit',
-      });
-      return `${time}${ampm} ${day}`;
-    };
-    return `${format(start)} -- ${format(end)}`;
-  }
-  // TODO: Add formatting for recurring events
-  return 'Recurring event';
-};
 
 onMounted(async () => {
   if (!userStore.isLoggedIn) {

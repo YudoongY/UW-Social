@@ -78,6 +78,62 @@ export interface MonthlySchedule extends BaseRecurringSchedule {
  */
 export type EventSchedule = OneTimeSchedule | DailySchedule | WeeklySchedule | MonthlySchedule;
 
+/**
+ * Formats an EventSchedule into a human-readable string.
+ */
+export function formatEventSchedule(schedule: EventSchedule): string {
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const formatDate = (date: Date) => {
+    if (!(date instanceof Date)) date = new Date(date);
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  };
+  const formatTime = (t?: string | Date) => {
+    if (!t) return '';
+    if (typeof t === 'string') return t;
+    return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+  };
+  switch (schedule.type) {
+    case RecurrenceType.ONE_TIME: {
+      const start = schedule.startDatetime instanceof Date ? schedule.startDatetime : new Date(schedule.startDatetime);
+      const end = schedule.endDatetime instanceof Date ? schedule.endDatetime : new Date(schedule.endDatetime);
+      return `One-time: ${formatDate(start)} ${formatTime(start)} - ${formatTime(end)}`;
+    }
+    case RecurrenceType.DAILY: {
+      let str = `Daily`;
+      if (schedule.startTimeOfDay && schedule.endTimeOfDay)
+        str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
+      if (schedule.startDate)
+        str += ` from ${formatDate(schedule.startDate)}`;
+      if (schedule.endDate)
+        str += ` to ${formatDate(schedule.endDate)}`;
+      return str;
+    }
+    case RecurrenceType.WEEKLY: {
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      let str = `Weekly on ${schedule.daysOfWeek.map(d => days[d]).join(', ')}`;
+      if (schedule.startTimeOfDay && schedule.endTimeOfDay)
+        str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
+      if (schedule.startDate)
+        str += ` from ${formatDate(schedule.startDate)}`;
+      if (schedule.endDate)
+        str += ` to ${formatDate(schedule.endDate)}`;
+      return str;
+    }
+    case RecurrenceType.MONTHLY: {
+      let str = `Monthly on the ${schedule.daysOfMonth.join(', ')}${schedule.daysOfMonth.length === 1 ? 'th' : 'ths'}`;
+      if (schedule.startTimeOfDay && schedule.endTimeOfDay)
+        str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
+      if (schedule.startDate)
+        str += ` from ${formatDate(schedule.startDate)}`;
+      if (schedule.endDate)
+        str += ` to ${formatDate(schedule.endDate)}`;
+      return str;
+    }
+    default:
+      return '';
+  }
+}
+
 export interface Event {
   id: string;
   title: string;
