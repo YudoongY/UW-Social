@@ -3,7 +3,7 @@
     <!-- <img :src="event.imageUrl ? event.imageUrl : '/images/default-event.jpg'" alt="event.title" /> -->
     <h3 :class="['event-title', `category-${event.category}`]">{{ event.title }}</h3>
     <p class="event-time">
-      {{ formatDate(event.startime) }}--{{ formatDate(event.endtime) }}
+      {{ formatSchedule(event.schedule) }}
     </p>
     <p>Location: {{ event.location }}</p>
     <p class="description">{{ event.description }}</p>
@@ -24,23 +24,30 @@ const props = defineProps<{
 
 const eventDialogStore = useEventDialogStore();
 
-// 只显示年月日和小时分钟
-const formatDate = (ts: any) => {
-    if (!ts) return '';
-    const date = typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
-    // 获取小时、分钟和 AM/PM
-    let [time, ampm] = date.toLocaleTimeString(undefined, {
+
+// Format the event schedule for display
+const formatSchedule = (schedule: any) => {
+  if (!schedule) return '';
+  if (schedule.type === 'ONE_TIME') {
+    const start = new Date(schedule.startDatetime);
+    const end = new Date(schedule.endDatetime);
+    const format = (d: Date) => {
+      let [time, ampm] = d.toLocaleTimeString(undefined, {
         hour: '2-digit',
         minute: '2-digit',
         hour12: true,
-    }).split(' ');
-    ampm = ampm?.toLowerCase() || '';
-    // 获取月和日
-    const day = date.toLocaleDateString(undefined, {
+      }).split(' ');
+      ampm = ampm?.toLowerCase() || '';
+      const day = d.toLocaleDateString(undefined, {
         month: '2-digit',
         day: '2-digit',
-    });
-    return `${time}${ampm} ${day}`;
+      });
+      return `${time}${ampm} ${day}`;
+    };
+    return `${format(start)} -- ${format(end)}`;
+  }
+  // TODO: Add formatting for recurring events
+  return 'Recurring event';
 };
 
 const handleCardClick = () => {

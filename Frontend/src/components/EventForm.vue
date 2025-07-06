@@ -144,9 +144,10 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { useEventStore } from '../stores/event';
-import { collection, addDoc,Timestamp } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import type { Event } from '../types/event';
+import { RecurrenceType } from '../types/event';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -195,11 +196,13 @@ const handleSubmit = async () => {
       alert('End time must be after start time.');
       return;
     }
-    // Prepare eventData with maxParticipants as number or undefined
-    const {
-      maxParticipants,
-      ...restFormData
-    } = formData.value;
+
+    // Build the schedule object for a one-time event
+    const schedule = {
+      type: RecurrenceType.ONE_TIME as const,
+      startDatetime: start,
+      endDatetime: end,
+    };
 
     const eventData: Omit<Event, 'id'> = {
       title: formData.value.title,
@@ -207,8 +210,7 @@ const handleSubmit = async () => {
       location: formData.value.location,
       category: formData.value.category,
       tags: formData.value.tags,
-      startime: Timestamp.fromDate(start),
-      endtime: Timestamp.fromDate(end),
+      schedule,
       maxParticipants: formData.value.maxParticipants,
       organizerId: userStore.userProfile.uid,
       organizerName: userStore.userProfile.displayName || 'Anonymous',
