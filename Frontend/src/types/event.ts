@@ -82,6 +82,7 @@ export type EventSchedule = OneTimeSchedule | DailySchedule | WeeklySchedule | M
  * Formats an EventSchedule into a human-readable string.
  */
 export function formatEventSchedule(schedule: EventSchedule): string {
+  if (!schedule) return 'old schedule format';
   const pad = (n: number) => n.toString().padStart(2, '0');
   const formatDate = (date: Date | string) => {
     if (typeof date === 'string') {
@@ -97,7 +98,6 @@ export function formatEventSchedule(schedule: EventSchedule): string {
     if (typeof t === 'string') return t;
     return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
   };
-  if (!schedule.type) return 'old schedule format';
   switch (schedule.type) {
     case RecurrenceType.ONE_TIME: {
       const start = schedule.startDatetime instanceof Date ? schedule.startDatetime : new Date(schedule.startDatetime);
