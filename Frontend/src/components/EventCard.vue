@@ -3,7 +3,7 @@
     <!-- <img :src="event.imageUrl ? event.imageUrl : '/images/default-event.jpg'" alt="event.title" /> -->
     <h3 :class="['event-title', `category-${event.category}`]">{{ event.title }}</h3>
     <p class="event-time">
-      {{ formatEventSchedule(event.schedule) }}
+      {{ formatEventSchedule(event) }}
     </p>
     <p>Location: {{ event.location }}</p>
     <p class="description">{{ event.description }}</p>

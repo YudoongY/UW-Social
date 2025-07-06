@@ -97,7 +97,7 @@
           >
             <h4>{{ event.title }}</h4>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>{{ formatEventSchedule(event.schedule) }}</span>
+              <span>{{ formatEventSchedule(event) }}</span>
               <span>{{ event.location }}</span>
             </div>
           </div>

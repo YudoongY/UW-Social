@@ -2,7 +2,7 @@
 	<div class="card">
 		<h2 class="card-title">{{ event.title }}</h2>
 		<p class="event-time">
-			{{ formatEventSchedule(event.schedule) }}
+			{{ formatEventSchedule(event) }}
 		</p>
 		<p class="card-location"> Location: {{ event.location }}</p>
 		<p class="card-category">📂 {{ event.category }}</p>
