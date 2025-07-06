@@ -97,7 +97,7 @@
           >
             <h4>{{ event.title }}</h4>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>{{ formatDate(event.startime) }}</span>
+              <span>{{ formatEventSchedule(event) }}</span>
               <span>{{ event.location }}</span>
             </div>
           </div>
@@ -132,7 +132,7 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 import AvatarUpload from '../components/AvatarUpload.vue'
 import DetailCard from '../components/DetailCard.vue';
 import '../assets/profile.css';
-import type { Event } from '../types/event';
+import { formatEventSchedule, type Event } from '../types/event';
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -151,12 +151,6 @@ function goToEditProfile() {
   router.push('/profile/edit');
 }
 
-const formatDate = (ts: any) => {
-  if (!ts) return '';
-  const date = typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
-  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-};
-
 onMounted(async () => {
   if (!userStore.isLoggedIn) {
     router.push('/login');
@@ -169,14 +163,6 @@ onMounted(async () => {
     const querySnapshot = await getDocs(q);
     publishedEvents.value = querySnapshot.docs.map(doc => {
       const data = doc.data();
-      // 格式化 startime 为 date 字段
-      let dateStr = '';
-      if (data.startime) {
-        const dateObj = typeof data.startime.toDate === 'function'
-          ? data.startime.toDate()
-          : new Date(data.startime);
-        dateStr = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      }
       return {
         id: doc.id,
         title: data.title || '',
@@ -184,15 +170,14 @@ onMounted(async () => {
         location: data.location || '',
         category: data.category || '',
         tags: data.tags || [],
-        startime: data.startime,
-        endtime: data.endtime,
+        schedule: data.schedule,
         maxParticipants: data.maxParticipants ?? null,
         organizerId: data.organizerId || '',
         organizerName: data.organizerName || '',
         organizerAvatar: data.organizerAvatar || '',
         createdAt: data.createdAt || '',
         participants: data.participants || [],
-        // 你可以根据 Event 类型再补充其它字段
+        link: data.link || '',
       };
     });
   } catch (error) {
@@ -205,11 +190,7 @@ const participatedEvents = ref([]);
 const isDialogOpen = ref(false);
 const selectedEvent = ref<Event | null>(null);
 
-function openDetail(event: Event | { id: string; title: string; 
-  description: string; startime: any; endtime: any; location: string; 
-  category: string; imageUrl?: string | undefined; organizerId: string; 
-  organizerName: string; organizerAvatar: string; createdAt: string; 
-  participants: string[]; maxParticipants: number | null; tags: string[]; } | null) {
+function openDetail(event: Event | null) {
   selectedEvent.value = event;
   isDialogOpen.value = true;
 }

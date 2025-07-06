@@ -2,7 +2,7 @@
 	<div class="card">
 		<h2 class="card-title">{{ event.title }}</h2>
 		<p class="event-time">
-			{{ formatDate(event.startime) }}--{{ formatDate(event.endtime) }}
+			{{ formatEventSchedule(event) }}
 		</p>
 		<p class="card-location"> Location: {{ event.location }}</p>
 		<p class="card-category">📂 {{ event.category }}</p>
@@ -17,35 +17,15 @@
 </template>
 
 <script setup lang="ts">
-import type { Event } from '../types/event';
-import { computed } from 'vue';
+import { formatEventSchedule, type Event } from '../types/event';
 
-const props = defineProps<{
-    event: Event;
+defineProps<{
+	event: Event;
 }>();
 
-// 格式化时间：只显示小时:分钟 AM/PM 和年月日
-const formatDate = (ts: any) => {
-    if (!ts) return '';
-    const date = typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
-    // 获取小时、分钟和 AM/PM
-    let [time, ampm] = date.toLocaleTimeString(undefined, {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-    }).split(' ');
-    ampm = ampm?.toLowerCase() || '';
-    // 获取月和日
-    const day = date.toLocaleDateString(undefined, {
-        month: '2-digit',
-        day: '2-digit',
-    });
-    return `${time}${ampm} ${day}`;
-};
-
 const formatDescription = (desc: string) => {
-    if (!desc) return '';
-    return desc.replace(/\n/g, '<br>');
+	if (!desc) return '';
+	return desc.replace(/\n/g, '<br>');
 };
 </script>
 

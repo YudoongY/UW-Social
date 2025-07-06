@@ -91,7 +91,7 @@
           <div v-for="event in publishedEvents" :key="event.id" class="event-card-horizontal">
             <h4>{{ event.title }}</h4>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>{{ formatDate(event.date) }}</span>
+              <span>{{ event.date }}</span>
               <span>{{ event.location }}</span>
             </div>
           </div>
@@ -130,6 +130,7 @@ import { useRouter } from 'vue-router'
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
 import AvatarUpload from '../components/AvatarUpload.vue'
 import '../assets/profile.css';
+import { formatEventSchedule } from '../types/event';
 
 interface Event {
   id: string
@@ -198,14 +199,7 @@ onMounted(async () => {
     const querySnapshot = await getDocs(q);
     publishedEvents.value = querySnapshot.docs.map(doc => {
       const data = doc.data();
-      // 格式化 startime 为 date 字段
-      let dateStr = '';
-      if (data.startime) {
-        const dateObj = typeof data.startime.toDate === 'function'
-          ? data.startime.toDate()
-          : new Date(data.startime);
-        dateStr = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      }
+      const dateStr = formatEventSchedule(data);
       return {
         id: doc.id,
         title: data.title || '',

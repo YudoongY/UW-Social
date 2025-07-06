@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
+import Fuse from 'fuse.js';
 import { useEventStore } from '../stores/event';
 import EventCard from './EventCard.vue';
 import { useRoute } from 'vue-router';
@@ -23,45 +24,26 @@ const eventStore = useEventStore();
 const route = useRoute();
 
 const filteredEvents = computed(() => {
-  // Revert to this if using unsorted ordering
-  //   if (!props.category) return eventStore.events;
-  // return eventStore.events.filter(e => e.category === props.category);
   let events = !props.category
     ? eventStore.events
     : eventStore.events.filter(e => e.category === props.category);
 
-  // 搜索过滤
-  const q = (route.query.q as string || '').toLowerCase();
-  if (q) {
-    events = events.filter(e =>
-      e.title.toLowerCase().includes(q) ||
-      e.description.toLowerCase().includes(q) ||
-      (e.location && e.location.toLowerCase().includes(q)) ||
-      (e.tags && e.tags.join(',').toLowerCase().includes(q)) ||
-      (e.organizerName && e.organizerName.toLowerCase().includes(q))
-    );
-    //考虑更精细的筛选，比如按时间，比如tags selection，比如直接输入09/25搜索09月25日的活动
-  }
-
-  // 只显示未过期活动
-  const now = new Date();
-  events = events.filter(e => {
-    const end = typeof e.endtime?.toDate === 'function'
-      ? e.endtime.toDate()
-      : new Date(e.endtime);
-    return end > now;
+  const q = (route.query.q as string || '').trim();
+  if (!q) return events;
+  // Use Fuse.js for fuzzy search and relevance ranking
+  const fuse = new Fuse(events, {
+    keys: [
+      'title',
+      'description',
+      'location',
+      'tags',
+      'organizerName',
+    ],
+    threshold: 0.4, // adjust as needed for fuzziness
+    ignoreLocation: true,
+    minMatchCharLength: 2,
   });
-
-  // Revert to this if using unsorted ordering
-  //   if (!props.category) return eventStore.events;
-  // return eventStore.events.filter(e => e.category === props.category);
-
-  // 按开始时间倒序
-  return events.slice().sort((a, b) => {
-    const aTime = typeof a.startime?.toDate === 'function' ? a.startime.toDate() : new Date(a.startime);
-    const bTime = typeof b.startime?.toDate === 'function' ? b.startime.toDate() : new Date(b.startime);
-    return aTime.getTime() - bTime.getTime();
-  });
+  return fuse.search(q).map(result => result.item);
 });
 
 onMounted(() => {
