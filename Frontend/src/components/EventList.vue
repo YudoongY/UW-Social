@@ -6,6 +6,7 @@
         v-for="event in filteredEvents"
         :key="event.id"
         :event="event"
+        :currentUserId="userStore.userProfile?.uid"
         @open-card="$emit('open-card', event)"
       />
     </div>
@@ -18,9 +19,11 @@ import Fuse from 'fuse.js';
 import { useEventStore } from '../stores/event';
 import EventCard from './EventCard.vue';
 import { useRoute } from 'vue-router';
+import { useUserStore } from '../stores/user'; // Add this
 
 const props = defineProps<{ category?: string }>();
 const eventStore = useEventStore();
+const userStore = useUserStore(); // Add this
 const route = useRoute();
 
 const filteredEvents = computed(() => {
