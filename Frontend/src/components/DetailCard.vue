@@ -25,13 +25,6 @@
     >
       Delete
     </el-button>
-    
-    <!-- 调试信息（生产环境可移除） -->
-    <p style="font-size:12px;color:#aaa;">
-      organizerId: {{ event.organizerId }} | 
-      currentUserId: {{ currentUserId }} |
-      showDelete: {{ showDeleteButton }}
-    </p>
   </div>
 </template>
 

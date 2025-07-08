@@ -10,9 +10,6 @@
         <p v-if="event.link" class="event-link">
       <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
     </p>
-    <p style="font-size:12px;color:#aaa;">
-      organizerId: {{ event.organizerId }} | currentUserId: {{ currentUserId }}
-    </p>
     <el-button
       v-if="String(event.organizerId) === String(currentUserId)"
       @click.stop="handleDelete"
