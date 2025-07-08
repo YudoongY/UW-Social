@@ -223,7 +223,6 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { useEventStore } from '../stores/event';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebase/config';
 import type { Event } from '../types/event';
 import { RecurrenceType } from '../types/event';
 import { getAuth } from 'firebase/auth';
@@ -232,7 +231,6 @@ const router = useRouter();
 const userStore = useUserStore();
 const eventStore = useEventStore();
 const isSubmitting = ref(false);
-const auth = getAuth();
 const db = getFirestore();
 
 const formData = ref({

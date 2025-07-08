@@ -154,10 +154,12 @@ export function formatEventSchedule(event: Event): string {
   };
 
   const pad = (n: number) => n.toString().padStart(2, '0');
+  const getDate = (d: any) => (d && typeof d.toDate === 'function') ? d.toDate() : new Date(d);
   const formatTime = (t?: string | Date) => {
     if (!t) return '';
     if (typeof t === 'string') return t;
-    return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+    if (t instanceof Date && !isNaN(t.getTime())) return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+    return '';
   };
 
   if (!schedule) {
@@ -167,12 +169,12 @@ export function formatEventSchedule(event: Event): string {
 
   switch (schedule.type) {
     case RecurrenceType.ONE_TIME: {
-      const start = schedule.startDatetime instanceof Date
-        ? schedule.startDatetime
-        : new Date(schedule.startDatetime);
-      const end = schedule.endDatetime instanceof Date
-        ? schedule.endDatetime
-        : new Date(schedule.endDatetime);
+      // Always use .toDate() if available
+      const getDate = (d: any) => (d && typeof d.toDate === 'function') ? d.toDate() : new Date(d);
+
+      const start = getDate(schedule.startDatetime);
+      const end = getDate(schedule.endDatetime);
+
       return `One-time: ${safeFormatDate(start)} ${formatTime(start)} - ${formatTime(end)}`;
     }
 
@@ -181,9 +183,9 @@ export function formatEventSchedule(event: Event): string {
       if (schedule.startTimeOfDay && schedule.endTimeOfDay)
         str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
       if (schedule.startDate)
-        str += ` from ${safeFormatDate(schedule.startDate)}`;
+        str += ` from ${safeFormatDate(getDate(schedule.startDate))}`;
       if (schedule.endDate)
-        str += ` to ${safeFormatDate(schedule.endDate)}`;
+        str += ` to ${safeFormatDate(getDate(schedule.endDate))}`;
       return str;
     }
 
@@ -193,9 +195,9 @@ export function formatEventSchedule(event: Event): string {
       if (schedule.startTimeOfDay && schedule.endTimeOfDay)
         str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
       if (schedule.startDate)
-        str += ` from ${safeFormatDate(schedule.startDate)}`;
+        str += ` from ${safeFormatDate(getDate(schedule.startDate))}`;
       if (schedule.endDate)
-        str += ` to ${safeFormatDate(schedule.endDate)}`;
+        str += ` to ${safeFormatDate(getDate(schedule.endDate))}`;
       return str;
     }
 
@@ -204,11 +206,11 @@ export function formatEventSchedule(event: Event): string {
       if (schedule.startTimeOfDay && schedule.endTimeOfDay)
         str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
       if (schedule.startDate)
-        str += ` from ${safeFormatDate(schedule.startDate)}`;
+        str += ` from ${safeFormatDate(getDate(schedule.startDate))}`;
       if (schedule.endDate)
-        str += ` to ${safeFormatDate(schedule.endDate)}`;
+        str += ` to ${safeFormatDate(getDate(schedule.endDate))}`;
       return str;
-    }
+   }
 
     default:
       throw new Error(`Unknown recurrence type: ${(schedule as any).type}`);
