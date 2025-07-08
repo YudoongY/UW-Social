@@ -101,79 +101,118 @@ export interface Event {
 
 function formatDate(date: any): string {
   const pad = (n: number) => n.toString().padStart(2, '0');
-  if (
-    (typeof date.seconds === 'number' &&
-      (typeof date.nanoseconds === 'number' || typeof date.nanoseconds === 'undefined'))
-  ) {
-    // Convert seconds to milliseconds
-    const d = new Date(date.seconds * 1000);
+
+  try {
+    let d: Date;
+
+    if (!date) throw new Error("No date provided");
+
+    // Case 1: Firestore Timestamp object (has .toDate)
+    if (typeof date.toDate === 'function') {
+      d = date.toDate();
+    }
+    // Case 2: Firestore-like object with .seconds
+    else if (typeof date.seconds === 'number') {
+      d = new Date(date.seconds * 1000);
+    }
+    // Case 3: Native Date
+    else if (date instanceof Date) {
+      d = date;
+    }
+    // Case 4: ISO string or timestamp number
+    else {
+      d = new Date(date);
+    }
+
+    // Final sanity check
+    if (isNaN(d.getTime())) throw new Error("Invalid date object");
+
     return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+  } catch (err) {
+    console.warn("formatDate failed:", date, err);
+    return 'Invalid date';
   }
-  // Firestore Timestamp (string representation)
-  if (
-    typeof date.toDate === 'function' &&
-    typeof date.seconds === 'number'
-  ) {
-    const d = date.toDate();
-    return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
-  }
-  throw new Error(`Invalid Firestore Timestamp format: ${JSON.stringify(date)}`);
 }
+
 
 /**
  * Formats an EventSchedule into a human-readable string.
  */
 export function formatEventSchedule(event: Event): string {
   const schedule = event.schedule;
-  if (!schedule) {
-    // Old schedule format
-    // One-time events, stored in starttime and endtime fields
-    return `One-time: ${formatDate(event.startime)} - ${formatDate(event.endtime)}`;
-  }
+
+  // Defensive safe formatter for all dates
+  const safeFormatDate = (d: any): string => {
+    if (!d) return 'Unknown';
+    try {
+      const date = d.toDate?.() ?? new Date(d);
+      return isNaN(date.getTime()) ? 'Invalid date' : formatDate(date);
+    } catch (err) {
+      console.warn("Bad date passed to formatDate:", d, err);
+      return 'Invalid date';
+    }
+  };
+
   const pad = (n: number) => n.toString().padStart(2, '0');
+  const getDate = (d: any) => (d && typeof d.toDate === 'function') ? d.toDate() : new Date(d);
   const formatTime = (t?: string | Date) => {
     if (!t) return '';
     if (typeof t === 'string') return t;
-    return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+    if (t instanceof Date && !isNaN(t.getTime())) return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+    return '';
   };
+
+  if (!schedule) {
+    // Old schedule format — one-time event
+    return `One-time: ${safeFormatDate(event.startime)} - ${safeFormatDate(event.endtime)}`;
+  }
+
   switch (schedule.type) {
     case RecurrenceType.ONE_TIME: {
-      const start = schedule.startDatetime instanceof Date ? schedule.startDatetime : new Date(schedule.startDatetime);
-      const end = schedule.endDatetime instanceof Date ? schedule.endDatetime : new Date(schedule.endDatetime);
-      return `One-time: ${formatDate(start)} ${formatTime(start)} - ${formatTime(end)}`;
+      // Always use .toDate() if available
+      const getDate = (d: any) => (d && typeof d.toDate === 'function') ? d.toDate() : new Date(d);
+
+      const start = getDate(schedule.startDatetime);
+      const end = getDate(schedule.endDatetime);
+
+      return `One-time: ${safeFormatDate(start)} ${formatTime(start)} - ${formatTime(end)}`;
     }
+
     case RecurrenceType.DAILY: {
       let str = `Daily`;
       if (schedule.startTimeOfDay && schedule.endTimeOfDay)
         str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
       if (schedule.startDate)
-        str += ` from ${formatDate(schedule.startDate)}`;
+        str += ` from ${safeFormatDate(getDate(schedule.startDate))}`;
       if (schedule.endDate)
-        str += ` to ${formatDate(schedule.endDate)}`;
+        str += ` to ${safeFormatDate(getDate(schedule.endDate))}`;
       return str;
     }
+
     case RecurrenceType.WEEKLY: {
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      let str = `Weekly on ${schedule.daysOfWeek.map(d => days[d]).join(', ')}`;
+      let str = `Weekly on ${schedule.daysOfWeek?.map(d => days[d]).join(', ')}`;
       if (schedule.startTimeOfDay && schedule.endTimeOfDay)
         str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
       if (schedule.startDate)
-        str += ` from ${formatDate(schedule.startDate)}`;
+        str += ` from ${safeFormatDate(getDate(schedule.startDate))}`;
       if (schedule.endDate)
-        str += ` to ${formatDate(schedule.endDate)}`;
+        str += ` to ${safeFormatDate(getDate(schedule.endDate))}`;
       return str;
     }
+
     case RecurrenceType.MONTHLY: {
-      let str = `Monthly on the ${schedule.daysOfMonth.join(', ')}${schedule.daysOfMonth.length === 1 ? 'th' : 'ths'}`;
+      let str = `Monthly on the ${schedule.daysOfMonth?.join(', ')}${schedule.daysOfMonth?.length === 1 ? 'th' : 'ths'}`;
       if (schedule.startTimeOfDay && schedule.endTimeOfDay)
         str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
       if (schedule.startDate)
-        str += ` from ${formatDate(schedule.startDate)}`;
+        str += ` from ${safeFormatDate(getDate(schedule.startDate))}`;
       if (schedule.endDate)
-        str += ` to ${formatDate(schedule.endDate)}`;
+        str += ` to ${safeFormatDate(getDate(schedule.endDate))}`;
       return str;
-    }
+   }
+
     default:
-      throw new Error(`Unknown recurrence type: ${(schedule as any).type}`); // Should never happen
+      throw new Error(`Unknown recurrence type: ${(schedule as any).type}`);
   }
 }

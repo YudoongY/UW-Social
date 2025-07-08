@@ -28,14 +28,20 @@
         <EventList :category="categoryFilter" @open-card="openCard" />
 
         <!-- 弹窗 -->
-        <ElDialog
-          v-model="isDialogOpen"
+        <el-dialog 
+          v-model="eventDialogStore.isDialogOpen" 
           title="Event Details"
           class="custom-dialog"
           :width="'90vw'"
+          @closed="() => console.log('[Dialog] Closed!')"
         >
-          <DetailCard v-if="selectedEvent" :event="selectedEvent" />
-        </ElDialog>
+          <DetailCard
+            v-if="selectedEvent && currentUserId"
+            :event="selectedEvent"
+            :currentUserId="currentUserId"
+          />
+
+        </el-dialog>
       </el-main>
     </el-container>
   </div>
@@ -47,22 +53,66 @@ import { useRoute } from 'vue-router';
 import EventList from '../components/EventList.vue';
 import DetailCard from '../components/DetailCard.vue';
 import '../assets/sidebar.css';
+import { useEventDialogStore } from '../stores/eventDialog';
+import { auth } from '../firebase'; // <-- Add this line (adjust path if needed)
+import { watchEffect, onMounted } from 'vue';
+import { useUserStore } from '../stores/user';
+
+
+const userStore = useUserStore();
+
+// Reliable computed wrapper
+const currentUserId = computed(() => userStore.userProfile?.uid);
+
+watchEffect(() => {
+  console.log('[Debug] userStore.userProfile:', userStore.userProfile);
+  console.log('[Debug] currentUserId (computed):', currentUserId.value);
+});
+
+onMounted(() => {
+  console.log('[Mounted] Final UID:', currentUserId.value);
+});
+
+
+const eventDialogStore = useEventDialogStore();
+
+watch(
+  () => userStore.userProfile,
+  (newVal) => {
+    console.log('[Debug] userProfile loaded:', newVal);
+  },
+  { immediate: true }
+);
+
 
 const route = useRoute();
-const isDialogOpen = ref(false);
-const selectedEvent = ref(null);
-const categoryFilter = ref(route.query.category || '');
+const selectedEvent = computed(() => eventDialogStore.selectedEvent);
+const getCategoryString = (val: unknown): string => {
+  if (Array.isArray(val)) {
+    return val[0] ?? '';
+  }
+  return typeof val === 'string' ? val : '';
+};
+
+const categoryFilter = ref(getCategoryString(route.query.category));
 
 watch(
   () => route.query.category,
   (val) => {
-    categoryFilter.value = val || '';
+    categoryFilter.value = getCategoryString(val);
   }
 );
 
 const openCard = (event: any) => {
-  selectedEvent.value = event;
-  isDialogOpen.value = true;
+  if (!userStore.userProfile || !userStore.userProfile.uid) {
+    alert('Please log in first.');
+    return;
+  }
+
+  console.log('Dialog should open. User UID:', userStore.userProfile?.uid);
+  // ...原有代码
+  eventDialogStore.openDialog(event); // ✅ use store action
+
 };
 
 const handleCategorySelect = (key: string) => {
