@@ -8,6 +8,7 @@ import router from './router';
 import './firebase'; // 确保 Firebase 初始化
 import './assets/form.css';
 
+
 import { useUserStore } from './stores/user';
 
 async function bootstrap() {
