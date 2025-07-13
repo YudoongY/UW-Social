@@ -18,11 +18,22 @@ const categories = [
   { key: "interest", label: "Interest", icon: "interest.svg" },
   { key: "hfs", label: "HFS", icon: "hfs.svg" },
 ];
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-const selectedCategory = ref("");
+const route = useRoute();
+const router = useRouter();
+const selectedCategory = computed(() => route.query.category?.toString() || "");
+
 
 function selectCategory(key: string) {
-  selectedCategory.value = selectedCategory.value === key ? "" : key;
+  const current = route.query.category?.toString() || '';
+  const query = current === key ? {} : { category: key };
+
+  router.push({
+    path: route.path,
+    query
+  });
 }
 </script>
 
