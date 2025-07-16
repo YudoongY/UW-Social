@@ -31,6 +31,22 @@ const filteredEvents = computed(() => {
     ? eventStore.events
     : eventStore.events.filter(e => e.category === props.category);
 
+    // 只显示未过期活动
+  const now = new Date();
+  events = events.filter(e => {
+    const end = typeof e.endtime?.toDate === 'function'
+      ? e.endtime.toDate()
+      : new Date(e.endtime);
+    return end > now;
+  });
+
+  // 按开始时间倒序
+  events = events.slice().sort((a, b) => {
+    const aTime = typeof a.startime?.toDate === 'function' ? a.startime.toDate() : new Date(a.startime);
+    const bTime = typeof b.startime?.toDate === 'function' ? b.startime.toDate() : new Date(b.startime);
+    return bTime.getTime() - aTime.getTime();
+  });
+
   const q = (route.query.q as string || '').trim();
   if (!q) return events;
   // Use Fuse.js for fuzzy search and relevance ranking
