@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { setPersistence, browserLocalPersistence } from 'firebase/auth';
 
 interface UserProfile {
   uid: string;
@@ -81,19 +82,22 @@ export const useUserStore = defineStore('user', () => {
     });
   };
 
-  // Google 登录
-  const loginWithGoogle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      userProfile.value = result.user as UserProfile;
-      isLoggedIn.value = true;
-      return result.user;
-    } catch (error) {
-      console.error('登录失败:', error);
-      throw error;
-    }
-  };
+ const loginWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+
+    // Force local persistence before login
+    await setPersistence(auth, browserLocalPersistence);
+
+    const result = await signInWithPopup(auth, provider);
+    userProfile.value = result.user as UserProfile;
+    isLoggedIn.value = true;
+    return result.user;
+  } catch (error) {
+    console.error('登录失败:', error);
+    throw error;
+  }
+};
 
   // 退出登录
   const logout = async () => {
