@@ -15,6 +15,7 @@
             <li v-if="userStore.isLoggedIn && userStore.userProfile?.displayName">
               <router-link to="/profile">👨‍🎓 Profile</router-link>
             </li>
+            <!-- 下划线-->
             <!-- 搜索框放在左侧导航项后面 -->
             <div class="navbar-search">
               <input
