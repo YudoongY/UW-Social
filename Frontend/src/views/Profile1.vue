@@ -9,12 +9,12 @@
 
       <div class="profile-menu">
         <ul>
-          <li><a href="#" @click="showSection('default')">🏠 Profile Home</a></li>
-          <li><a href="#" @click="showSection('friends')">👥 My Friends</a></li>
-          <li><a href="#" @click="showSection('recommendations')">✨ People You May Know</a></li>
-          <li><a href="#" @click="showSection('published')">📅 Published Events</a></li>
-          <li><a href="#" @click="showSection('participated')">🎯 Participated Events</a></li>
-          <li><a href="#" @click="showSection('achievements')">🏆 Your Achievement</a></li>
+          <li><a href="#" @click.prevent="showSection('default')">🏠 Profile Home</a></li>
+          <!-- <li><a href="#" @click="showSection('friends')">👥 My Friends</a></li>
+          <li><a href="#" @click="showSection('recommendations')">✨ People You May Know</a></li> -->
+          <li><a href="#" @click.prevent="showSection('published')">📅 Published Events</a></li>
+          <!-- <li><a href="#" @click="showSection('participated')">🎯 Participated Events</a></li> -->
+          <li><a href="#" @click.prevent="showSection('achievements')">🏆 Your Achievement</a></li>
         </ul>
       </div>
     </aside>
@@ -88,22 +88,19 @@
       <div v-show="currentSection === 'published'" class="profile-section">
         <h3>📅 Published Events</h3>
         <div class="event-list-horizontal">
-          <div v-for="event in publishedEvents" :key="event.id" class="event-card-horizontal">
+          <div
+            v-for="event in publishedEvents"
+            :key="event.id"
+            class="event-card-horizontal"
+            @click="openDetail(event)"
+            style="cursor: pointer;"
+          >
             <h4>{{ event.title }}</h4>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>{{ event.date }}</span>
+              <span>{{ formatEventSchedule(event) }}</span>
               <span>{{ event.location }}</span>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div v-show="currentSection === 'participated'" class="profile-section">
-        <h3>🎯 Participated Events</h3>
-        <div v-for="event in participatedEvents" :key="event.id" class="event-card">
-          <h4>{{ event.title }}</h4>
-          <p>📅 {{ event.date }}</p>
-          <p>📍 {{ event.location }}</p>
         </div>
       </div>
 
@@ -118,6 +115,10 @@
           <p>🤝 You have made 5 new friends!</p>
         </div>
       </div>
+
+      <ElDialog v-model="isDialogOpen" title="Event Details" class="custom-dialog">
+        <DetailCard v-if="selectedEvent" :event="selectedEvent" />
+      </ElDialog>
     </main>
   </div>
 </template>
@@ -129,45 +130,14 @@ import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
 import AvatarUpload from '../components/AvatarUpload.vue'
+import DetailCard from '../components/DetailCard.vue';
 import '../assets/profile.css';
-import { formatEventSchedule } from '../types/event';
-
-interface Event {
-  id: string
-  title: string
-  date: string
-  location: string
-}
+import { formatEventSchedule, type Event } from '../types/event';
 
 const userStore = useUserStore()
 const router = useRouter()
 const currentSection = ref('default')
 const db = getFirestore()
-
-// 模拟数据
-const publishedEvents = ref<Event[]>([
-  {
-    id: '1',
-    title: 'Study Session',
-    date: 'March 30th',
-    location: 'Library 4th Floor'
-  },
-  {
-    id: '2',
-    title: 'Club Fair',
-    date: 'April 1st',
-    location: 'Student Center'
-  }
-])
-
-const participatedEvents = ref<Event[]>([
-  {
-    id: '1',
-    title: 'Basketball Game',
-    date: 'March 25th',
-    location: 'IMA'
-  }
-])
 
 const showSection = (section: string) => {
   currentSection.value = section
@@ -181,12 +151,6 @@ function goToEditProfile() {
   router.push('/profile/edit');
 }
 
-const formatDate = (ts: any) => {
-  if (!ts) return '';
-  const date = typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
-  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-};
-
 onMounted(async () => {
   if (!userStore.isLoggedIn) {
     router.push('/login');
@@ -199,16 +163,35 @@ onMounted(async () => {
     const querySnapshot = await getDocs(q);
     publishedEvents.value = querySnapshot.docs.map(doc => {
       const data = doc.data();
-      const dateStr = formatEventSchedule(data);
       return {
         id: doc.id,
         title: data.title || '',
-        date: dateStr,
-        location: data.location || ''
+        description: data.description || '',
+        location: data.location || '',
+        category: data.category || '',
+        tags: data.tags || [],
+        schedule: data.schedule,
+        maxParticipants: data.maxParticipants ?? null,
+        organizerId: data.organizerId || '',
+        organizerName: data.organizerName || '',
+        organizerAvatar: data.organizerAvatar || '',
+        createdAt: data.createdAt || '',
+        participants: data.participants || [],
+        link: data.link || '',
       };
     });
   } catch (error) {
     console.error('获取发布的活动失败:', error);
   }
 });
+
+const publishedEvents = ref<Event[]>([]);
+const participatedEvents = ref([]);
+const isDialogOpen = ref(false);
+const selectedEvent = ref<Event | null>(null);
+
+function openDetail(event: Event | null) {
+  selectedEvent.value = event;
+  isDialogOpen.value = true;
+}
 </script>

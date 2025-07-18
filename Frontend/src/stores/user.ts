@@ -8,25 +8,10 @@ import {
   onAuthStateChanged,
   User
 } from 'firebase/auth';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { setPersistence, browserLocalPersistence } from 'firebase/auth';
-
-interface UserProfile {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-  emailVerified: boolean;
-  isAnonymous: boolean;
-  metadata: {
-    creationTime?: string;
-    lastSignInTime?: string;
-  };
-  providerData: any[];
-  refreshToken: string;
-  tenantId: string | null;
-}
+import type { UserProfile } from '../types/user';
 
 export const useUserStore = defineStore('user', () => {
   const isLoggedIn = ref(false);
@@ -46,28 +31,38 @@ export const useUserStore = defineStore('user', () => {
 
         if (user) {
           try {
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            const userRef = doc(db, 'users', user.uid);
+            const userDoc = await getDoc(userRef);
+
+            const lastSignInTime = user.metadata?.lastSignInTime || new Date().toISOString();
+
             if (userDoc.exists()) {
-              userProfile.value = {
-                ...user,
-                ...userDoc.data()
-              } as UserProfile;
+              // 更新 lastSignInTime
+              await updateDoc(userRef, {
+                'metadata.lastSignInTime': lastSignInTime
+              });
+              userProfile.value = userDoc.data() as UserProfile;
+              // 手动同步最新 lastSignInTime 到本地
+              if (userProfile.value.metadata) {
+                userProfile.value.metadata.lastSignInTime = lastSignInTime;
+              }
             } else {
+              // 文档不存在，创建默认文档
               const plainUser = {
                 uid: user.uid,
                 email: user.email,
                 displayName: user.displayName,
                 photoURL: user.photoURL,
                 emailVerified: user.emailVerified,
-                isAnonymous: user.isAnonymous,
+                grade: '',
+                major: '',
+                tags: [],
                 metadata: {
-                  creationTime: user.metadata?.creationTime,
-                  lastSignInTime: user.metadata?.lastSignInTime,
+                  creationTime: user.metadata?.creationTime || new Date().toISOString(),
+                  lastSignInTime: lastSignInTime,
                 },
-                providerData: user.providerData ?? [],
-                refreshToken: user.refreshToken,
-                tenantId: user.tenantId,
               };
+              await setDoc(userRef, plainUser);
               userProfile.value = plainUser as UserProfile;
             }
           } catch (err) {
@@ -82,22 +77,22 @@ export const useUserStore = defineStore('user', () => {
     });
   };
 
- const loginWithGoogle = async () => {
-  try {
-    const provider = new GoogleAuthProvider();
+  const loginWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
 
-    // Force local persistence before login
-    await setPersistence(auth, browserLocalPersistence);
+      // Force local persistence before login
+      await setPersistence(auth, browserLocalPersistence);
 
-    const result = await signInWithPopup(auth, provider);
-    userProfile.value = result.user as UserProfile;
-    isLoggedIn.value = true;
-    return result.user;
-  } catch (error) {
-    console.error('登录失败:', error);
-    throw error;
-  }
-};
+      const result = await signInWithPopup(auth, provider);
+      userProfile.value = result.user as UserProfile;
+      isLoggedIn.value = true;
+      return result.user;
+    } catch (error) {
+      console.error('登录失败:', error);
+      throw error;
+    }
+  };
 
   // 退出登录
   const logout = async () => {
@@ -134,6 +129,26 @@ export const useUserStore = defineStore('user', () => {
     return userProfile.value?.uid === uid;
   };
 
+  // 设置默认用户数据
+  const setDefaultUserData = async () => {
+    if (!userProfile.value?.uid) return;
+
+    try {
+      const userRef = doc(db, 'users', userProfile.value.uid);
+      await setDoc(userRef, {
+        email: userProfile.value.email,
+        displayName: userProfile.value.displayName,
+        grade: 'freshman',
+        major: '',
+        tags: [],
+        // ...其他字段
+      }, { merge: true });
+    } catch (error) {
+      console.error('设置默认用户数据失败:', error);
+      throw error;
+    }
+  };
+
   return {
     isLoggedIn,
     userProfile,
@@ -141,6 +156,7 @@ export const useUserStore = defineStore('user', () => {
     logout,
     updateUserProfile,
     loadUser,
-    isOwner
+    isOwner,
+    setDefaultUserData
   };
 });
