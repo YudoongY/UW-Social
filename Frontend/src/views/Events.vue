@@ -116,7 +116,8 @@ const openCard = (event: any) => {
 };
 
 const handleCategorySelect = (key: string) => {
-  categoryFilter.value = key;
+  let capsCategory = categoryFilter.value.toUpperCase();
+  capsCategory  = key.toUpperCase();
 };
 
 const dialogWidth = computed(() =>
