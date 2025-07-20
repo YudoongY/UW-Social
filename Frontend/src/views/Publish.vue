@@ -10,9 +10,9 @@ import EventForm from '../components/EventForm.vue';
 
 <style scoped>
 .publish-page {
-  padding: 1rem;
-  margin-top: 35px;
+  padding: 0;
+  margin-top: 70px;
   min-height: calc(100vh - 100px);
-  background: #f5f5f5;
+  background: transparent;
 }
 </style> 
