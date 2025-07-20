@@ -1,11 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { useUserStore } from '../stores/user'
+// import { isMobile } from '@/App.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/Home.vue')
+    component: isMobile()
+      ? () => import('@/components/mobile/MobileHome.vue')
+      : () => import('@/views/Home.vue')
   },
   {
     path: '/login',
@@ -41,11 +44,14 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory("/UW-Social/"),
+  history: createWebHashHistory(),
+  // Cool, better than createWebHistory.
   routes
 })
 
-
+export function isMobile() {
+  return window.innerWidth <= 576;
+}
 
 // 路由守卫
 router.beforeEach((to, from, next) => {

@@ -69,11 +69,10 @@
 }
 
 .profile-info h3,
-.profile-tags h3,
-.profile-hobbies h3 {
+.profile-tags h3 {
   color: #333;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
+  margin-bottom: 1.2rem;
+  margin-top: 1rem;
 }
 
 .profile-info p {
@@ -81,8 +80,7 @@
   color: #666;
 }
 
-.profile-tags ul,
-.profile-hobbies ul {
+.profile-tags ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -91,8 +89,7 @@
   gap: 0.5rem;
 }
 
-.profile-tags li,
-.profile-hobbies li {
+.profile-tags li {
   background: #f0f0f0;
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -181,4 +178,22 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #337ab7;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  /* text-decoration: underline; */
+  transition: color 0.2s;
+}
+
+.link-btn:hover,
+.link-btn:focus {
+  color: #23527c;
+  /* text-decoration: underline; */
 }

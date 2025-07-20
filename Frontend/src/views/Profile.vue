@@ -9,12 +9,12 @@
 
       <div class="profile-menu">
         <ul>
-          <li><a href="#" @click="showSection('default')">🏠 Profile Home</a></li>
-          <!-- <li><a href="#" @click="showSection('friends')">👥 My Friends</a></li>
-          <li><a href="#" @click="showSection('recommendations')">✨ People You May Know</a></li> -->
-          <li><a href="#" @click="showSection('published')">📅 Published Events</a></li>
-          <!-- <li><a href="#" @click="showSection('participated')">🎯 Participated Events</a></li> -->
-          <li><a href="#" @click="showSection('achievements')">🏆 Your Achievement</a></li>
+          <li><a href="#" @click.prevent="showSection('default')">🏠 Profile Home</a></li>
+          <!-- <li><a href="#" @click.prevent="showSection('friends')">👥 My Friends</a></li> -->
+          <!-- <li><a href="#" @click.prevent="showSection('recommendations')">✨ People You May Know</a></li> -->
+          <li><a href="#" @click.prevent="showSection('published')">📅 Published Events</a></li>
+          <li><a href="#" @click.prevent="showSection('participated')">🎯 Participated Events</a></li>
+          <li><a href="#" @click.prevent="showSection('achievements')">🏆 Your Achievement</a></li>
         </ul>
       </div>
     </aside>
@@ -23,41 +23,34 @@
     <main class="profile-main">
       <!-- 默认页面（基本信息 & 社交动态） -->
       <div v-show="currentSection === 'default'" id="default-content">
-        <h2>👋 This is your profile!</h2>
         
         <!-- 个人信息 -->
         <div class="profile-info">
           <h3>📄 Basic Information</h3>
-          <p>🎓 Major: Computer Science & Math</p>
-          <p>📞 Contact: {{ userStore.userProfile?.email }}</p>
+          <p>Name: {{ userStore.userProfile?.displayName }}</p>
+          <p>Grade: {{ userStore.userProfile?.grade }}</p>
+          <p>Major: {{ userStore.userProfile?.major }}</p>
+          <p>Contact: {{ userStore.userProfile?.email }}</p>
         </div>
 
         <!-- 个人标签 -->
         <div class="profile-tags">
           <h3>🏷️ Personal Tags</h3>
           <ul>
-            <li>💻 Computer Science & Math</li>
-            <li>🏠 Dorm: McCarty Hall</li>
-            <li>🎭 Organization: Drama Club</li>
+            <li v-for="tag in userStore.userProfile?.tags || []" :key="tag">{{ tag }}</li>
           </ul>
         </div>
 
-        <!-- 个人爱好 -->
-        <div class="profile-hobbies">
-          <h3>🎯 Personal Hobbies</h3>
-          <ul>
-            <li>🎵 Music</li>
-            <li>🏀 Basketball</li>
-            <li>📖 Reading</li>
-          </ul>
+        <!-- 编辑 -->
+        <div class="edit-profile">
           <button class="edit-btn" @click="goToEditProfile">✏️ Edit Profile</button>
         </div>
 
         <div class="achievements">
-          <h2>🏆 Your Achievements</h2>
+          <h3>🏆 Your Achievements</h3>
           <div class="achievement-badge">
-            <img src="/images/logo.png" alt="UW Social Badge">
-            <p>🎉 Congratulations! You have published 3 events!</p>
+            <img src="/images/logo1.png" alt="UW Social Badge">
+            <p>🎉 You have published 3 events!</p>
           </div>
           <div class="achievement-badge">
             <img src="/images/logo1.png" alt="UW Social Badge">
@@ -67,7 +60,7 @@
       </div>
 
       <!-- 其他动态页面 -->
-      <div v-show="currentSection === 'friends'" class="profile-section">
+      <!-- <div v-show="currentSection === 'friends'" class="profile-section">
         <h3>👥 My Friends</h3>
         <ul>
           <li>🧑‍💻 Alex (Computer Science)</li>
@@ -83,24 +76,27 @@
           <li>🔍 David (International Student)</li>
           <li>🔍 Mia (Artificial Intelligence)</li>
         </ul>
-      </div>
+      </div> -->
 
       <div v-show="currentSection === 'published'" class="profile-section">
         <h3>📅 Published Events</h3>
         <div class="event-list-horizontal">
-          <div
-            v-for="event in publishedEvents"
-            :key="event.id"
-            class="event-card-horizontal"
-            @click="openDetail(event)"
-            style="cursor: pointer;"
-          >
+          <div v-for="event in publishedEvents" :key="event.id" class="event-card-horizontal">
             <h4>{{ event.title }}</h4>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>{{ formatDate(event.startime) }}</span>
+              <span>{{ event.date }}</span>
               <span>{{ event.location }}</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div v-show="currentSection === 'participated'" class="profile-section">
+        <h3>🎯 Participated Events</h3>
+        <div v-for="event in participatedEvents" :key="event.id" class="event-card">
+          <h4>{{ event.title }}</h4>
+          <p>📅 {{ event.date }}</p>
+          <p>📍 {{ event.location }}</p>
         </div>
       </div>
 
@@ -115,10 +111,6 @@
           <p>🤝 You have made 5 new friends!</p>
         </div>
       </div>
-
-      <ElDialog v-model="isDialogOpen" title="Event Details" class="custom-dialog">
-        <DetailCard v-if="selectedEvent" :event="selectedEvent" />
-      </ElDialog>
     </main>
   </div>
 </template>
@@ -130,14 +122,24 @@ import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'
 import AvatarUpload from '../components/AvatarUpload.vue'
-import DetailCard from '../components/DetailCard.vue';
 import '../assets/profile.css';
-import type { Event } from '../types/event';
+import { formatEventSchedule } from '../types/event';
+
+interface Event {
+  id: string
+  title: string
+  date: string
+  location: string
+}
 
 const userStore = useUserStore()
 const router = useRouter()
 const currentSection = ref('default')
 const db = getFirestore()
+
+// 模拟数据
+const publishedEvents = ref<Event[]>([])
+const participatedEvents = ref<Event[]>([])
 
 const showSection = (section: string) => {
   currentSection.value = section
@@ -169,48 +171,16 @@ onMounted(async () => {
     const querySnapshot = await getDocs(q);
     publishedEvents.value = querySnapshot.docs.map(doc => {
       const data = doc.data();
-      // 格式化 startime 为 date 字段
-      let dateStr = '';
-      if (data.startime) {
-        const dateObj = typeof data.startime.toDate === 'function'
-          ? data.startime.toDate()
-          : new Date(data.startime);
-        dateStr = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      }
+      const dateStr = formatEventSchedule(data);
       return {
         id: doc.id,
         title: data.title || '',
-        description: data.description || '',
-        location: data.location || '',
-        category: data.category || '',
-        tags: data.tags || [],
-        startime: data.startime,
-        endtime: data.endtime,
-        maxParticipants: data.maxParticipants ?? null,
-        organizerId: data.organizerId || '',
-        organizerName: data.organizerName || '',
-        organizerAvatar: data.organizerAvatar || '',
-        createdAt: data.createdAt || '',
-        participants: data.participants || [],
-        // 你可以根据 Event 类型再补充其它字段
+        date: dateStr,
+        location: data.location || ''
       };
     });
   } catch (error) {
-    console.error('获取发布的活动失败:', error);
+    console.error('Failed to fetch published events:', error);
   }
 });
-
-const publishedEvents = ref<Event[]>([]);
-const participatedEvents = ref([]);
-const isDialogOpen = ref(false);
-const selectedEvent = ref<Event | null>(null);
-
-function openDetail(event: Event | { id: string; title: string; 
-  description: string; startime: any; endtime: any; location: string; 
-  category: string; imageUrl?: string | undefined; organizerId: string; 
-  organizerName: string; organizerAvatar: string; createdAt: string; 
-  participants: string[]; maxParticipants: number | null; tags: string[]; } | null) {
-  selectedEvent.value = event;
-  isDialogOpen.value = true;
-}
 </script>

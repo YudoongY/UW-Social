@@ -25,44 +25,122 @@
         ></textarea>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="startDate">Start Date</label>
-          <input
-            id="startDate"
-            v-model="formData.startDate"
-            type="date"
-            required
-          >
+      <div class="form-group">
+        <label for="recurrenceType">Recurrence</label>
+        <select id="recurrenceType" v-model="formData.recurrenceType" required>
+          <option :value="RecurrenceType.ONE_TIME">One-time</option>
+          <option :value="RecurrenceType.DAILY">Daily</option>
+          <option :value="RecurrenceType.WEEKLY">Weekly</option>
+          <option :value="RecurrenceType.MONTHLY">Monthly</option>
+        </select>
+      </div>
+
+      <!-- One-time event fields -->
+      <div v-if="formData.recurrenceType === RecurrenceType.ONE_TIME">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input id="startDate" v-model="formData.startDate" type="date" required>
+          </div>
+          <div class="form-group">
+            <label for="startTime">Start Time</label>
+            <input id="startTime" v-model="formData.startTime" type="time" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="startTime">Start Time</label>
-          <input
-            id="startTime"
-            v-model="formData.startTime"
-            type="time"
-            required
-          >
+        <div class="form-row">
+          <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input id="endDate" v-model="formData.endDate" type="date" required>
+          </div>
+          <div class="form-group">
+            <label for="endTime">End Time</label>
+            <input id="endTime" v-model="formData.endTime" type="time" required>
+          </div>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="endDate">End Date</label>
-          <input
-            id="endDate"
-            v-model="formData.endDate"
-            type="date"
-            required
-          >
+
+      <!-- Daily recurring event fields -->
+      <div v-if="formData.recurrenceType === RecurrenceType.DAILY">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dailyStartDate">Start Date</label>
+            <input id="dailyStartDate" v-model="formData.startDate" type="date" required>
+          </div>
+          <div class="form-group">
+            <label for="dailyEndDate">End Date (optional)</label>
+            <input id="dailyEndDate" v-model="formData.endDate" type="date">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dailyStartTime">Start Time</label>
+            <input id="dailyStartTime" v-model="formData.startTime" type="time" required>
+          </div>
+          <div class="form-group">
+            <label for="dailyEndTime">End Time</label>
+            <input id="dailyEndTime" v-model="formData.endTime" type="time" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly recurring event fields -->
+      <div v-if="formData.recurrenceType === RecurrenceType.WEEKLY">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="weeklyStartDate">Start Date</label>
+            <input id="weeklyStartDate" v-model="formData.startDate" type="date" required>
+          </div>
+          <div class="form-group">
+            <label for="weeklyEndDate">End Date (optional)</label>
+            <input id="weeklyEndDate" v-model="formData.endDate" type="date">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="weeklyStartTime">Start Time</label>
+            <input id="weeklyStartTime" v-model="formData.startTime" type="time" required>
+          </div>
+          <div class="form-group">
+            <label for="weeklyEndTime">End Time</label>
+            <input id="weeklyEndTime" v-model="formData.endTime" type="time" required>
+          </div>
         </div>
         <div class="form-group">
-          <label for="endTime">End Time</label>
-          <input
-            id="endTime"
-            v-model="formData.endTime"
-            type="time"
-            required
-          >
+          <label>Days of Week</label>
+          <div class="checkbox-group">
+            <label v-for="(day, idx) in weekDays" :key="idx">
+              <input type="checkbox" :value="idx" v-model="formData.daysOfWeek"> {{ day }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly recurring event fields -->
+      <div v-if="formData.recurrenceType === RecurrenceType.MONTHLY">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="monthlyStartDate">Start Date</label>
+            <input id="monthlyStartDate" v-model="formData.startDate" type="date" required>
+          </div>
+          <div class="form-group">
+            <label for="monthlyEndDate">End Date (optional)</label>
+            <input id="monthlyEndDate" v-model="formData.endDate" type="date">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="monthlyStartTime">Start Time</label>
+            <input id="monthlyStartTime" v-model="formData.startTime" type="time" required>
+          </div>
+          <div class="form-group">
+            <label for="monthlyEndTime">End Time</label>
+            <input id="monthlyEndTime" v-model="formData.endTime" type="time" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Days of Month</label>
+          <input type="text" v-model="formData.daysOfMonthInput" placeholder="e.g., 1, 15, 31">
+          <small>Enter days separated by commas (1-31)</small>
         </div>
       </div>
 
@@ -81,12 +159,12 @@
         <label for="category">Category</label>
         <select id="category" v-model="formData.category" required>
           <option value="">Select category</option>
-          <option value="academic">Academic</option>
-          <option value="club">Club</option>
-          <option value="sports">Sports</option>
-          <option value="games">Games</option>
-          <option value="culture">Culture</option>
-          <option value="interest">Interest</option>
+          <option value="Academic">Academic</option>
+          <option value="Club">Club</option>
+          <option value="Sports">Sports</option>
+          <option value="Games">Games</option>
+          <option value="Culture">Culture</option>
+          <option value="Interest">Interest</option>
           <option value="HFS">HFS</option>
           <!-- <option value="other">Other</option> -->
         </select>
@@ -144,14 +222,16 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { useEventStore } from '../stores/event';
-import { collection, addDoc,Timestamp } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import type { Event } from '../types/event';
+import { RecurrenceType } from '../types/event';
+import { getAuth } from 'firebase/auth';
 
 const router = useRouter();
 const userStore = useUserStore();
 const eventStore = useEventStore();
 const isSubmitting = ref(false);
+const db = getFirestore();
 
 const formData = ref({
   title: '',
@@ -165,7 +245,12 @@ const formData = ref({
   maxParticipants: null as number | null,
   tags: [] as string[],
   link: '',
+  recurrenceType: RecurrenceType.ONE_TIME,
+  daysOfWeek: [] as number[],
+  daysOfMonthInput: '',
 });
+
+const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const tagsInput = computed({
   get: () => formData.value.tags.join(', '),
@@ -189,26 +274,102 @@ const handleSubmit = async () => {
 
   isSubmitting.value = true;
   try {
-    const start = new Date(`${formData.value.startDate}T${formData.value.startTime}`);
-    const end = new Date(`${formData.value.endDate}T${formData.value.endTime}`);
-    if (start >= end) {
-      alert('End time must be after start time.');
+    let schedule;
+    const recurrenceType = formData.value.recurrenceType;
+    if (recurrenceType === RecurrenceType.ONE_TIME) {
+      const start = new Date(`${formData.value.startDate}T${formData.value.startTime}`);
+      const end = new Date(`${formData.value.endDate}T${formData.value.endTime}`);
+      if (start.toDateString() !== end.toDateString()) {
+        alert('Start and end must be on the same day for a one-time event.');
+        isSubmitting.value = false;
+        return;
+      }
+      if (start >= end) {
+        alert('End time must be after start time.');
+        isSubmitting.value = false;
+        return;
+      }
+      schedule = {
+        type: RecurrenceType.ONE_TIME as const,
+        startDatetime: start,
+        endDatetime: end,
+      };
+    } else if (recurrenceType === RecurrenceType.DAILY) {
+      if (!formData.value.startDate || !formData.value.startTime || !formData.value.endTime) {
+        alert('Please fill in all required fields.');
+        isSubmitting.value = false;
+        return;
+      }
+      if (formData.value.endDate && new Date(formData.value.endDate) < new Date(formData.value.startDate)) {
+        alert('End date must be after start date.');
+        isSubmitting.value = false;
+        return;
+      }
+      schedule = {
+        type: RecurrenceType.DAILY as const,
+        startDate: new Date(formData.value.startDate),
+        endDate: formData.value.endDate ? new Date(formData.value.endDate) : undefined,
+        startTimeOfDay: formData.value.startTime,
+        endTimeOfDay: formData.value.endTime,
+      };
+    } else if (recurrenceType === RecurrenceType.WEEKLY) {
+      if (!formData.value.startDate || !formData.value.startTime || !formData.value.endTime || formData.value.daysOfWeek.length === 0) {
+        alert('Please fill in all required fields and select at least one day of week.');
+        isSubmitting.value = false;
+        return;
+      }
+      if (formData.value.endDate && new Date(formData.value.endDate) < new Date(formData.value.startDate)) {
+        alert('End date must be after start date.');
+        isSubmitting.value = false;
+        return;
+      }
+      schedule = {
+        type: RecurrenceType.WEEKLY as const,
+        startDate: new Date(formData.value.startDate),
+        endDate: formData.value.endDate ? new Date(formData.value.endDate) : undefined,
+        startTimeOfDay: formData.value.startTime,
+        endTimeOfDay: formData.value.endTime,
+        daysOfWeek: formData.value.daysOfWeek.map(Number),
+      };
+    } else if (recurrenceType === RecurrenceType.MONTHLY) {
+      if (!formData.value.startDate || !formData.value.startTime || !formData.value.endTime || !formData.value.daysOfMonthInput) {
+        alert('Please fill in all required fields and enter days of month.');
+        isSubmitting.value = false;
+        return;
+      }
+      if (formData.value.endDate && new Date(formData.value.endDate) < new Date(formData.value.startDate)) {
+        alert('End date must be after start date.');
+        isSubmitting.value = false;
+        return;
+      }
+      const daysOfMonth = formData.value.daysOfMonthInput.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n) && n >= 1 && n <= 31);
+      if (daysOfMonth.length === 0) {
+        alert('Please enter valid days of month (1-31).');
+        isSubmitting.value = false;
+        return;
+      }
+      schedule = {
+        type: RecurrenceType.MONTHLY as const,
+        startDate: new Date(formData.value.startDate),
+        endDate: formData.value.endDate ? new Date(formData.value.endDate) : undefined,
+        startTimeOfDay: formData.value.startTime,
+        endTimeOfDay: formData.value.endTime,
+        daysOfMonth,
+      };
+    }
+
+    if (!schedule) {
+      alert('Invalid schedule.');
+      isSubmitting.value = false;
       return;
     }
-    // Prepare eventData with maxParticipants as number or undefined
-    const {
-      maxParticipants,
-      ...restFormData
-    } = formData.value;
-
     const eventData: Omit<Event, 'id'> = {
       title: formData.value.title,
       description: formData.value.description,
       location: formData.value.location,
       category: formData.value.category,
       tags: formData.value.tags,
-      startime: Timestamp.fromDate(start),
-      endtime: Timestamp.fromDate(end),
+      schedule: schedule,
       maxParticipants: formData.value.maxParticipants,
       organizerId: userStore.userProfile.uid,
       organizerName: userStore.userProfile.displayName || 'Anonymous',

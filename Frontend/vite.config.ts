@@ -10,7 +10,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base: '/UW-Social/',
+  base: process.env.VITE_BASE_PATH || '/',
   server: {
     proxy: {
       '/api': {
