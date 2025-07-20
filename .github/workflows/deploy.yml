@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main, alpha ]
+    branches: [ main ]
   # pull_request: Reason: will not have permission and fails anyways.
   #   branches: [ main ]
   workflow_dispatch:
