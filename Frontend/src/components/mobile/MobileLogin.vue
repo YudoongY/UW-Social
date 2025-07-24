@@ -52,7 +52,7 @@ function handleGoogleLogin() {
 <style scoped>
 .mobile-login-container {
   max-width: 25rem; /* 400px ≈ 25rem */
-  margin: 0 auto;
+  margin: 0 0rem;
   background: #fff;
   min-height: 100vh;
   display: flex;

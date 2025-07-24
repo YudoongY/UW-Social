@@ -8,9 +8,8 @@
     <div class="content">
       <router-view></router-view>
     </div>
-
     <!-- 全局弹窗 -->
-    <ElDialog v-model="eventDialogStore.isDialogOpen" title="Event Details" class="custom-dialog">
+    <ElDialog v-if="!hasQuery" v-model="eventDialogStore.isDialogOpen" title="Event Details" class="custom-dialog">
       <DetailCard v-if="eventDialogStore.selectedEvent" :event="eventDialogStore.selectedEvent" />
     </ElDialog>
   </div>
@@ -25,7 +24,9 @@ import { onMounted, ref, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 
-const route = useRoute();
+const eventDialogStore = useEventDialogStore();
+const route = useRoute()
+const hasQuery = computed(() => !!route.query.q)
 const isMobile = ref(window.innerWidth <= 576);
 
 function updateIsMobile() {
@@ -50,34 +51,7 @@ onUnmounted(() => {
   window.removeEventListener('resize', setVh);
 });
 
-const eventDialogStore = useEventDialogStore();
-
-const route = useRoute()
-const hasQuery = computed(() => !!route.query.q)
 </script>
-
-<template>
-  <div class="app-container">
-    <MobileNav v-if="isMobile" />
-    <Navbar v-else />
-    <div class="content">
-      <router-view></router-view>
-    </div>
-
-    <!-- 全局弹窗 -->
-    <ElDialog
-    v-if="!hasQuery"
-    v-model="eventDialogStore.isDialogOpen"
-    title="Event Details"
-    class="custom-dialog"
-  >
-    <DetailCard
-      v-if="eventDialogStore.selectedEvent"
-      :event="eventDialogStore.selectedEvent"
-    />
-  </ElDialog>
-  </div>
-</template>
 
 <style scoped>
 .custom-dialog {
@@ -88,9 +62,6 @@ const hasQuery = computed(() => !!route.query.q)
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-</style>
-
-<style>
 * {
   margin: 0;
   padding: 0;
