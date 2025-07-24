@@ -1,5 +1,8 @@
 <template>
-  <div class="app-container">
+  <div
+    class="app-container"
+    :style="isMobile && route.path === '/login' ? { paddingTop: '0' } : { paddingTop: '70px' }"
+  >
     <MobileNav v-if="isMobile" />
     <Navbar v-else />
     <div class="content">
@@ -19,7 +22,9 @@ import MobileNav from '@/components/mobile/MobileNav.vue';
 import { useEventDialogStore } from './stores/eventDialog.ts';
 import DetailCard from '@/components/DetailCard.vue';
 import { onMounted, ref, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const isMobile = ref(window.innerWidth <= 576);
 
 function updateIsMobile() {
@@ -83,7 +88,7 @@ body {
 }
 
 .content {
-  padding: 10px; /* 正文和边缘的距离 */
+  /* padding: 10px; 正文和边缘的距离 */
 }
 
 @media (max-width: 576px) {

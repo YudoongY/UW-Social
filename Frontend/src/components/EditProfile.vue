@@ -88,6 +88,12 @@
               <button @click="addCustomTag" class="add-custom-btn" :disabled="!tagSearchQuery.trim()">
                 <span>+</span>
               </button>
+              <img
+                src="/svg/help.svg"
+                class="tag-help-icon"
+                title="You can search for tags like major, dorm, sports, hobbies, etc."
+                alt="Help"
+              />
             </div>
             
             <!-- Search Results -->
@@ -112,7 +118,7 @@
           </div>
 
           <!-- Category Tags -->
-          <div class="tag-categories">
+          <!-- <div class="tag-categories">
             <div class="tag-category">
               <h4>🏠 Dorm & Housing</h4>
               <div class="tag-grid">
@@ -172,7 +178,7 @@
                 </button>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- Selected Tags Display -->
           <div v-if="selectedTags.length > 0" class="selected-tags-section">
