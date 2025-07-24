@@ -18,8 +18,9 @@
 <script setup lang="ts">
 import Navbar from './components/Navbar.vue';
 import MobileNav from '@/components/mobile/MobileNav.vue';
-import { useEventDialogStore } from './stores/eventDialog.ts';
 import DetailCard from '@/components/DetailCard.vue';
+import '@/assets/global.css';
+import { useEventDialogStore } from './stores/eventDialog.ts';
 import { onMounted, ref, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
@@ -60,19 +61,6 @@ onUnmounted(() => {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  /* box-sizing: border-box; */
-}
-
-body {
-  margin: 0;
-  font-family: 'Helvetica Neue', sans-serif;
-  background-color: #ffffff;
-  min-height: 100vh;
 }
 
 .app-container {

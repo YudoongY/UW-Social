@@ -5,7 +5,7 @@
       <button class="back-btn" @click="$router.back()">
         <img src="/svg/rightarrow.svg" alt="Back" style="transform: rotate(180deg); width: 24px; height: 24px;" />
       </button>
-      <span class="login-title">Log in</span>
+      <span class="login-title">Sign in</span>
     </div>
     <!-- logo -->
     <div class="logo-section">
@@ -73,7 +73,8 @@ function handleGoogleLogin() {
 .back-btn {
   position: absolute;
   left: 1rem;
-  top: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   padding: 0;
@@ -85,6 +86,10 @@ function handleGoogleLogin() {
   font-weight: 600;
   color: #222;
   letter-spacing: 1px;
+  line-height: 3rem; /* 与 .login-header 高度一致 */
+  height: 3rem;
+  display: flex;
+  align-items: center;
 }
 
 .logo-section {
