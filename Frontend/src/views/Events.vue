@@ -64,16 +64,6 @@ const userStore = useUserStore();
 // Reliable computed wrapper
 const currentUserId = computed(() => userStore.userProfile?.uid);
 
-watchEffect(() => {
-  console.log('[Debug] userStore.userProfile:', userStore.userProfile);
-  console.log('[Debug] currentUserId (computed):', currentUserId.value);
-});
-
-onMounted(() => {
-  console.log('[Mounted] Final UID:', currentUserId.value);
-});
-
-
 const eventDialogStore = useEventDialogStore();
 
 
@@ -101,8 +91,7 @@ const openCard = (event: any) => {
 };
 
 const handleCategorySelect = (key: string) => {
-  let capsCategory = categoryFilter.value.toUpperCase();
-  capsCategory  = key.toUpperCase();
+  categoryFilter.value = key;
 };
 
 const dialogWidth = computed(() =>
