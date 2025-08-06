@@ -36,21 +36,20 @@ function sortEventsByStartTimeDesc(events: any[]) {
 }
 
 function makeInterestTagEventsFirst(events: any[]) {
-  const userTags = (userStore.userProfile?.tags ?? []).map(t => t.toLowerCase());
+  const userTagSet = new Set((userStore.userProfile?.tags ?? []).map(t => t.toLowerCase()));
 
-  if (!userTags.length) return events;
+  if (!userTagSet.size) return events;
 
   const interestEvents = events.filter(e =>
-    userTags.includes(e.category.toLowerCase())
+    Array.isArray(e.tags) && e.tags.some((tag: string) => userTagSet.has(tag.toLowerCase()))
   );
 
   const otherEvents = events.filter(e =>
-    !userTags.includes(e.category.toLowerCase())
+    !Array.isArray(e.tags) || !e.tags.some((tag: string) => userTagSet.has(tag.toLowerCase()))
   );
 
   return [...interestEvents, ...otherEvents];
 }
-
 
 const filteredEvents = computed(() => {
   let events = !props.category
