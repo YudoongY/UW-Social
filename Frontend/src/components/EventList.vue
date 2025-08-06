@@ -51,9 +51,6 @@ function makeInterestTagEventsFirst(events: any[]) {
   return [...interestEvents, ...otherEvents];
 }
 
-
-
-
 const filteredEvents = computed(() => {
   let events = !props.category
     ? eventStore.events
