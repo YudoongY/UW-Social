@@ -28,7 +28,7 @@
       <div class="form-group">
         <label for="recurrenceType">Recurrence</label>
         <select id="recurrenceType" v-model="formData.recurrenceType" required>
-          <option :value="RecurrenceType.ONE_TIME">One-time</option>
+          <!-- <option :value="RecurrenceType.ONE_TIME">One-time</option> -->
           <option :value="RecurrenceType.DAILY">Daily</option>
           <option :value="RecurrenceType.WEEKLY">Weekly</option>
           <option :value="RecurrenceType.MONTHLY">Monthly</option>
@@ -191,14 +191,15 @@
         >
       </div>
 
-      <!-- <div class="form-group">
+      <div class="form-group">
         <label for="image">Event Image (Optional)</label>
         <input
           id="image"
           type="file"
           accept="image/*"
           @change="handleImageUpload"
-        > -->
+        >
+      </div>
 
       <div class="form-group">
         <label for="link">Event Link (Optional)</label>
@@ -223,6 +224,7 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { useEventStore } from '../stores/event';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'; // 引入 Firebase Storage 方法
 import type { Event } from '../types/event';
 import { RecurrenceType } from '../types/event';
 import { getAuth } from 'firebase/auth';
@@ -232,6 +234,7 @@ const userStore = useUserStore();
 const eventStore = useEventStore();
 const isSubmitting = ref(false);
 const db = getFirestore();
+const storage = getStorage(); // 初始化 Firebase Storage
 
 const formData = ref({
   title: '',
@@ -248,6 +251,7 @@ const formData = ref({
   recurrenceType: RecurrenceType.ONE_TIME,
   daysOfWeek: [] as number[],
   daysOfMonthInput: '',
+  imageUrl: '', // 新增字段，用于存储图片的下载 URL
 });
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -265,6 +269,26 @@ const descriptionPlaceholder = computed(() =>
     ? `Come and enjoy ${formData.value.title}!`
     : 'Describe your event here...'
 );
+
+const handleImageUpload = async (event: Event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const storagePath = `events/${Date.now()}_${file.name}`; // 生成唯一的存储路径
+  const storageReference = storageRef(storage, storagePath);
+
+  try {
+    // 上传文件到 Firebase Storage
+    const snapshot = await uploadBytes(storageReference, file);
+    // 获取文件的下载 URL
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    formData.value.imageUrl = downloadURL; // 将下载 URL 保存到表单数据中
+    alert('Image uploaded successfully!');
+  } catch (error) {
+    console.error('Failed to upload image:', error);
+    alert('Failed to upload image.');
+  }
+};
 
 const handleSubmit = async () => {
   if (!userStore.userProfile) {
@@ -377,6 +401,7 @@ const handleSubmit = async () => {
       createdAt: new Date().toISOString(),
       participants: [],
       link: formData.value.link,
+      imageUrl: formData.value.imageUrl, // 保存图片的下载 URL
     };
 
     await addDoc(collection(db, 'events'), eventData);

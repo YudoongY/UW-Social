@@ -1,49 +1,45 @@
 <template>
-  <div class="events-page-with-sidebar">
-    <el-container>
-      <el-aside width="200px" class="sidebar">
-        <el-menu
-          :default-active="categoryFilter"
-          @select="handleCategorySelect"
-          class="category-menu"
-        >
-          <el-menu-item index="">All</el-menu-item>
-          <el-menu-item index="academic">Academic</el-menu-item>
-          <el-menu-item index="club">Club</el-menu-item>
-          <el-menu-item index="sports">Sports</el-menu-item>
-          <el-menu-item index="games">Games</el-menu-item>
-          <el-menu-item index="culture">Culture</el-menu-item>
-          <el-menu-item index="interest">Interest</el-menu-item>
-          <el-menu-item index="HFS">HFS</el-menu-item>
-        </el-menu>
-      </el-aside>
-      <el-main>
-        <div class="events-header">
-          <h2>Event List🔥</h2>
-          <router-link to="/publish" class="publish-btn">
-            🚀 Publish new event
-          </router-link>
-        </div>
-        <!-- 监听 open-card 事件 -->
-        <EventList :category="categoryFilter" @open-card="openCard" />
+  <div class="events-page">
+    <!-- 背景容器 -->
+    <div class="background-container">
+      <img src="/svg/eventsbg.svg" alt="Events Background" class="background-svg" />
+      <!--疑似是“-”导致的build失败，而不是路径问题，此处尝试一下删掉“-”-->
+    </div>
 
-        <!-- 弹窗 -->
-        <el-dialog 
-          v-model="eventDialogStore.isDialogOpen" 
-          title="Event Details"
-          class="custom-dialog"
-          :width="'90vw'"
-          @closed="() => console.log('[Dialog] Closed!')"
-        >
-          <DetailCard
-            v-if="selectedEvent && currentUserId"
-            :event="selectedEvent"
-            :currentUserId="currentUserId"
+    <div class="events-page-with-search">
+      <div class="events-content">
+        <!-- 搜索框 -->
+        <div class="search-bar-container">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search events..."
+            class="search-bar"
+            @keyup.enter="handleSearch"
           />
+        </div>
 
-        </el-dialog>
-      </el-main>
-    </el-container>
+        <!-- 事件列表 -->
+        <el-main class="event-list-container">
+          <EventList :category="categoryFilter" :search="searchQuery" @open-card="openCard" />
+        </el-main>
+      </div>
+
+      <!-- 弹窗 -->
+      <el-dialog 
+        v-model="eventDialogStore.isDialogOpen" 
+        title="Event Details"
+        class="custom-dialog"
+        :width="'90vw'"
+        @closed="() => console.log('[Dialog] Closed!')"
+      >
+        <DetailCard
+          v-if="selectedEvent && currentUserId"
+          :event="selectedEvent"
+          :currentUserId="currentUserId"
+        />
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -77,6 +73,7 @@ const getCategoryString = (val: unknown): string => {
 };
 
 const categoryFilter = ref(getCategoryString(route.query.category));
+const searchQuery = ref('');
 
 const openCard = (event: any) => {
   if (!userStore.userProfile || !userStore.userProfile.uid) {
@@ -94,6 +91,11 @@ const handleCategorySelect = (key: string) => {
   categoryFilter.value = key;
 };
 
+const handleSearch = () => {
+  // Implement search logic or event emission here
+  console.log('Search initiated for:', searchQuery.value);
+};
+
 const dialogWidth = computed(() =>
   window.innerWidth <= 576 ? '95vw' : '600px'
 );
@@ -105,13 +107,83 @@ window.addEventListener('resize', () => {
 </script>
 
 <style scoped>
-.events-page-with-sidebar {
-  min-height: calc(100vh - 100px);
-  background: #f5f5f5;
+.events-page {
+  position: relative;
+  overflow: hidden;
 }
 
-.events-page-with-sidebar .el-main {
-  margin-left: 160px; /* 与 sidebar 宽度一致 */
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.background-svg {
+  width: 100%;
+  height: auto;
+}
+
+.events-page-with-search {
+  min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+}
+
+.events-content {
+  display: flex; /* 使用 flex 布局 */
+  flex: 1; /* 占据剩余空间 */
+  gap: 1rem; /* 搜索框和事件列表之间的间距 */
+}
+
+.search-bar-container {
+  display: flex;
+  flex-direction: column; /* 垂直排列搜索框和按钮 */
+  justify-content: flex-start; /* 搜索框靠顶部对齐 */
+  align-items: flex-start; /* 搜索框靠左对齐 */
+  padding: 3rem 0 1rem 2.5rem; /* 上下边距为3rem，左右边距为1rem */
+  border-radius: 8px;
+  width: 250px; /* 搜索框容器宽度 */
+}
+
+.search-bar {
+  color: #828282;
+  width: 100%; /* 搜索框宽度占满容器 */
+  padding: 0.8rem;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0 rgba(0, 0, 0, 0.1)  2px 4px;
+  font-size: 1rem;
+}
+
+.search-btn {
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.8rem 1.2rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+  background-color: #5753d6;
+}
+
+.events-page-with-search .el-main {
+  margin: 0; /* Reset margin */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-list-container {
+  flex: 1; /* 事件列表占据剩余空间 */
+  display: flex;
+  flex-direction: column;
 }
 
 .events-header {
