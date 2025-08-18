@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@svg': path.resolve(__dirname, './public/svg'),
     },
   },
   base: process.env.VITE_BASE_PATH || '/',
