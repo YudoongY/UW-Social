@@ -12,8 +12,10 @@ let sessionInstance: ort.InferenceSession | null = null;
 import { AutoTokenizer } from '@huggingface/transformers';
 
 async function getTokenizer(modelName = 'sentence-transformers/paraphrase-MiniLM-L3-v2') {
-  const tokenizer = await AutoTokenizer.from_pretrained(modelName);
-  return tokenizer;
+  if (!tokenizerInstance) {
+    tokenizerInstance = await AutoTokenizer.from_pretrained(modelName);
+  }
+  return tokenizerInstance;
 }
 
 /**
