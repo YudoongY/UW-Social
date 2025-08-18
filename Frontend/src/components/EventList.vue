@@ -112,7 +112,7 @@ onMounted(() => {
 
 .events-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 固定3列 */
+    grid-template-columns: repeat(1, 1fr); /* 固定3列 */
     gap: 2.1rem 1.5rem;
     width: 100%;
     box-sizing: border-box;
