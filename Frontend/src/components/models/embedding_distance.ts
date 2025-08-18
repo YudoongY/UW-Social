@@ -3,8 +3,8 @@ import * as ort from 'onnxruntime-web';
 ort.env.wasm.wasmPaths =
   'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/';
 
-ort.env.wasm.proxy = true;
-ort.env.logLevel = 'verbose';
+// ort.env.wasm.proxy = true;
+// ort.env.logLevel = 'verbose';
 
 let cachedSession: ort.InferenceSession | null = null;
 let sessionPromise: Promise<ort.InferenceSession> | null = null;
