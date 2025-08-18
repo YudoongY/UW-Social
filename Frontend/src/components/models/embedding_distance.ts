@@ -15,6 +15,7 @@ async function getTokenizer(modelName = 'sentence-transformers/paraphrase-MiniLM
   if (!tokenizerInstance) {
     tokenizerInstance = await AutoTokenizer.from_pretrained(modelName);
   }
+  console.log('Tokenizer loaded');
   return tokenizerInstance;
 }
 
