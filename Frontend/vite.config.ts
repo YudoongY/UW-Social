@@ -2,10 +2,25 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
-  resolve: {
+  plugins: [
+    vue(),
+    {
+      name: 'vite-plugin-onnx-mime',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url && req.url.endsWith('.onnx')) {
+            res.setHeader('Content-Type', 'application/octet-stream');
+          }
+          if (req.url && req.url.endsWith('.wasm')) {
+            res.setHeader('Content-Type', 'application/wasm');
+          }
+          next();
+        });
+      },
+    },
+  ],
+   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@svg': path.resolve(__dirname, './public/svg'),
