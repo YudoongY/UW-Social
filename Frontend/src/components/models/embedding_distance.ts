@@ -6,27 +6,45 @@ ort.env.wasm.wasmPaths =
 ort.env.wasm.proxy = true;
 ort.env.logLevel = 'verbose';
 
-let tokenizerInstance: any = null;
-let sessionInstance: ort.InferenceSession | null = null;
+let cachedSession: ort.InferenceSession | null = null;
+let sessionPromise: Promise<ort.InferenceSession> | null = null;
 
 import { AutoTokenizer } from '@huggingface/transformers';
 
-async function getTokenizer(modelName = 'sentence-transformers/paraphrase-MiniLM-L3-v2') {
-  if (!tokenizerInstance) {
-    tokenizerInstance = await AutoTokenizer.from_pretrained(modelName);
+let cachedTokenizer: any = null;
+let tokenizerPromise: Promise<any> | null = null;
+
+export function getTokenizer(modelName?: string) {
+  if (cachedTokenizer) return Promise.resolve(cachedTokenizer);
+
+  if (!tokenizerPromise) {
+    tokenizerPromise = AutoTokenizer.from_pretrained(modelName ?? 'sentence-transformers/paraphrase-MiniLM-L3-v2')
+      .then((tok) => {
+        cachedTokenizer = tok;
+        tokenizerPromise = null;
+        return tok;
+      });
   }
-  return tokenizerInstance;
+
+  return tokenizerPromise;
 }
 
 /**
  * Load and cache the ONNX model session.
  */
-async function getSession(modelPath: string = '/models/model_qint8_arm64.onnx') {
-  if (!sessionInstance) {
-    sessionInstance = await ort.InferenceSession.create('/models/model_qint8_arm64.onnx');
+export function getSession(modelPath?: string): Promise<ort.InferenceSession> {
+  if (cachedSession) return Promise.resolve(cachedSession);
+
+  if (!sessionPromise) {
+    sessionPromise = ort.InferenceSession.create(modelPath ?? '/models/model_qint8_arm64.onnx')
+      .then((session) => {
+        cachedSession = session;
+        sessionPromise = null; // clear the promise after initialization
+        return session;
+      });
   }
-  console.log('ONNX model session loaded:');
-  return sessionInstance;
+
+  return sessionPromise;
 }
 
 /**
