@@ -91,7 +91,7 @@ onMounted(() => {
     gap: 2.1rem 1.5rem;
     width: 100%;
     box-sizing: border-box;
-    padding: 1rem 0;
+    padding: 0;
 }
 
 @media (max-width: 900px) {

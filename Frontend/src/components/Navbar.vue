@@ -6,31 +6,40 @@
           <div class="nav-left">
             <li>
               <router-link to="/">
-                <img src="/images/logo1.png" alt="UW Social Logo" class="logo">
+                <img src="../../public/svg/UW-Social-Logo2.svg" alt="UW Social Logo" class="logo">
+                <img src="../../public/svg/UW-SOCIAL.svg" alt="UW SOCIAL" class="logo-text">
               </router-link>
             </li>
-            <li><router-link to="/">🏠 Home</router-link></li>
-            <li><router-link to="/events">🎪 Events</router-link></li>
-            <li><router-link to="/publish">🚀 Publish New</router-link></li>
-            <li v-if="userStore.isLoggedIn && userStore.userProfile?.displayName">
-              <router-link to="/profile">👨‍🎓 Profile</router-link>
-            </li>
-            <!-- 下划线-->
-            <!-- 搜索框放在左侧导航项后面 -->
-            <div class="navbar-search">
-              <input
-                v-model="navbarSearch"
-                @keyup.enter="handleNavbarSearch"
-                type="text"
-                placeholder="Search events..."
-                class="navbar-search-input"
-                title="type in event title, tag, or organizer's name"
-              />
+            <div :class="{ active: $route.path === '/' }">
+              <li><router-link to="/">HOME</router-link></li>
+            </div>
+            <div :class="{ active: $route.path === '/events' }">
+              <li><router-link to="/events">EVENTS</router-link></li>
+            </div>
+            <div :class="{ active: $route.path === '/clubs' }">
+              <li><router-link to="/clubs">CLUBS</router-link></li>
+            </div>
+            <div :class="{ active: $route.path === '/publish' }">
+              <li><router-link to="/publish">PUBLISH NEW</router-link></li>
+            </div>
+            <div v-if="userStore.isLoggedIn && userStore.userProfile?.displayName" :class="{ active: $route.path === '/profile' }">
+              <li><router-link to="/profile">PROFILE</router-link></li>
             </div>
           </div>
         </div>
 
         <div class="right-link">
+          <!-- 搜索框放在右侧导航项前面 -->
+          <div class="navbar-search">
+            <input
+              v-model="navbarSearch"
+              @keyup.enter="handleNavbarSearch"
+              type="text"
+              placeholder="Search events..."
+              class="navbar-search-input"
+              title="type in event title, tag, or organizer's name"
+            />
+          </div>
           <div class="user-profile">
             <template v-if="userStore.isLoggedIn && userStore.userProfile?.displayName">
               <span class="welcome-text">Welcome, {{ userStore.userProfile.displayName }}!</span>
