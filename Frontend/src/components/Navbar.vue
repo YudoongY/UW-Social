@@ -6,7 +6,7 @@
           <div class="nav-left">
             <li>
               <router-link to="/">
-                <img src="../../public/svg/UW-Social-Logo2.svg" alt="UW Social Logo" class="logo">
+                <img src="../../public/svg/uw-social-logo2.svg" alt="UW Social Logo" class="logo">
                 <img src="../../public/svg/UW-SOCIAL.svg" alt="UW SOCIAL" class="logo-text">
               </router-link>
             </li>
