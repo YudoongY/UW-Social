@@ -1,13 +1,15 @@
 <template>
-  <div class="app-container">
+  <div
+    class="app-container"
+    :style="isMobile && route.path === '/login' ? { paddingTop: '0' } : { paddingTop: '70px' }"
+  >
     <MobileNav v-if="isMobile" />
     <Navbar v-else />
     <div class="content">
       <router-view></router-view>
     </div>
-
     <!-- 全局弹窗 -->
-    <ElDialog v-model="eventDialogStore.isDialogOpen" title="Event Details" class="custom-dialog">
+    <ElDialog v-if="!hasQuery" v-model="eventDialogStore.isDialogOpen" title="Event Details" class="custom-dialog">
       <DetailCard v-if="eventDialogStore.selectedEvent" :event="eventDialogStore.selectedEvent" />
     </ElDialog>
   </div>
@@ -16,10 +18,16 @@
 <script setup lang="ts">
 import Navbar from './components/Navbar.vue';
 import MobileNav from '@/components/mobile/MobileNav.vue';
-import { useEventDialogStore } from './stores/eventDialog.ts';
 import DetailCard from '@/components/DetailCard.vue';
+import '@/assets/global.css';
+import { useEventDialogStore } from './stores/eventDialog.ts';
 import { onMounted, ref, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
+const eventDialogStore = useEventDialogStore();
+const route = useRoute()
+const hasQuery = computed(() => !!route.query.q)
 const isMobile = ref(window.innerWidth <= 576);
 
 function updateIsMobile() {
@@ -44,12 +52,7 @@ onUnmounted(() => {
   window.removeEventListener('resize', setVh);
 });
 
-const eventDialogStore = useEventDialogStore();
 </script>
-
-function ref(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
 
 <style scoped>
 .custom-dialog {
@@ -60,22 +63,6 @@ function ref(arg0: boolean) {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-</style>
-
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  /* box-sizing: border-box; */
-}
-
-body {
-  margin: 0;
-  font-family: 'Helvetica Neue', sans-serif;
-  background-color: #ffffff;
-  min-height: 100vh;
-}
-
 .app-container {
   padding-top: 70px; /* 让出导航栏的空间 */
   min-height: calc(var(--vh, 1vh) * 100); /* 保持全屏 */
@@ -83,7 +70,7 @@ body {
 }
 
 .content {
-  padding: 10px; /* 正文和边缘的距离 */
+  /* padding: 10px; 正文和边缘的距离 */
 }
 
 @media (max-width: 576px) {

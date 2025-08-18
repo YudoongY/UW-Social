@@ -20,16 +20,41 @@ import { useEventStore } from '../stores/event';
 import EventCard from './EventCard.vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '../stores/user'; // Add this
+import { allTags, academicTags, dormTags, interestTags, sportsTags, csTags } from '../stores/tags';
 
 const props = defineProps<{ category?: string }>();
 const eventStore = useEventStore();
 const userStore = useUserStore(); // Add this
 const route = useRoute();
 
+function sortEventsByStartTimeDesc(events: any[]) {
+  return events.slice().sort((a, b) => {
+    const toDate = (val: any) =>
+      typeof val?.toDate === 'function' ? val.toDate() : new Date(val);
+    return toDate(b.startime).getTime() - toDate(a.startime).getTime();
+  });
+}
+
+function makeInterestTagEventsFirst(events: any[]) {
+  const userTagSet = new Set((userStore.userProfile?.tags ?? []).map(t => t.toLowerCase()));
+
+  if (!userTagSet.size) return events;
+
+  const interestEvents = events.filter(e =>
+    Array.isArray(e.tags) && e.tags.some((tag: string) => userTagSet.has(tag.toLowerCase()))
+  );
+
+  const otherEvents = events.filter(e =>
+    !Array.isArray(e.tags) || !e.tags.some((tag: string) => userTagSet.has(tag.toLowerCase()))
+  );
+
+  return [...interestEvents, ...otherEvents];
+}
+
 const filteredEvents = computed(() => {
   let events = !props.category
     ? eventStore.events
-    : eventStore.events.filter(e => e.category === props.category);
+      : eventStore.events.filter(e => e.category.toUpperCase() === props.category?.toUpperCase());
 
     // 只显示未过期活动
   const now = new Date();
@@ -41,13 +66,13 @@ const filteredEvents = computed(() => {
   });
 
   // 按开始时间倒序
-  events = events.slice().sort((a, b) => {
-    const aTime = typeof a.startime?.toDate === 'function' ? a.startime.toDate() : new Date(a.startime);
-    const bTime = typeof b.startime?.toDate === 'function' ? b.startime.toDate() : new Date(b.startime);
-    return bTime.getTime() - aTime.getTime();
-  });
+  events = sortEventsByStartTimeDesc(events);
 
   const q = (route.query.q as string || '').trim();
+  if (userStore.isLoggedIn) {
+    events = makeInterestTagEventsFirst(events);
+  }
+
   if (!q) return events;
   // Use Fuse.js for fuzzy search and relevance ranking
   const fuse = new Fuse(events, {
@@ -62,7 +87,7 @@ const filteredEvents = computed(() => {
     ignoreLocation: true,
     minMatchCharLength: 2,
   });
-  return fuse.search(q).map(result => result.item);
+  return sortEventsByStartTimeDesc(fuse.search(q).map(result => result.item));
 });
 
 onMounted(() => {

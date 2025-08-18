@@ -132,6 +132,7 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  align-items: center;
 }
 
 .tag-search-input {
@@ -170,6 +171,12 @@
 .add-custom-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.tag-help-icon {
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
 }
 
 .tag-suggestions {
