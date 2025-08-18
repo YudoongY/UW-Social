@@ -6,8 +6,8 @@
           <div class="nav-left">
             <li>
               <router-link to="/">
-                <img src="/svg/uw-social-logo2.svg" alt="UW Social Logo" class="logo">
-                <img src="/svg/UW-SOCIAL.svg" alt="UW SOCIAL" class="logo-text">
+                <img :src="logo" alt="UW Social Logo" class="logo">
+                <img :src="logoText" alt="UW SOCIAL" class="logo-text">
               </router-link>
             </li>
             <div :class="{ active: $route.path === '/' }">
@@ -60,6 +60,8 @@ import '../assets/navbar.css';
 import { useUserStore } from '../stores/user'
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'
+import logo from '@/../public/svg/uw-social-logo2.svg';
+import logoText from '@/../public/svg/UW-SOCIAL.svg';
 
 const userStore = useUserStore()
 const router = useRouter()
