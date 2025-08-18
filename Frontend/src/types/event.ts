@@ -164,7 +164,7 @@ export function formatEventSchedule(event: Event): string {
 
   if (!schedule) {
     // Old schedule format — one-time event
-    return `One-time: ${safeFormatDate(event.startime)} - ${safeFormatDate(event.endtime)}`;
+    return `${safeFormatDate(event.startime)} - ${safeFormatDate(event.endtime)}`;
   }
 
   switch (schedule.type) {
@@ -175,7 +175,7 @@ export function formatEventSchedule(event: Event): string {
       const start = getDate(schedule.startDatetime);
       const end = getDate(schedule.endDatetime);
 
-      return `One-time: ${safeFormatDate(start)} ${formatTime(start)} - ${formatTime(end)}`;
+      return `${safeFormatDate(start)} ${formatTime(start)} - ${formatTime(end)}`;
     }
 
     case RecurrenceType.DAILY: {

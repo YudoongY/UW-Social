@@ -1,26 +1,32 @@
 <template>
   <div class="card event-card" @click="handleCardClick">
-    <!-- <img :src="event.imageUrl ? event.imageUrl : '/images/default-event.jpg'" alt="event.title" /> -->
-    <h3 :class="['event-title', `category-${event.category}`]">{{ event.title }}</h3>
-    <p class="event-time">
-      {{ formatEventSchedule(event) }}
-    </p>
-    <p>Location: {{ event.location }}</p>
-    <p class="description">{{ event.description }}</p>
-        <p v-if="event.link" class="event-link">
-      <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
-    </p>
-    <el-button
-      v-if="String(event.organizerId) === String(currentUserId)"
-      @click.stop="handleDelete"
-      type="primary"
-      round
-      size="small"
-      class="delete-btn purple-btn"
-      style="margin-top: 1rem;"
-    >
-      Delete
-    </el-button>
+    <img :src="event.imageUrl || '/default-event-image.jpg'" alt="Event Image" />
+    <div class="event-card-content">
+      <!-- 左侧内容 -->
+      <div class="event-card-left">
+        <h3 :class="['event-title', `category-${event.category}`]">{{ event.title }}</h3>
+        <p class="description">{{ event.description }}</p>
+        <div v-if="event.link" class="event-link">
+          <a :href="event.link" target="_blank" rel="noopener noreferrer">Learn More</a>
+        </div>
+      </div>
+      <!-- 右侧内容 -->
+      <div class="event-card-right">
+        <p class="event-time">{{ formatEventSchedule(event) }}</p>
+        <p>Location: {{ event.location }}</p>
+        <el-button
+          v-if="String(event.organizerId) === String(currentUserId)"
+          @click.stop="handleDelete"
+          type="primary"
+          round
+          size="small"
+          class="delete-btn purple-btn"
+          style="margin-top: 1rem;"
+        >
+          Delete
+        </el-button>
+      </div>
+    </div>
   </div>
 </template>
 
