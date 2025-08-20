@@ -45,7 +45,9 @@ function handleHomeSearch() {
 function handleScroll() {
   const maxScroll = 550; // 滚动多少像素后完全透明
   const scrollTop = window.scrollY;
+
   backgroundOpacity.value = Math.max(1 - scrollTop / maxScroll, 0.1);
+
 }
 
 onMounted(() => {
