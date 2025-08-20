@@ -4,7 +4,7 @@ nav {
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: #b388eb;
+  background-color: #AD91EB;
   padding: 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -15,14 +15,16 @@ nav {
   align-items: center;
   justify-content: space-between;
   list-style: none;
-  margin: 0;
+  margin: 0; /*改不掉右侧的-40px，糟糕*/
   padding: 0 20px;
   height: 80px;
   width: 100%;
   max-width: 1400px;
   margin: auto;
   overflow: hidden;
-  font-size: 1.15rem; /* 新增或调整 */
+  font-size: 1.2rem; /* 新增或调整 */
+  font-family: 'Poppins', sans-serif; /* 设置字体为 Poppins */
+  font-weight: 800; /* 设置字体粗细 */
 }
 
 .nav-items {
@@ -38,7 +40,15 @@ nav {
   white-space: nowrap;
 }
 
+.nav-items .right-link {
+  display: flex; /* 强制水平排列 */
+  align-items: center; /* 垂直居中 */
+  gap: 10px; /* 子元素之间的间距 */
+}
+
 .nav-items .right-link a {
+  display: inline-block;
+  margin: 0 15px;
   font-size: 1.10rem;
   white-space: nowrap;
 }
@@ -49,6 +59,34 @@ nav {
   gap: 10px;
 }
 
+.nav-left div {
+  position: relative;
+}
+
+.nav-left div.active::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; /* 横线距离文字的间距 */
+  left: 50%;
+  transform: translateX(-50%) scaleX(1); /* 激活状态：横线展开 */
+  width: 50%; /* 横线宽度 */
+  height: 2px; /* 横线高度 */
+  background-color: #6c63ff; /* 横线颜色 */
+  transition: all 0.3s ease; /* 添加平滑过渡效果 */
+}
+
+.nav-left div::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0); /* 初始状态：横线缩小 */
+  width: 50%;
+  height: 2px;
+  background-color: #6c63ff;
+  transition: transform 0.3s ease; /* 动画效果 */
+}
+
 .user-profile {
   display: flex;
   align-items: center;
@@ -57,15 +95,21 @@ nav {
 }
 
 .logo {
-  height: 60px;
+  height: 50px;
   width: auto;
-  margin: 5px 10px 0 10px;
+  margin: 5px 10px 0 -30px;
+}
+
+.logo-text {
+  height: 40px;
+  width: auto;
+  margin: 5px 35px 5px -8px; /*What a hard number*/
 }
 
 a, .welcome-text {
   color: white;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 a:hover {

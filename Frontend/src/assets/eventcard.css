@@ -1,58 +1,59 @@
 .card.event-card {
-  background: #fff;
+  display: flex; /* 使用 flex 布局 */
+  align-items: center; /* 垂直居中内容 */
+  background: #F5F5F5;
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(108, 99, 255, 0.08);
-  border: none;
-  transition: box-shadow 0.2s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 下方阴影效果 */
+  border: 1px solid #E0E0E0; /* 添加边框 */
+  border-color: black;
+  transition: box-shadow 0.2s, border-color 0.2s; /* 添加边框颜色过渡效果 */
   cursor: pointer; /* 鼠标悬浮时变成小手 */
   width: 100%;
   box-sizing: border-box;
-  padding: 1.5rem;
+  padding: 0.5rem;
+  gap: 1rem; /* 图片与内容之间的间距 */
 }
 
 .card.event-card:hover {
-  box-shadow: 0 6px 24px rgba(108, 99, 255, 0.16);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 鼠标悬浮时阴影更明显 */
+  border-color: #6c63ff; /* 鼠标悬浮时边框颜色变为紫色 */
 }
 
 .event-card img {
-  width: 100%;
-  height: 200px;
+  width: 150px; /* 图片宽度 */
+  height: 150px; /* 图片高度 */
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 15px;
+  flex-shrink: 0; /* 防止图片缩小 */
+}
+
+.event-card-content {
+  display: flex; /* 使用 flex 布局 */
+  gap: 1rem; /* 左右内容之间的间距 */
+  flex: 1; /* 内容区域占据剩余空间 */
+  width: 100%;
+}
+
+.event-card-left {
+  flex: 3; /* 左侧占 3/4 */
+}
+
+.event-card-right {
+  flex: 1; /* 右侧占 1/4 */
+  display: flex;
+  flex-direction: column; /* 垂直排列内容 */
+  justify-content: center; /* 集中在中间 */
 }
 
 .event-card h3 {
-  margin: 2px 0 5px 0;
-  font-size: 1.2em;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
 }
 
 .event-title {
-  color: #2d0975; /* 深蓝 */
+  /* color: #2d0975; */
+  color:black
 }
-/*
-.event-title.category-academic {
-  color: #062e56; // 深蓝
-}
-.event-title.category-club {
-  color: #ff9800; // 橙色
-}
-.event-title.category-sports {
-  color: #43a047; // 绿色
-}
-.event-title.category-videogames {
-  color: #8e24aa; // 紫色
-}
-.event-title.category-culture {
-  color: #e53935; // 红色
-}
-.event-title.category-interest {
-  color: #0097a7; // 青色
-}
-.event-title.category-HFS {
-  color: #6d4c41; // 棕色
-}
-*/
 
 .event-card p {
   color: #666;
@@ -60,56 +61,44 @@
   font-size: 0.9em;
 }
 
-.event-card .event-time {
-  /* font-size: 1em; */
-  font-weight: bold;
-  color: #1c6fc1; /* 更鲜明的蓝色 */
-  margin: 10px 0 6px 0;
-  line-height: 1.5;
-}
-
 .event-card .description {
+  margin: 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-line-clamp: 2; /* 限制为 2 行 */
   -webkit-box-orient: vertical;
 }
 
-.card.event-card h3,
-.card.event-card p {
-  word-break: break-word;
-  overflow-wrap: break-word;
+.event-card .event-time {
+  font-weight: bold;
+  margin: 0.5rem 0;
 }
 
-.event-link a,
-.card-link a {
+.event-card .event-link a {
   color: #2440b3;
   text-decoration: underline;
-  word-break: break-all;
 }
 
-.event-link a:hover,
-.card-link a:hover,
-.event-link a:active,
-.card-link a:active {
+.event-card .event-link a:hover {
   color: #4e6ef2;
 }
 
-.event-link {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;    /* 只显示一行 */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-all;
-  max-width: 100%;
+.delete-btn {
+  margin-top: 1rem;
 }
 
 @media (max-width: 576px) {
   .card.event-card {
+    flex-direction: column; /* 小屏幕时改为纵向排列 */
     padding: 0.7rem 0.4rem; /* 更窄的内边距 */
     border-radius: 10px;
+  }
+  .event-card img {
+    width: 100%; /* 图片宽度占满 */
+    height: auto; /* 高度自动调整 */
   }
   .event-title {
     font-size: 0.3em; /* 标题字体更小 */

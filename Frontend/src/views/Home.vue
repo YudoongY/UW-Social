@@ -1,37 +1,38 @@
 <template>
-  <div>
-    <!-- 仅在首页渲染 Welcome -->
-    <div v-if="$route.path === '/'" class="welcome-container">
-      <Welcome />
-      <!-- 大搜索框 -->
-      <div class="home-search-bar">
-        <input
-          v-model="homeSearch"
-          @keyup.enter="handleHomeSearch"
-          type="text"
-          placeholder="Find any campus events you like..."
-          class="home-search-input"
-          title="search by event title, tag, or organizer's name"
-        />
-        <button @click="handleHomeSearch" class="home-search-btn">🔍</button>
-      </div>
+  <div class="home-page">
+    <!-- 背景 SVG -->
+    <div class="background-container">
+      <img src="../../public/svg/background4.svg" class="background-svg" :style="{ opacity: backgroundOpacity }" />
     </div>
+
+    <!-- 新增标题和短句子 -->
+    <div class="page-title">
+      <h1>UW Social</h1>
+      <p>Your social gateway<br />to everything happening at UW</p>
+      <!-- 新增按钮 -->
+      <el-row class="page-button">
+        <el-button round type="primary">
+          Explore Now
+          <img src="../../public/svg/rightarrow1.svg" alt="arrow" class="button-arrow" />
+        </el-button>
+      </el-row>
+    </div>
+
     <div class="events-section">
-      <h2>Latest Events</h2>
+      <h2>Recommended for you</h2>
       <EventList />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// import NavBar from '@/components/Navbar.vue'; // 确保路径正确
-import Welcome from '@/components/Welcome.vue';
 import EventList from '@/components/EventList.vue';
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const homeSearch = ref('');
 const router = useRouter();
+const backgroundOpacity = ref(1); // 背景透明度
 
 function handleHomeSearch() {
   if (homeSearch.value.trim()) {
@@ -39,61 +40,119 @@ function handleHomeSearch() {
     homeSearch.value = '';
   }
 }
+
+// 监听滚动事件，动态调整背景透明度
+function handleScroll() {
+  const maxScroll = 550; // 滚动多少像素后完全透明
+  const scrollTop = window.scrollY;
+
+  backgroundOpacity.value = Math.max(1 - scrollTop / maxScroll, 0.1);
+
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
 <style scoped>
-.home-page, .welcome-container {
-  margin: 0;
-  padding: 0;
-  }
-  
 .home-page {
+  position: relative;
   min-height: calc(100vh - 100px);
+  overflow: hidden;
+  z-index: 1; /* 确保内容在背景之上 */
 }
 
-.events-section {
-  padding: 1rem;
-  background: #f5f5f5;
-}
-
-.events-section h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: -0.5rem;
-  font-size: 1.5rem;
-}
-
-.home-search-bar {
+.background-container {
+  position: fixed;
+  top: 380px; /* 留出导航栏的高度，假设导航栏高度为 60px */
+  left: 0;
+  width: 100%; /* 背景宽度覆盖整个视口 */
+  height: calc(100% - 60px); /* 减去导航栏的高度 */
+  z-index: -1; /* 确保背景在内容后面 */
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 32px 0 24px 0;
+  flex-direction: column;
+  pointer-events: none; /* 防止背景影响内容交互 */
 }
-.home-search-input {
-  width: 40vw;           /* 占据屏幕一半宽度 */
-  max-width: 700px;      /* 可根据需要调整最大宽度 */
-  padding: 1.1rem 1.5rem;
-  font-size: 1.2rem;
-  border-radius: 32px 0 0 32px;
-  border: 1.5px solid #b388eb;
-  outline: none;
-  transition: border 0.2s;
+
+.background-svg {
+  width: 100%; /* 宽度自动调整 */
+  height: auto; /* 高度覆盖容器 */
+  object-fit: cover; /* 确保背景图像适应容器 */
+  opacity: 1;
+  transition: opacity 0.2s ease-out; /* 平滑过渡 */
 }
-.home-search-input:focus {
-  border: 2px solid #6c63ff;
+
+.page-title {
+  position: absolute;
+  top: calc(80px + 3rem); /* 导航栏高度 + 3rem */
+  left: 5rem; /* 距离左侧 5rem */
+  color: #8358D8; /* 标题颜色 */
+  font-family: 'Poppins', sans-serif; /* 使用 Poppins 字体 */
+  z-index: 2; /* 确保标题在背景之上 */
 }
-.home-search-btn {
-  padding: 1.1rem 1.5rem;
-  font-size: 1.2rem;
-  border-radius: 0 32px 32px 0;
-  border: 1.5px solid #b388eb;
-  border-left: none;
-  background: #b388eb;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.2s;
+
+.page-title h1 {
+  font-size: 3.4rem; /* 主标题字体大小 */
+  font-weight: 1000; /* 主标题字体粗细 */
+  margin: 0;
 }
-.home-search-btn:hover {
-  background: #6c63ff;
+
+.page-title p {
+  font-size: 2.1rem; /* 副标题字体大小 */
+  font-weight: 500; /* 副标题字体粗细 */
+  margin: 0.5rem 0 0 0; /* 副标题与主标题的间距 */
+  line-height: 1.5; /* 行高 */
+}
+
+.page-button {
+  margin-top: 3rem; /* 按钮距离标题的间距 */
+}
+
+.page-button .el-button {
+  background-color: #8c66d8; /* 按钮背景颜色 */
+  color: #F4EBD1; /* 按钮文字颜色 */
+  font-size: 1.4rem; /* 按钮文字大小 */
+  font-family: 'Poppins', sans-serif; /* 按钮文字字体 */
+  border-radius: 40px; /* 按钮圆角 */
+  padding: 2rem 2.3rem; /* 按钮内边距 */
+  transition: background-color 0.3s ease;
+}
+
+.page-button .el-button:hover {
+  background-color: #6c63ff; /* 按钮悬停时的背景颜色 */
+}
+
+.welcome-container {
+  margin: 0;
+  padding: 0;
+  z-index: 2; /* 确保 Welcome 在背景之上 */
+}
+
+.events-section {
+  padding: 39rem 4rem 1rem;
+  z-index: 2; /* 确保 EventList 在背景之上 */
+  position: relative; /* 确保 z-index 生效 */
+}
+
+.events-section h2 {
+  text-align: left;
+  color: #8358D8;
+  padding: 0 0 0 2rem;
+  font-size: 1.5rem;
+  font-family: 'Poppins', sans-serif; /* 设置字体为 Poppins */
+  font-weight: 500;
+}
+
+.button-arrow {
+  width: 2.5rem;
+  height: 2.5rem;
+  vertical-align: middle;
 }
 </style>
