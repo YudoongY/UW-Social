@@ -6,6 +6,7 @@ import type { Event } from '../types/event';
 
 export const useEventStore = defineStore('event', () => {
   const events = ref<Event[]>([]);
+  const selectedEvents = ref<Event[]>([]); // 存储选中的事件
 
   const fetchEvents = async () => {
     try {
@@ -22,5 +23,19 @@ export const useEventStore = defineStore('event', () => {
     }
   };
 
-  return { events, fetchEvents };
+  const selectEvent = (event: Event) => {
+    selectedEvents.value.push(event);
+  };
+
+  const clearSelectedEvents = () => {
+    selectedEvents.value = [];
+  };
+
+  return {
+    events,
+    selectedEvents,
+    fetchEvents,
+    selectEvent,
+    clearSelectedEvents,
+  };
 });

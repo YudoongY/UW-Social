@@ -1,30 +1,31 @@
 <template>
-  <div class="card">
-    <h2 class="card-title">{{ event.title }}</h2>
-    <p class="event-time">
-      {{ formatEventSchedule(event) }}
-    </p>
-    <p class="card-location">Location: {{ event.location }}</p>
-    <p class="card-category">📂 {{ event.category }}</p>
-    <p v-if="event.maxParticipants" class="card-max">👥 Max: {{ event.maxParticipants }}</p>
-    <p v-if="event.tags && event.tags.length" class="card-tags">🏷️ {{ event.tags.join(', ') }}</p>
-    <p class="card-description" v-html="formatDescription(event.description)"></p>
-    <p v-if="event.link" class="card-link">
-      <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
-    </p>
-    
-    <!-- 删除按钮（仅对活动创建者可见） -->
-    <el-button
-      v-if="showDeleteButton"
-      @click="handleDelete"
-      type="primary"
-      round
-      size="small"
-      class="delete-btn purple-btn"
-      style="margin-top: 1rem;"
-    >
-      Delete
-    </el-button>
+  <div class="detail-page">
+    <el-card class="detail-card">
+      <!-- 第一部分：图片和标题 -->
+      <div class="detail-header">
+        <img :src="event.imageUrl || '/images/default-event-image.jpg'" alt="Event Image" class="event-image" />
+        <div class="event-info">
+          <h2 class="event-title">{{ event.title }}</h2>
+          <p class="event-location">📍 {{ event.location }}</p>
+          <p class="event-time">⏰ {{ formatEventSchedule(event) }}</p>
+        </div>
+      </div>
+
+      <!-- 第二部分：Google Map -->
+      <div class="google-map">
+        <p>Google Map</p>
+        <!-- 嵌入 Google Map 的 API -->
+      </div>
+
+      <!-- 第三部分：描述、标签和链接 -->
+      <div class="event-details">
+        <p class="event-description" v-html="formatDescription(event.description)"></p>
+        <p v-if="event.tags && event.tags.length" class="event-tags">🏷️ {{ event.tags.join(', ') }}</p>
+        <p v-if="event.link" class="event-link">
+          <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
+        </p>
+      </div>
+    </el-card>
   </div>
 </template>
 
@@ -69,65 +70,88 @@ const handleDelete = async () => {
     alert('Failed to delete event.');
   }
 };
+
+console.log('[DetailCard.vue] props.event:', props.event);
 </script>
 
 <style scoped>
-.card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 0.5rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  z-index: 1050;
-  position: relative;
-}
-
-.card-title {
-  font-size: 1.5rem;
-  margin-bottom: 8px;
-}
-
-.card-description {
-  font-size: 1rem;
-  margin-bottom: 8px;
-  color: #555;
-}
-
-.event-time {
-  font-size: 1.05em;
-  font-weight: bold;
-  color: #8f2a2a;
-  margin: 10px 0 6px 0;
-  line-height: 1.5;
-}
-
-.card-location,
-.card-category,
-.card-max,
-.card-tags {
-  font-size: 0.95rem;
-  color: #555;
-  margin-bottom: 4px;
-}
-
-.delete-btn {
+.detail-page {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(128, 0, 255, 0.08);
-  background: #7c3aed !important;
-  border-color: #7c3aed !important;
-  color: #fff !important;
-  transition: background 0.2s, box-shadow 0.2s;
+  flex-direction: column;
+  gap: 1.5rem; /* 区块之间的间距 */
+  padding: 2rem;
+  background-color: #f9f9f9;
 }
 
-.delete-btn:hover {
-  background: #a78bfa !important;
-  border-color: #a78bfa !important;
-  color: #fff !important;
-  box-shadow: 0 4px 16px rgba(128, 0, 255, 0.15);
+.detail-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.detail-header {
+  display: flex;
+  gap: 1.5rem; /* 图片和信息之间的间距 */
+  align-items: center;
+}
+
+.event-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.event-info {
+  flex: 1;
+}
+
+.event-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.event-location,
+.event-time {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.google-map {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.event-details {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-description {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.event-tags {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 1rem;
+}
+
+.event-link a {
+  color: #1c6fc1;
+  text-decoration: underline;
+}
+
+.event-link a:hover {
+  color: #0a4fa3;
 }
 </style>

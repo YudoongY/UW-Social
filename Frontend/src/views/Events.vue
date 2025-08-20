@@ -3,7 +3,6 @@
     <!-- 背景容器 -->
     <div class="background-container">
       <img src="/svg/eventsbg.svg" alt="Events Background" class="background-svg" />
-      <!--疑似是“-”导致的build失败，而不是路径问题，此处尝试一下删掉“-”-->
     </div>
 
     <div class="events-page-with-search">
@@ -21,89 +20,56 @@
 
         <!-- 事件列表 -->
         <el-main class="event-list-container">
-          <EventList :category="categoryFilter" :search="searchQuery" @open-card="openCard" />
+          <EventList :category="categoryFilter" :search="searchQuery" @open-card="setSelectedEvent" />
         </el-main>
       </div>
 
-      <!-- 弹窗 -->
-      <el-dialog 
-        v-model="eventDialogStore.isDialogOpen" 
-        title="Event Details"
-        class="custom-dialog"
-        :width="'90vw'"
-        @closed="() => console.log('[Dialog] Closed!')"
-      >
-        <DetailCard
-          v-if="selectedEvent && currentUserId"
-          :event="selectedEvent"
-          :currentUserId="currentUserId"
-        />
-      </el-dialog>
+      <!-- Detail Card -->
+      <div v-if="selectedEvent" class="detail-card-container">
+        <DetailCard :event="selectedEvent" :currentUserId="currentUserId" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import EventList from '../components/EventList.vue';
 import DetailCard from '../components/DetailCard.vue';
 import '../assets/sidebar.css';
-import { useEventDialogStore } from '../stores/eventDialog';
-import { auth } from '../firebase'; // <-- Add this line (adjust path if needed)
-import { watchEffect, onMounted } from 'vue';
 import { useUserStore } from '../stores/user';
 
-
 const userStore = useUserStore();
-
-// Reliable computed wrapper
 const currentUserId = computed(() => userStore.userProfile?.uid);
 
-const eventDialogStore = useEventDialogStore();
+// 单个选中的活动
+const selectedEvent = ref(null);
 
-
-const route = useRoute();
-const selectedEvent = computed(() => eventDialogStore.selectedEvent);
-const getCategoryString = (val: unknown): string => {
-  if (Array.isArray(val)) {
-    return val[0] ?? '';
-  }
-  return typeof val === 'string' ? val : '';
+// 方法：设置选中的活动
+const setSelectedEvent = (event: any) => {
+  selectedEvent.value = event;
 };
 
-const categoryFilter = ref(getCategoryString(route.query.category));
+// 方法：清空选中的活动
+const clearSelectedEvent = () => {
+  selectedEvent.value = null;
+};
+
+const categoryFilter = ref('');
 const searchQuery = ref('');
+
+const handleSearch = () => {
+  console.log('Search initiated for:', searchQuery.value);
+};
 
 const openCard = (event: any) => {
   if (!userStore.userProfile || !userStore.userProfile.uid) {
     alert('Please log in first.');
     return;
   }
-
-  console.log('Dialog should open. User UID:', userStore.userProfile?.uid);
-  // ...原有代码
-  eventDialogStore.openDialog(event); // ✅ use store action
-
+  setSelectedEvent(event); // 设置选中的活动
 };
-
-const handleCategorySelect = (key: string) => {
-  categoryFilter.value = key;
-};
-
-const handleSearch = () => {
-  // Implement search logic or event emission here
-  console.log('Search initiated for:', searchQuery.value);
-};
-
-const dialogWidth = computed(() =>
-  window.innerWidth <= 576 ? '95vw' : '600px'
-);
-
-// Optional: update on resize
-window.addEventListener('resize', () => {
-  dialogWidth.value = window.innerWidth <= 576 ? '95vw' : '600px';
-});
 </script>
 
 <style scoped>
@@ -232,32 +198,15 @@ h1 {
   font-size: 1.2rem;
 }
 
-.custom-dialog {
-  max-width: 600px;
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Deep selector for Element Plus dialog */
-::v-deep(.custom-dialog) {
-  margin: 10vh auto !important;
+.detail-card-container {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 576px) {
-  ::v-deep(.el-dialog) {
-    width: 95vw !important;
-    max-width: 95vw !important;
-    min-width: 0 !important;
-    margin: 2vh auto !important;
-    left: 0 !important;
-    right: 0 !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-  }
-  ::v-deep(.el-dialog__body) {
-    padding: 10px !important;
-  }
+  
 }
 </style>

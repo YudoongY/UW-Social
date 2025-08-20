@@ -7,7 +7,7 @@
         :key="event.id"
         :event="event"
         :currentUserId="userStore.userProfile?.uid"
-        @open-card="$emit('open-card', event)"
+        @click="$emit('open-card', event); console.log('[EventList.vue] open-card emitted with event:', event)"
       />
     </div>
   </div>
@@ -21,6 +21,7 @@ import EventCard from './EventCard.vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { getPhraseVec, getPhraseVecBatch } from './models/embedding_distance';
+import { formatEventSchedule, type Event } from '../types/event';
 
 const props = defineProps<{ category?: string }>();
 const eventStore = useEventStore();
@@ -31,7 +32,7 @@ function sortEventsByStartTimeDesc(events: any[]) {
   return events.slice().sort((a, b) => {
     const toDate = (val: any) =>
       typeof val?.toDate === 'function' ? val.toDate() : new Date(val);
-    return toDate(b.startime).getTime() - toDate(a.startime).getTime();
+    return toDate(b.startTime).getTime() - toDate(a.startTime).getTime();
   });
 }
 
@@ -122,6 +123,7 @@ async function makeInterestTagEventsFirstSemantic(events: any[]){
 const eventsAfterSemantic = ref<any[]>([]);
 
 async function refreshEvents() {
+  console.log('[EventList.vue] refreshEvents called');
   let events = !props.category
     ? eventStore.events
     : eventStore.events.filter(e => e.category.toUpperCase() === props.category?.toUpperCase());
@@ -182,6 +184,16 @@ onMounted(async () => {
   }
   refreshEvents(); // now events are loaded
 });
+
+const isVisible = ref(false); // 控制 DetailCard 的显示状态
+
+const showDetailCard = () => {
+  isVisible.value = true; // 显示 DetailCard
+};
+
+const hideDetailCard = () => {
+  isVisible.value = false; // 隐藏 DetailCard
+};
 </script>
 
 <style scoped>
@@ -222,5 +234,13 @@ onMounted(async () => {
         box-sizing: border-box;
         padding: 0.2rem 0;
     }
+}
+
+.detail-card {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 </style>
