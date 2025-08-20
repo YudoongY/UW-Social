@@ -13,7 +13,9 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/Login.vue')
+    component: isMobile()
+      ? () => import('@/components/mobile/MobileLogin.vue')
+      : () => import('@/views/Login.vue')
   },
   {
     path: '/profile',

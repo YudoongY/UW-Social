@@ -88,6 +88,12 @@
               <button @click="addCustomTag" class="add-custom-btn" :disabled="!tagSearchQuery.trim()">
                 <span>+</span>
               </button>
+              <img
+                src="/svg/help.svg"
+                class="tag-help-icon"
+                title="You can search for tags like major, dorm, sports, hobbies, etc."
+                alt="Help"
+              />
             </div>
             
             <!-- Search Results -->
@@ -112,7 +118,7 @@
           </div>
 
           <!-- Category Tags -->
-          <div class="tag-categories">
+          <!-- <div class="tag-categories">
             <div class="tag-category">
               <h4>🏠 Dorm & Housing</h4>
               <div class="tag-grid">
@@ -157,11 +163,26 @@
                 </button>
               </div>
             </div>
-          </div>
+
+            <div class="tag-category">
+              <h4>Self Development</h4>
+              <div class="tag-grid">
+                <button
+                  v-for="tag in csTags.slice(0, 8)"
+                  :key="tag"
+                  @click="toggleTag(tag)"
+                  class="tag-option"
+                  :class="{ 'tag-selected': selectedTags.includes(tag) }"
+                >
+                  {{ tag }}
+                </button>
+              </div>
+            </div>
+          </div> -->
 
           <!-- Selected Tags Display -->
           <div v-if="selectedTags.length > 0" class="selected-tags-section">
-            <h4>Your Selected Tags ({{ selectedTags.length }})</h4>
+            <h4>Your Tags ({{ selectedTags.length }})</h4>
             <div class="selected-tags">
               <div
                 v-for="tag in selectedTags"
@@ -193,9 +214,10 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
-import { allTags, academicTags, dormTags, interestTags, sportsTags } from '../stores/tags';
+import { allTags, academicTags, dormTags, interestTags, sportsTags, csTags } from '../stores/tags';
 import { useUserStore } from '../stores/user';
 import AvatarUpload from './AvatarUpload.vue';
+import '../assets/editprofile.css';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -301,362 +323,4 @@ const cancelEdit = () => {
 </script>
 
 <style scoped>
-.edit-profile-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem 1rem;
-}
-
-.edit-profile-card {
-  max-width: 900px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-.profile-header {
-  position: relative;
-  padding: 3rem 2rem 2rem;
-  text-align: center;
-}
-
-.header-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 120px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 24px 24px 0 0;
-}
-
-.profile-avatar-section {
-  position: relative;
-  z-index: 2;
-}
-
-.profile-avatar-section h2 {
-  margin: 1rem 0 0.5rem;
-  color: #2d3748;
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-.profile-avatar-section p {
-  color: #718096;
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-.profile-form {
-  padding: 2rem;
-}
-
-.form-section {
-  margin-bottom: 3rem;
-}
-
-.section-header {
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.section-header h3 {
-  color: #2d3748;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.section-header p {
-  color: #718096;
-  margin: 0;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  color: #4a5568;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  font-size: 0.95rem;
-}
-
-.form-input,
-.form-select {
-  padding: 12px 16px;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: white;
-}
-
-.form-input:focus,
-.form-select:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.select-wrapper {
-  position: relative;
-}
-
-.tag-search-section {
-  margin-bottom: 2rem;
-}
-
-.search-input-wrapper {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.tag-search-input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.tag-search-input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.add-custom-btn {
-  padding: 12px 16px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 50px;
-}
-
-.add-custom-btn:hover:not(:disabled) {
-  background: #5a67d8;
-  transform: translateY(-1px);
-}
-
-.add-custom-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.tag-suggestions {
-  background: #f7fafc;
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.suggestions-header {
-  color: #4a5568;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  font-size: 0.9rem;
-}
-
-.tag-categories {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.tag-category h4 {
-  color: #4a5568;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.tag-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.75rem;
-}
-
-.tag-option,
-.tag-suggestion {
-  padding: 8px 12px;
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  position: relative;
-}
-
-.tag-option:hover,
-.tag-suggestion:hover {
-  border-color: #667eea;
-  transform: translateY(-1px);
-}
-
-.tag-selected {
-  background: #667eea;
-  color: white;
-  border-color: #667eea;
-}
-
-.tag-disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.tag-check {
-  margin-left: 4px;
-  font-weight: bold;
-}
-
-.selected-tags-section {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: #f7fafc;
-  border-radius: 12px;
-}
-
-.selected-tags-section h4 {
-  color: #4a5568;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.selected-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.selected-tag {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 6px 12px;
-  background: #667eea;
-  color: white;
-  border-radius: 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.remove-tag-btn {
-  background: rgba(255, 255, 255, 0.3);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s ease;
-}
-
-.remove-tag-btn:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.form-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  padding-top: 2rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-.save-btn {
-  padding: 14px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 16px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 140px;
-}
-
-.save-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-}
-
-.save-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.cancel-btn {
-  padding: 14px 32px;
-  background: white;
-  color: #4a5568;
-  border: 2px solid #e2e8f0;
-  border-radius: 16px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.cancel-btn:hover {
-  border-color: #cbd5e0;
-  transform: translateY(-1px);
-}
-
-@media (max-width: 768px) {
-  .edit-profile-container {
-    padding: 1rem 0.5rem;
-  }
-  
-  .profile-header {
-    padding: 2rem 1rem 1.5rem;
-  }
-  
-  .profile-form {
-    padding: 1.5rem;
-  }
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .tag-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-  
-  .form-actions {
-    flex-direction: column;
-  }
-  
-  .save-btn,
-  .cancel-btn {
-    width: 100%;
-  }
-}
 </style>

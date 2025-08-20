@@ -1,10 +1,8 @@
 <template>
-  <div class="box">
+  <div v-if="route.path === '/'" class="box">
     <div class="top-part">
       <div class="search-bar-flex">
         <div class="search">
-          <!-- 可加搜索图标 -->
-          <!-- <img src="/images/search.svg" class="img" alt="search" /> -->
           <input
             class="label"
             type="text"
@@ -40,7 +38,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
 // 示例：你可以用自己的图标组件或图片
 import { AcademicIcon, ClubIcon, SportsIcon, GameIcon, CultureIcon, InterestIcon, HFSIcon } from "@/components/mobile/icons";
@@ -51,6 +49,7 @@ const userAvatar = computed(() => userStore.userProfile?.photoURL || defaultAvat
 
 const mobileSearch = ref("");
 const router = useRouter();
+const route = useRoute(); // 新增
 
 function handleMobileSearch() {
   if (mobileSearch.value.trim()) {
