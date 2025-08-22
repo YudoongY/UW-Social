@@ -1,4 +1,5 @@
 import * as ort from 'onnxruntime-web';
+
 // ort.env.wasm.wasmPaths = '/';   // points to /public
 ort.env.wasm.wasmPaths =
   'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/';
@@ -10,6 +11,24 @@ let cachedSession: ort.InferenceSession | null = null;
 let sessionPromise: Promise<ort.InferenceSession> | null = null;
 
 import { AutoTokenizer } from '@huggingface/transformers';
+
+import { AutoTokenizer } from '@huggingface/transformers';
+
+let tokenizerInstance: any = null;
+let sessionInstance: ort.InferenceSession | null = null;
+let ortInitialized = false;
+
+// Initialize ONNX Runtime only once
+async function initializeORT() {
+  if (ortInitialized) return;
+  
+  ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/';
+  ort.env.wasm.proxy = true;
+  ort.env.logLevel = 'verbose';
+  
+  ortInitialized = true;
+}
+
 
 let cachedTokenizer: any = null;
 let tokenizerPromise: Promise<any> | null = null;
@@ -29,6 +48,7 @@ export function getTokenizer(modelName?: string) {
   return tokenizerPromise;
 }
 
+
 /**
  * Load and cache the ONNX model session.
  */
@@ -42,6 +62,13 @@ export function getSession(modelPath?: string): Promise<ort.InferenceSession> {
         sessionPromise = null; // clear the promise after initialization
         return session;
       });
+
+async function getSession(modelPath: string = '/models/model_qint8_arm64.onnx') {
+  await initializeORT(); // Ensure ORT is initialized before creating session
+  
+  if (!sessionInstance) {
+    sessionInstance = await ort.InferenceSession.create(modelPath);
+
   }
 
   return sessionPromise;
