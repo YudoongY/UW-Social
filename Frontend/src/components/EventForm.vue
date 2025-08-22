@@ -502,6 +502,29 @@ const handleSubmit = async () => {
       return;
     }
 
+    // Calculate startTime and endtime for compatibility with existing EventList filtering
+    let startTime, endtime;
+    if (recurrenceType === RecurrenceType.ONE_TIME) {
+      startTime = schedule.startDatetime;
+      endtime = schedule.endDatetime;
+    } else {
+      // For recurring events, use the start date with start time
+      const startDate = new Date(formData.value.startDate);
+      const endDate = formData.value.endDate ? new Date(formData.value.endDate) : new Date('2099-12-31');
+      
+      if (formData.value.startTime) {
+        const [hours, minutes] = formData.value.startTime.split(':');
+        startDate.setHours(parseInt(hours), parseInt(minutes));
+      }
+      if (formData.value.endTime) {
+        const [hours, minutes] = formData.value.endTime.split(':');
+        endDate.setHours(parseInt(hours), parseInt(minutes));
+      }
+      
+      startTime = startDate;
+      endtime = endDate;
+    }
+
     const eventData: Omit<Event, 'id'> = {
       title: formData.value.title,
       description: formData.value.description,
@@ -517,8 +540,8 @@ const handleSubmit = async () => {
       participants: [],
       link: formData.value.link,
       imageUrl: formData.value.imageUrl,
-      startime: '', // These seem to be required by your Event type
-      endtime: '',
+      startTime: startTime,
+      endtime: endtime,
     };
 
     await addDoc(collection(db, 'events'), eventData);

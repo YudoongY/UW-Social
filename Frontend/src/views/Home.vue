@@ -29,10 +29,12 @@
 import EventList from '@/components/EventList.vue';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useEventStore } from '../stores/event';
 
 const homeSearch = ref('');
 const router = useRouter();
 const backgroundOpacity = ref(1); // 背景透明度
+const eventStore = useEventStore();
 
 function handleHomeSearch() {
   if (homeSearch.value.trim()) {

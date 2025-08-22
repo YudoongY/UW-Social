@@ -60,3 +60,4 @@ HELP.md
 # 构建输出
 dist-ssr/
 *.local
+Frontend/src/env.d.ts
