@@ -11,7 +11,7 @@
       <p>Your social gateway<br />to everything happening at UW</p>
       <!-- 新增按钮 -->
       <el-row class="page-button">
-        <el-button round type="primary">
+        <el-button round type="primary" @click="navigateToEvents">
           Explore Now
           <img src="../../public/svg/rightarrow1.svg" alt="arrow" class="button-arrow" />
         </el-button>
@@ -20,7 +20,7 @@
 
     <div class="events-section">
       <h2>Recommended for you</h2>
-      <EventList />
+      <EventList @open-card="setSelectedEvent" />
     </div>
   </div>
 </template>
@@ -41,14 +41,25 @@ function handleHomeSearch() {
   }
 }
 
+// 新增 navigateToEvents 方法
+function navigateToEvents() {
+  router.push('/events'); // 跳转到 events 页面
+}
+
 // 监听滚动事件，动态调整背景透明度
 function handleScroll() {
   const maxScroll = 550; // 滚动多少像素后完全透明
   const scrollTop = window.scrollY;
 
   backgroundOpacity.value = Math.max(1 - scrollTop / maxScroll, 0.1);
-
 }
+
+const selectedEvent = ref(null);
+
+const setSelectedEvent = (event: any) => {
+  console.log('Selected Event:', event);
+  selectedEvent.value = event; // 设置选中的事件
+};
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
@@ -113,9 +124,11 @@ onUnmounted(() => {
 
 .page-button {
   margin-top: 3rem; /* 按钮距离标题的间距 */
+  z-index: 4; /* 确保按钮在其他元素之上 */
+  position: relative;
 }
 
-.page-button .el-button {
+.page-button .el-button { /*explore now button */
   background-color: #8c66d8; /* 按钮背景颜色 */
   color: #F4EBD1; /* 按钮文字颜色 */
   font-size: 1.4rem; /* 按钮文字大小 */
@@ -126,17 +139,12 @@ onUnmounted(() => {
 }
 
 .page-button .el-button:hover {
-  background-color: #6c63ff; /* 按钮悬停时的背景颜色 */
-}
-
-.welcome-container {
-  margin: 0;
-  padding: 0;
-  z-index: 2; /* 确保 Welcome 在背景之上 */
+  background-color: #b196e5; /* 按钮悬停时的背景颜色 */
 }
 
 .events-section {
-  padding: 39rem 4rem 1rem;
+  margin: 30rem 0;
+  padding: 9rem 4rem 1rem;
   z-index: 2; /* 确保 EventList 在背景之上 */
   position: relative; /* 确保 z-index 生效 */
 }

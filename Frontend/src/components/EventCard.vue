@@ -1,6 +1,6 @@
 <template>
-  <div class="card event-card" @click="handleCardClick">
-    <img :src="event.imageUrl || '/default-event-image.jpg'" alt="Event Image" />
+  <div class="card event-card" @click="$emit('open-card', event)">
+    <img :src="event.imageUrl || '/images/wavingdog.jpg'" alt="Event Image" />
     <div class="event-card-content">
       <!-- 左侧内容 -->
       <div class="event-card-left">
@@ -35,7 +35,7 @@ import { defineProps, toRefs } from 'vue';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useEventStore } from '../stores/event';
-import { useEventDialogStore } from '../stores/eventDialog';
+// import { useEventDialogStore } from '../stores/eventDialog';
 import { formatEventSchedule, type Event } from '../types/event';
 import '../assets/eventcard.css';
 import { ElButton } from 'element-plus';
@@ -48,10 +48,11 @@ const props = defineProps<{
 
 const { event } = toRefs(props);
 const eventStore = useEventStore();
-const eventDialogStore = useEventDialogStore();
+// const eventDialogStore = useEventDialogStore();
 
 const handleCardClick = () => {
-  eventDialogStore.openDialog(props.event);
+  // eventDialogStore.openDialog(props.event);
+  eventStore.selectEvent(props.event);
 };
 
 const handleDelete = async () => {

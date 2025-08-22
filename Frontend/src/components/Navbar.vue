@@ -6,8 +6,8 @@
           <div class="nav-left">
             <li>
               <router-link to="/">
-                <img src="/images/uw-social-logo2.svg" alt="UW Social Logo" class="logo">
-                <img src="/images/UW-SOCIAL.svg" alt="UW SOCIAL" class="logo-text">
+                <img src="/svg/uw-social-logo1.svg" alt="UW Social Logo" class="logo">
+                <img src="/svg/UW-SOCIAL.svg" alt="UW SOCIAL" class="logo-text">
               </router-link>
             </li>
             <div :class="{ active: $route.path === '/' }">

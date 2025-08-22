@@ -108,24 +108,7 @@
     margin: 6px 0;
   }
 
-    /* Deep selector for Element Plus dialog */
-  ::v-deep(.el-dialog) {
-    margin: 10vh auto !important;
-  }
-
   @media (max-width: 576px) {
-    ::v-deep(.el-dialog) {
-      width: 95vw !important;
-      max-width: 95vw !important;
-      min-width: 0 !important;
-      margin: 2vh auto !important;
-      left: 0 !important;
-      right: 0 !important;
-      border-radius: 0 !important;
-      padding: 0 !important;
-    }
-    ::v-deep(.el-dialog__body) {
-      padding: 10px !important;
-    }
+    
   }
 }

@@ -1,4 +1,17 @@
 import * as ort from 'onnxruntime-web';
+
+// ort.env.wasm.wasmPaths = '/';   // points to /public
+ort.env.wasm.wasmPaths =
+  'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/';
+
+// ort.env.wasm.proxy = true;
+// ort.env.logLevel = 'verbose';
+
+let cachedSession: ort.InferenceSession | null = null;
+let sessionPromise: Promise<ort.InferenceSession> | null = null;
+
+import { AutoTokenizer } from '@huggingface/transformers';
+
 import { AutoTokenizer } from '@huggingface/transformers';
 
 let tokenizerInstance: any = null;
@@ -16,21 +29,49 @@ async function initializeORT() {
   ortInitialized = true;
 }
 
-async function getTokenizer(modelName = 'sentence-transformers/paraphrase-MiniLM-L3-v2') {
-  if (!tokenizerInstance) {
-    tokenizerInstance = await AutoTokenizer.from_pretrained(modelName);
+
+let cachedTokenizer: any = null;
+let tokenizerPromise: Promise<any> | null = null;
+
+export function getTokenizer(modelName?: string) {
+  if (cachedTokenizer) return Promise.resolve(cachedTokenizer);
+
+  if (!tokenizerPromise) {
+    tokenizerPromise = AutoTokenizer.from_pretrained(modelName ?? 'sentence-transformers/paraphrase-MiniLM-L3-v2')
+      .then((tok) => {
+        cachedTokenizer = tok;
+        tokenizerPromise = null;
+        return tok;
+      });
   }
-  return tokenizerInstance;
+
+  return tokenizerPromise;
 }
+
+
+/**
+ * Load and cache the ONNX model session.
+ */
+export function getSession(modelPath?: string): Promise<ort.InferenceSession> {
+  if (cachedSession) return Promise.resolve(cachedSession);
+
+  if (!sessionPromise) {
+    sessionPromise = ort.InferenceSession.create(modelPath ?? '/models/model_qint8_arm64.onnx')
+      .then((session) => {
+        cachedSession = session;
+        sessionPromise = null; // clear the promise after initialization
+        return session;
+      });
 
 async function getSession(modelPath: string = '/models/model_qint8_arm64.onnx') {
   await initializeORT(); // Ensure ORT is initialized before creating session
   
   if (!sessionInstance) {
     sessionInstance = await ort.InferenceSession.create(modelPath);
+
   }
-  console.log('ONNX model session loaded:');
-  return sessionInstance;
+
+  return sessionPromise;
 }
 
 /**
