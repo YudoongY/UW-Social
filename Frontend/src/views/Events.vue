@@ -5,35 +5,37 @@
       <img src="/svg/eventsbg.svg" alt="Events Background" class="background-svg" />
     </div>
 
-    <div class="events-page-with-search">
-      <div class="events-content">
-        <!-- 搜索框 -->
-        <div class="search-bar-container">
-          <input
+    <div class="overlapping-page">
+      <div class="events-page-with-search" v-if="!selectedEvent">
+        <div class="events-content">
+          <!-- 搜索框 -->
+          <div class="search-bar-container">
+            <input
             v-model="searchQuery"
             type="text"
             placeholder="Search events..."
             class="search-bar"
             @keyup.enter="handleSearch"
-          />
+            />
+          </div>
+
+          <!-- 事件列表 -->
+          <el-main class="event-list-container">
+            <EventList :category="categoryFilter" :search="searchQuery" @open-card="setSelectedEvent" />
+          </el-main>
         </div>
-
-        <!-- 事件列表 -->
-        <el-main class="event-list-container">
-          <EventList :category="categoryFilter" :search="searchQuery" @open-card="setSelectedEvent" />
-        </el-main>
       </div>
-
+      
       <!-- Detail Card -->
-      <div v-if="selectedEvent" class="detail-card-container">
-        <DetailCard :event="selectedEvent" :currentUserId="currentUserId" />
+      <div v-if="selectedEvent" class="detail-card-overlay" @click.self="clearSelectedEvent">
+        <DetailCard :event="selectedEvent" :currentUserId="currentUserId" @close="clearSelectedEvent" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import EventList from '../components/EventList.vue';
 import DetailCard from '../components/DetailCard.vue';
@@ -55,6 +57,22 @@ const setSelectedEvent = (event: any) => {
 const clearSelectedEvent = () => {
   selectedEvent.value = null;
 };
+
+// 方法：监听键盘事件
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    clearSelectedEvent(); // 按下 Esc 键时清空选中的活动
+  }
+};
+
+// 挂载和卸载事件监听器
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
 
 const categoryFilter = ref('');
 const searchQuery = ref('');
@@ -90,6 +108,11 @@ const openCard = (event: any) => {
 .background-svg {
   width: 100%;
   height: auto;
+}
+
+.overlapping-page {
+  position: relative;
+  z-index: 1;
 }
 
 .events-page-with-search {
@@ -199,11 +222,21 @@ h1 {
 }
 
 .detail-card-container {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 100px;
+  border: none;
+}
+
+.detail-card-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 @media (max-width: 576px) {

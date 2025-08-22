@@ -1,5 +1,5 @@
 <template>
-  <div class="card event-card" @click="handleCardClick">
+  <div class="card event-card" @click="$emit('open-card', event)">
     <img :src="event.imageUrl || '/images/wavingdog.jpg'" alt="Event Image" />
     <div class="event-card-content">
       <!-- 左侧内容 -->

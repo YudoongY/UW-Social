@@ -1,6 +1,6 @@
 <template>
   <div class="event-list">
-    <div v-if="filteredEvents.length === 0" class="loading">No events found. You may need a VPN.</div>
+    <div v-if="filteredEvents.length === 0" class="loading">Loading events...</div>
     <div v-else class="events-grid">
       <EventCard
         v-for="event in filteredEvents"
@@ -234,13 +234,5 @@ const hideDetailCard = () => {
         box-sizing: border-box;
         padding: 0.2rem 0;
     }
-}
-
-.detail-card {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

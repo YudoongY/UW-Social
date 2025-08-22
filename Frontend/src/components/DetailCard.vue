@@ -1,31 +1,34 @@
 <template>
-  <div class="detail-page">
-    <el-card class="detail-card">
+  <div class="detail-card-container" @click.self="$emit('close')">
+    <el-card class="detail-card-header">
       <!-- 第一部分：图片和标题 -->
       <div class="detail-header">
-        <img :src="event.imageUrl || '/images/default-event-image.jpg'" alt="Event Image" class="event-image" />
+        <img :src="event.imageUrl || '/images/wavingdog.jpg'" alt="Event Image" class="event-image" />
         <div class="event-info">
           <h2 class="event-title">{{ event.title }}</h2>
           <p class="event-location">📍 {{ event.location }}</p>
           <p class="event-time">⏰ {{ formatEventSchedule(event) }}</p>
         </div>
       </div>
+    </el-card>
 
-      <!-- 第二部分：Google Map -->
-      <div class="google-map">
-        <p>Google Map</p>
-        <!-- 嵌入 Google Map 的 API -->
-      </div>
+    <!-- 第二部分：Google Map 和描述 -->
+    <div class="map-and-description">
+      <el-card class="detail-card-map">
+        <div class="google-map">
+          <p>Google Map</p>
+          <!-- 嵌入 Google Map 的 API -->
+        </div>
+      </el-card>
 
-      <!-- 第三部分：描述、标签和链接 -->
-      <div class="event-details">
+      <el-card class="detail-card-description">
         <p class="event-description" v-html="formatDescription(event.description)"></p>
         <p v-if="event.tags && event.tags.length" class="event-tags">🏷️ {{ event.tags.join(', ') }}</p>
         <p v-if="event.link" class="event-link">
           <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
         </p>
-      </div>
-    </el-card>
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -75,16 +78,31 @@ console.log('[DetailCard.vue] props.event:', props.event);
 </script>
 
 <style scoped>
-.detail-page {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem; /* 区块之间的间距 */
-  padding: 2rem;
-  background-color: #f9f9f9;
+.detail-card-container {
+  position: relative;
+  width: 1400px; /* 增大容器宽度 */
+  margin-top: 100px;
 }
 
-.detail-card {
-  padding: 1.5rem;
+.detail-card-header {
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+}
+
+.map-and-description {
+  display: flex; /* 设置为水平布局 */
+  gap: 1.5rem; /* map 和 description 之间的间距 */
+  margin-top: 1.5rem; /* 与标题部分的间距 */
+}
+
+.detail-card-map {
+  flex: 0.3; /* 缩短 map 的宽度 */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.detail-card-description {
+  flex: 0.7; /* 增大 description 的宽度 */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -135,7 +153,8 @@ console.log('[DetailCard.vue] props.event:', props.event);
 }
 
 .event-description {
-  font-size: 1rem;
+  padding: 0 0.5rem;
+  font-size: 1.1rem;
   color: #555;
   margin-bottom: 1rem;
 }
