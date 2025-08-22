@@ -80,13 +80,16 @@ export const useUserStore = defineStore('user', () => {
   const loginWithGoogle = async () => {
     try {
       const provider = new GoogleAuthProvider();
+      
+      // Add these settings to help with popup issues
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
 
       // Force local persistence before login
       await setPersistence(auth, browserLocalPersistence);
 
       const result = await signInWithPopup(auth, provider);
-      userProfile.value = result.user as UserProfile;
-      isLoggedIn.value = true;
       return result.user;
     } catch (error) {
       console.error('登录失败:', error);
