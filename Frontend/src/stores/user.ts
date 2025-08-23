@@ -85,8 +85,10 @@ export const useUserStore = defineStore('user', () => {
       await setPersistence(auth, browserLocalPersistence);
 
       const result = await signInWithPopup(auth, provider);
-      userProfile.value = result.user as UserProfile;
-      isLoggedIn.value = true;
+      
+      // 不要直接设置userProfile，让onAuthStateChanged处理
+      // 这样可以确保正确的用户文档创建和photoURL保存
+      
       return result.user;
     } catch (error) {
       console.error('登录失败:', error);

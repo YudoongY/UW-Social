@@ -171,7 +171,7 @@ onMounted(async () => {
     const querySnapshot = await getDocs(q);
     publishedEvents.value = querySnapshot.docs.map(doc => {
       const data = doc.data();
-      const dateStr = formatEventSchedule(data.schedule);
+      const dateStr = data.schedule ? formatEventSchedule(data.schedule) : 'Schedule not available';
       return {
         id: doc.id,
         title: data.title || '',

@@ -12,10 +12,6 @@ let sessionPromise: Promise<ort.InferenceSession> | null = null;
 
 import { AutoTokenizer } from '@huggingface/transformers';
 
-import { AutoTokenizer } from '@huggingface/transformers';
-
-let tokenizerInstance: any = null;
-let sessionInstance: ort.InferenceSession | null = null;
 let ortInitialized = false;
 
 // Initialize ONNX Runtime only once
@@ -52,8 +48,10 @@ export function getTokenizer(modelName?: string) {
 /**
  * Load and cache the ONNX model session.
  */
-export function getSession(modelPath?: string): Promise<ort.InferenceSession> {
-  if (cachedSession) return Promise.resolve(cachedSession);
+export async function getSession(modelPath?: string): Promise<ort.InferenceSession> {
+  if (cachedSession) return cachedSession;
+
+  await initializeORT(); // Ensure ORT is initialized before creating session
 
   if (!sessionPromise) {
     sessionPromise = ort.InferenceSession.create(modelPath ?? '/models/model_qint8_arm64.onnx')
@@ -62,13 +60,6 @@ export function getSession(modelPath?: string): Promise<ort.InferenceSession> {
         sessionPromise = null; // clear the promise after initialization
         return session;
       });
-
-async function getSession(modelPath: string = '/models/model_qint8_arm64.onnx') {
-  await initializeORT(); // Ensure ORT is initialized before creating session
-  
-  if (!sessionInstance) {
-    sessionInstance = await ort.InferenceSession.create(modelPath);
-
   }
 
   return sessionPromise;

@@ -1,220 +1,342 @@
 <template>
   <div class="event-form">
-    <h2>Publish New Event</h2>
-    <form @submit.prevent="handleSubmit">
-      <div class="form-group">
-        <label for="title">Event Title</label>
-        <input
-          id="title"
-          v-model="formData.title"
-          type="text"
-          required
-          placeholder="Enter event title"
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="description">Description</label>
-        <textarea
-          id="description"
-          v-model="formData.description"
-          type="text"
-          required
-          :placeholder="descriptionPlaceholder"
-          rows="3"
-        ></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="recurrenceType">Recurrence</label>
-        <select id="recurrenceType" v-model="formData.recurrenceType" required>
-          <!-- <option :value="RecurrenceType.ONE_TIME">One-time</option> -->
-          <option :value="RecurrenceType.DAILY">Daily</option>
-          <option :value="RecurrenceType.WEEKLY">Weekly</option>
-          <option :value="RecurrenceType.MONTHLY">Monthly</option>
-        </select>
-      </div>
-
-      <!-- One-time event fields -->
-      <div v-if="formData.recurrenceType === RecurrenceType.ONE_TIME">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="startDate">Start Date</label>
-            <input id="startDate" v-model="formData.startDate" type="date" required>
-          </div>
-          <div class="form-group">
-            <label for="startTime">Start Time</label>
-            <input id="startTime" v-model="formData.startTime" type="time" required>
-          </div>
+    <div class="form-container">
+      <div class="step-indicator">
+        <div class="step" :class="{ active: currentStep >= 1 }" @click="currentStep = 1">
+          <span class="step-number">1</span>
+          <span class="step-title">Basic Info</span>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="endDate">End Date</label>
-            <input id="endDate" v-model="formData.endDate" type="date" required>
-          </div>
-          <div class="form-group">
-            <label for="endTime">End Time</label>
-            <input id="endTime" v-model="formData.endTime" type="time" required>
-          </div>
+        <div class="step" :class="{ active: currentStep >= 2 }" @click="currentStep = 2">
+          <span class="step-number">2</span>
+          <span class="step-title">Schedule</span>
+        </div>
+        <div class="step" :class="{ active: currentStep >= 3 }" @click="currentStep = 3">
+          <span class="step-number">3</span>
+          <span class="step-title">Details</span>
+        </div>
+        <div class="step" :class="{ active: currentStep >= 4 }" @click="currentStep = 4">
+          <span class="step-number">4</span>
+          <span class="step-title">Preview</span>
         </div>
       </div>
 
-      <!-- Daily recurring event fields -->
-      <div v-if="formData.recurrenceType === RecurrenceType.DAILY">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="dailyStartDate">Start Date</label>
-            <input id="dailyStartDate" v-model="formData.startDate" type="date" required>
+      <form @submit.prevent="handleSubmit" class="form-content">
+        
+        <!-- Step 1: Basic Information -->
+        <div v-show="currentStep === 1" class="step-content">
+          <div class="bento-grid">
+            <div class="bento-card large">
+              <div class="card-header">
+                <h3>📝 Basic Information</h3>
+                <p>Let's start with the essentials</p>
+              </div>
+              <div class="form-group">
+                <label for="title">Event Title</label>
+                <input
+                  id="title"
+                  v-model="formData.title"
+                  type="text"
+                  required
+                  placeholder="Enter event title"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="description">Description (Optional)</label>
+                <textarea
+                  id="description"
+                  v-model="formData.description"
+                  type="text"
+                  :placeholder="descriptionPlaceholder"
+                  rows="3"
+                ></textarea>
+              </div>
+            </div>
+            
+            <div class="bento-card small">
+              <div class="card-header">
+                <h3>📍 Location</h3>
+              </div>
+              <div class="form-group">
+                <input
+                  id="location"
+                  v-model="formData.location"
+                  type="text"
+                  required
+                  placeholder="Where will it happen?"
+                >
+              </div>
+            </div>
+            
+            <div class="bento-card small">
+              <div class="card-header">
+                <h3>🏷️ Category</h3>
+              </div>
+              <div class="form-group">
+                <select id="category" v-model="formData.category" required>
+                  <option value="">Select category</option>
+                  <option value="Academic">Academic</option>
+                  <option value="Club">Club</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Games">Games</option>
+                  <option value="Culture">Culture</option>
+                  <option value="Interest">Interest</option>
+                  <option value="HFS">HFS</option>
+                </select>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="dailyEndDate">End Date (optional)</label>
-            <input id="dailyEndDate" v-model="formData.endDate" type="date">
+          
+          <div class="step-navigation">
+            <button type="button" class="nav-btn next" @click="currentStep = 2">Next Step →</button>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="dailyStartTime">Start Time</label>
-            <input id="dailyStartTime" v-model="formData.startTime" type="time" required>
+        
+        <!-- Step 2: Schedule -->
+        <div v-show="currentStep === 2" class="step-content">
+          <div class="bento-grid">
+            <div class="bento-card large">
+              <div class="card-header">
+                <h3>📅 Schedule Details</h3>
+                <p>When should people join?</p>
+              </div>
+              <div class="form-group">
+                <label for="recurrenceType">Recurrence Type</label>
+                <select id="recurrenceType" v-model="formData.recurrenceType" required>
+                  <option :value="RecurrenceType.ONE_TIME">One-time</option>
+                  <option :value="RecurrenceType.DAILY">Daily</option>
+                  <option :value="RecurrenceType.WEEKLY">Weekly</option>
+                  <option :value="RecurrenceType.MONTHLY">Monthly</option>
+                </select>
+              </div>
+
+              <!-- One-time event fields -->
+              <div v-if="formData.recurrenceType === RecurrenceType.ONE_TIME" class="schedule-fields">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input id="startDate" v-model="formData.startDate" type="date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="startTime">Start Time</label>
+                    <input id="startTime" v-model="formData.startTime" type="time" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="endDate">End Date</label>
+                    <input id="endDate" v-model="formData.endDate" type="date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="endTime">End Time</label>
+                    <input id="endTime" v-model="formData.endTime" type="time" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Daily recurring event fields -->
+              <div v-if="formData.recurrenceType === RecurrenceType.DAILY" class="schedule-fields">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="dailyStartDate">Start Date</label>
+                    <input id="dailyStartDate" v-model="formData.startDate" type="date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="dailyEndDate">End Date (optional)</label>
+                    <input id="dailyEndDate" v-model="formData.endDate" type="date">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="dailyStartTime">Start Time</label>
+                    <input id="dailyStartTime" v-model="formData.startTime" type="time" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="dailyEndTime">End Time</label>
+                    <input id="dailyEndTime" v-model="formData.endTime" type="time" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Weekly recurring event fields -->
+              <div v-if="formData.recurrenceType === RecurrenceType.WEEKLY" class="schedule-fields">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="weeklyStartDate">Start Date</label>
+                    <input id="weeklyStartDate" v-model="formData.startDate" type="date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="weeklyEndDate">End Date (optional)</label>
+                    <input id="weeklyEndDate" v-model="formData.endDate" type="date">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="weeklyStartTime">Start Time</label>
+                    <input id="weeklyStartTime" v-model="formData.startTime" type="time" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="weeklyEndTime">End Time</label>
+                    <input id="weeklyEndTime" v-model="formData.endTime" type="time" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Days of Week</label>
+                  <div class="checkbox-group">
+                    <label v-for="(day, idx) in weekDays" :key="idx" class="day-checkbox">
+                      <input type="checkbox" :value="idx" v-model="formData.daysOfWeek"> 
+                      <span>{{ day }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Monthly recurring event fields -->
+              <div v-if="formData.recurrenceType === RecurrenceType.MONTHLY" class="schedule-fields">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="monthlyStartDate">Start Date</label>
+                    <input id="monthlyStartDate" v-model="formData.startDate" type="date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="monthlyEndDate">End Date (optional)</label>
+                    <input id="monthlyEndDate" v-model="formData.endDate" type="date">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="monthlyStartTime">Start Time</label>
+                    <input id="monthlyStartTime" v-model="formData.startTime" type="time" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="monthlyEndTime">End Time</label>
+                    <input id="monthlyEndTime" v-model="formData.endTime" type="time" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Days of Month</label>
+                  <input type="text" v-model="formData.daysOfMonthInput" placeholder="e.g., 1, 15, 31">
+                  <small>Enter days separated by commas (1-31)</small>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="dailyEndTime">End Time</label>
-            <input id="dailyEndTime" v-model="formData.endTime" type="time" required>
+          
+          <div class="step-navigation">
+            <button type="button" class="nav-btn prev" @click="currentStep = 1">← Previous</button>
+            <button type="button" class="nav-btn next" @click="currentStep = 3">Next Step →</button>
           </div>
         </div>
-      </div>
+        
+        <!-- Step 3: Additional Details -->
+        <div v-show="currentStep === 3" class="step-content">
+          <div class="bento-grid">
+            <div class="bento-card medium">
+              <div class="card-header">
+                <h3>👥 Participation</h3>
+              </div>
+              <div class="form-group">
+                <label for="maxParticipants">Max Participants (Optional)</label>
+                <input
+                  id="maxParticipants"
+                  v-model="formData.maxParticipants"
+                  type="number"
+                  min="1"
+                  placeholder="No limit if not set"
+                >
+              </div>
+            </div>
+            
+            <div class="bento-card medium">
+              <div class="card-header">
+                <h3>🏷️ Tags</h3>
+                <p>Separate with commas or spaces</p>
+              </div>
+              <div class="form-group">
+                <input
+                  id="tags"
+                  v-model="tagsInputValue"
+                  type="text"
+                  placeholder="e.g., study, social, sports"
+                  @input="handleTagsInput"
+                  @keydown="handleTagsKeydown"
+                >
+                <!-- 实时显示已输入的tags -->
+                <div v-if="formData.tags.length" class="tags-preview">
+                  <span v-for="tag in formData.tags" :key="tag" class="tag-preview-chip">#{{ tag }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bento-card large">
+              <div class="card-header">
+                <h3>📸 Media & Links</h3>
+              </div>
+              <div class="form-group">
+                <label for="image">Event Image (Optional)</label>
+                <input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  @change="handleImageUpload"
+                  class="file-input"
+                >
+              </div>
 
-      <!-- Weekly recurring event fields -->
-      <div v-if="formData.recurrenceType === RecurrenceType.WEEKLY">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="weeklyStartDate">Start Date</label>
-            <input id="weeklyStartDate" v-model="formData.startDate" type="date" required>
+              <div class="form-group">
+                <label for="link">Event Link (Optional)</label>
+                <input
+                  id="link"
+                  v-model="formData.link"
+                  type="url"
+                  placeholder="e.g., https://meeting.com/your-event"
+                >
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="weeklyEndDate">End Date (optional)</label>
-            <input id="weeklyEndDate" v-model="formData.endDate" type="date">
+          
+          <div class="step-navigation">
+            <button type="button" class="nav-btn prev" @click="currentStep = 2">← Previous</button>
+            <button type="button" class="nav-btn next" @click="currentStep = 4">Preview →</button>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="weeklyStartTime">Start Time</label>
-            <input id="weeklyStartTime" v-model="formData.startTime" type="time" required>
+        
+        <!-- Step 4: Preview & Submit -->
+        <div v-show="currentStep === 4" class="step-content">
+          <div class="preview-card">
+            <div class="card-header">
+              <h3>🎉 Ready to Publish?</h3>
+              <p>Review your event details</p>
+            </div>
+            
+            <div class="preview-content">
+              <div class="preview-item">
+                <strong>{{ formData.title }}</strong>
+              </div>
+              <div class="preview-item">
+                {{ formData.description.trim() || `Come and enjoy ${formData.title}!` }}
+              </div>
+              <div class="preview-details">
+                <span class="detail-chip">📍 {{ formData.location }}</span>
+                <span class="detail-chip">🏷️ {{ formData.category }}</span>
+                <span v-if="formData.maxParticipants" class="detail-chip">👥 Max {{ formData.maxParticipants }}</span>
+              </div>
+              <div v-if="formData.tags.length" class="preview-tags">
+                <span v-for="tag in formData.tags" :key="tag" class="tag-chip">#{{ tag }}</span>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="weeklyEndTime">End Time</label>
-            <input id="weeklyEndTime" v-model="formData.endTime" type="time" required>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Days of Week</label>
-          <div class="checkbox-group">
-            <label v-for="(day, idx) in weekDays" :key="idx">
-              <input type="checkbox" :value="idx" v-model="formData.daysOfWeek"> {{ day }}
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Monthly recurring event fields -->
-      <div v-if="formData.recurrenceType === RecurrenceType.MONTHLY">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="monthlyStartDate">Start Date</label>
-            <input id="monthlyStartDate" v-model="formData.startDate" type="date" required>
-          </div>
-          <div class="form-group">
-            <label for="monthlyEndDate">End Date (optional)</label>
-            <input id="monthlyEndDate" v-model="formData.endDate" type="date">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="monthlyStartTime">Start Time</label>
-            <input id="monthlyStartTime" v-model="formData.startTime" type="time" required>
-          </div>
-          <div class="form-group">
-            <label for="monthlyEndTime">End Time</label>
-            <input id="monthlyEndTime" v-model="formData.endTime" type="time" required>
+          
+          <div class="step-navigation">
+            <button type="button" class="nav-btn prev" @click="currentStep = 3">← Edit Details</button>
+            <button type="submit" class="submit-btn" :disabled="isSubmitting">
+              {{ isSubmitting ? 'Publishing...' : '🚀 Publish Event!' }}
+            </button>
           </div>
         </div>
-        <div class="form-group">
-          <label>Days of Month</label>
-          <input type="text" v-model="formData.daysOfMonthInput" placeholder="e.g., 1, 15, 31">
-          <small>Enter days separated by commas (1-31)</small>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="location">Location</label>
-        <input
-          id="location"
-          v-model="formData.location"
-          type="text"
-          required
-          placeholder="Event location"
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="category">Category</label>
-        <select id="category" v-model="formData.category" required>
-          <option value="">Select category</option>
-          <option value="Academic">Academic</option>
-          <option value="Club">Club</option>
-          <option value="Sports">Sports</option>
-          <option value="Games">Games</option>
-          <option value="Culture">Culture</option>
-          <option value="Interest">Interest</option>
-          <option value="HFS">HFS</option>
-          <!-- <option value="other">Other</option> -->
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="maxParticipants">Max Participants (Optional)</label>
-        <input
-          id="maxParticipants"
-          v-model="formData.maxParticipants"
-          type="number"
-          min="1"
-          placeholder="No limit if not set"
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="tags">Tags (comma separated)</label>
-        <input
-          id="tags"
-          v-model="tagsInput"
-          type="text"
-          placeholder="e.g., study, social, sports"
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="image">Event Image (Optional)</label>
-        <input
-          id="image"
-          type="file"
-          accept="image/*"
-          @change="handleImageUpload"
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="link">Event Link (Optional)</label>
-        <input
-          id="link"
-          v-model="formData.link"
-          type="url"
-          placeholder="e.g., https://meeting.com/your-event"
-        >
-      </div>
-
-      <button type="submit" class="submit-btn" :disabled="isSubmitting">
-        {{ isSubmitting ? 'Publishing...' : 'Publish!' }}
-      </button>
-    </form>
+        
+      </form>
+    </div>
   </div>
 </template>
 
@@ -224,17 +346,17 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { useEventStore } from '../stores/event';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'; // 引入 Firebase Storage 方法
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { Event } from '../types/event';
 import { RecurrenceType } from '../types/event';
-import { getAuth } from 'firebase/auth';
 
 const router = useRouter();
 const userStore = useUserStore();
 const eventStore = useEventStore();
 const isSubmitting = ref(false);
 const db = getFirestore();
-const storage = getStorage(); // 初始化 Firebase Storage
+const storage = getStorage();
+const currentStep = ref(1);
 
 const formData = ref({
   title: '',
@@ -251,38 +373,69 @@ const formData = ref({
   recurrenceType: RecurrenceType.ONE_TIME,
   daysOfWeek: [] as number[],
   daysOfMonthInput: '',
-  imageUrl: '', // 新增字段，用于存储图片的下载 URL
+  imageUrl: '',
 });
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-const tagsInput = computed({
-  get: () => formData.value.tags.join(', '),
-  set: (value) => {
-    formData.value.tags = value.split(',').map(tag => tag.trim()).filter(Boolean);
-  }
-});
+// 使用简单的ref来避免computed双向绑定的问题
+const tagsInputValue = ref('');
 
-// 新增：动态 placeholder
+// 解析tags的函数
+const parseTagsFromInput = (value: string) => {
+  return value.split(/[,，\s]+/).map(tag => tag.trim()).filter(Boolean);
+};
+
+// 处理input事件
+const handleTagsInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  tagsInputValue.value = target.value;
+  
+  // 实时更新tags数组
+  formData.value.tags = parseTagsFromInput(target.value);
+};
+
 const descriptionPlaceholder = computed(() =>
   formData.value.title
     ? `Come and enjoy ${formData.value.title}!`
     : 'Describe your event here...'
 );
 
-const handleImageUpload = async (event: Event) => {
-  const file = event.target.files[0];
+// 处理tags输入的键盘事件
+const handleTagsKeydown = (event: KeyboardEvent) => {
+  // 只处理回车键，避免干扰正常输入
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    const target = event.target as HTMLInputElement;
+    const currentValue = target.value;
+    
+    // 在当前光标位置插入逗号和空格
+    const cursorPos = target.selectionStart || 0;
+    const newValue = currentValue.slice(0, cursorPos) + ', ' + currentValue.slice(cursorPos);
+    
+    // 更新值
+    tagsInputValue.value = newValue;
+    formData.value.tags = parseTagsFromInput(newValue);
+    
+    // 设置新的光标位置
+    setTimeout(() => {
+      target.selectionStart = target.selectionEnd = cursorPos + 2;
+    }, 0);
+  }
+};
+
+const handleImageUpload = async (event: InputEvent) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
   if (!file) return;
 
-  const storagePath = `events/${Date.now()}_${file.name}`; // 生成唯一的存储路径
+  const storagePath = `events/${Date.now()}_${file.name}`;
   const storageReference = storageRef(storage, storagePath);
 
   try {
-    // 上传文件到 Firebase Storage
     const snapshot = await uploadBytes(storageReference, file);
-    // 获取文件的下载 URL
     const downloadURL = await getDownloadURL(snapshot.ref);
-    formData.value.imageUrl = downloadURL; // 将下载 URL 保存到表单数据中
+    formData.value.imageUrl = downloadURL;
     alert('Image uploaded successfully!');
   } catch (error) {
     console.error('Failed to upload image:', error);
@@ -387,9 +540,33 @@ const handleSubmit = async () => {
       isSubmitting.value = false;
       return;
     }
+
+    // Calculate startTime and endtime for compatibility with existing EventList filtering
+    let startTime, endtime;
+    if (recurrenceType === RecurrenceType.ONE_TIME) {
+      startTime = schedule.startDatetime;
+      endtime = schedule.endDatetime;
+    } else {
+      // For recurring events, use the start date with start time
+      const startDate = new Date(formData.value.startDate);
+      const endDate = formData.value.endDate ? new Date(formData.value.endDate) : new Date('2099-12-31');
+      
+      if (formData.value.startTime) {
+        const [hours, minutes] = formData.value.startTime.split(':');
+        startDate.setHours(parseInt(hours), parseInt(minutes));
+      }
+      if (formData.value.endTime) {
+        const [hours, minutes] = formData.value.endTime.split(':');
+        endDate.setHours(parseInt(hours), parseInt(minutes));
+      }
+      
+      startTime = startDate;
+      endtime = endDate;
+    }
+
     const eventData: Omit<Event, 'id'> = {
       title: formData.value.title,
-      description: formData.value.description,
+      description: formData.value.description.trim() || `Come and enjoy ${formData.value.title}!`,
       location: formData.value.location,
       category: formData.value.category,
       tags: formData.value.tags,
@@ -401,15 +578,15 @@ const handleSubmit = async () => {
       createdAt: new Date().toISOString(),
       participants: [],
       link: formData.value.link,
-      imageUrl: formData.value.imageUrl, // 保存图片的下载 URL
+      imageUrl: formData.value.imageUrl,
+      startTime: startTime,
+      endtime: endtime,
     };
 
     await addDoc(collection(db, 'events'), eventData);
     alert('Successfully published!');
 
-    // 更新全局事件列表
     await eventStore.fetchEvents();
-
     router.push('/events');
   } catch (error) {
     console.error('Failed to publish event:', error);
@@ -422,34 +599,392 @@ const handleSubmit = async () => {
 
 <style scoped>
 .event-form {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-h2 {
-  color: #333;
+.form-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  gap: 1rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 1rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.step:hover {
+  background: rgba(179, 136, 235, 0.1);
+}
+
+.step.active {
+  background: linear-gradient(135deg, #b388eb 0%, #6c63ff 100%);
+  color: white;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.step.active .step-number {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.step-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
   margin-bottom: 2rem;
-  text-align: center;
+}
+
+.bento-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(230, 230, 230, 0.6);
+  transition: all 0.3s ease;
+}
+
+.bento-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.bento-card.large {
+  grid-column: 1 / -1;
+}
+
+.bento-card.medium {
+  grid-column: span 1;
+}
+
+.bento-card.small {
+  grid-column: span 1;
+}
+
+.card-header {
+  margin-bottom: 1.5rem;
+}
+
+.card-header h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.card-header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
 }
 
 label {
   display: block;
-  margin-bottom: 0.5rem;
-  color: #666;
-  font-weight: 500;
-}
-#description::placeholder {
-  font-weight: 500;
-}
-#title,
-#description,
-#location {
-  /* font-weight: 600; */
-  border-width: 2px;
+  margin-bottom: 0.6rem;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
+input, textarea, select {
+  width: 100%;
+  padding: 0.9rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 10px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  background: #fafbfc;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #b388eb;
+  box-shadow: 0 0 0 3px rgba(179, 136, 235, 0.1);
+  background: white;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.schedule-fields {
+  margin-top: 1.5rem;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.day-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 2px solid #e1e5e9;
+  background: #fafbfc;
+}
+
+.day-checkbox:hover {
+  background: rgba(179, 136, 235, 0.1);
+  border-color: #b388eb;
+}
+
+.day-checkbox input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.file-input {
+  padding: 0.6rem !important;
+}
+
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.nav-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-btn.prev {
+  background: #f8f9fa;
+  color: #666;
+  border: 2px solid #e1e5e9;
+}
+
+.nav-btn.prev:hover {
+  background: #e9ecef;
+  border-color: #ced4da;
+}
+
+.nav-btn.next {
+  background: linear-gradient(135deg, #b388eb 0%, #6c63ff 100%);
+  color: white;
+}
+
+.nav-btn.next:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(179, 136, 235, 0.4);
+}
+
+.preview-card {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  border: 2px solid rgba(179, 136, 235, 0.2);
+}
+
+.preview-content {
+  margin-top: 1.5rem;
+}
+
+.preview-item {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.preview-item strong {
+  color: #333;
+  font-size: 1.4rem;
+}
+
+.preview-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+
+.detail-chip {
+  background: rgba(179, 136, 235, 0.1);
+  color: #6c63ff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tag-chip {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 0.4rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Tags preview styles */
+.tags-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+  padding: 0.8rem;
+  background: rgba(179, 136, 235, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(179, 136, 235, 0.2);
+}
+
+.tag-preview-chip {
+  background: rgba(179, 136, 235, 0.15);
+  color: #6c63ff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tag-preview-chip:hover {
+  background: rgba(179, 136, 235, 0.25);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1.5rem;
+  }
+
+  .step-indicator {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .step {
+    min-width: 80px;
+    padding: 0.8rem;
+  }
+
+  .step-number {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .step-title {
+    font-size: 0.8rem;
+  }
+
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .bento-card.large,
+  .bento-card.medium,
+  .bento-card.small {
+    grid-column: span 1;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .checkbox-group {
+    gap: 0.5rem;
+  }
+
+  .step-navigation {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-btn {
+    width: 100%;
+  }
+}
 </style>
