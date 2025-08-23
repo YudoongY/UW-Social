@@ -211,24 +211,16 @@ const hideDetailCard = () => {
 
 .events-grid {
     display: grid;
-    grid-template-columns: repeat(1, 1fr); /* 固定3列 */
+    grid-template-columns: repeat(1, 1fr); /* 固定1列 */
     gap: 2.1rem 1.5rem;
     width: 100%;
     box-sizing: border-box;
     padding: 0;
 }
 
-@media (max-width: 900px) {
-    .events-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
 @media (max-width: 576px) {
-    .event-list {
-        padding: 0.2rem; /* 左右边距几乎为0 */
-    }
     .events-grid {
-        grid-template-columns: repeat(2, 1fr);
+        /* grid-template-columns: repeat(2, 1fr); */
         gap: 1rem 0.5rem;
         width: 100%;
         box-sizing: border-box;

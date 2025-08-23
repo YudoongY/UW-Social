@@ -20,9 +20,9 @@
               <li><router-link to="/clubs">CLUBS</router-link></li>
             </div>
             <div :class="{ active: $route.path === '/publish' }">
-              <li><router-link to="/publish">PUBLISH NEW</router-link></li>
+              <li><router-link to="/publish">PUBLISH</router-link></li>
             </div>
-            <div v-if="userStore.isLoggedIn && userStore.userProfile?.displayName" :class="{ active: $route.path === '/profile' }">
+            <div v-if="isWeb && userStore.isLoggedIn && userStore.userProfile?.displayName" :class="{ active: $route.path === '/profile' }">
               <li><router-link to="/profile">PROFILE</router-link></li>
             </div>
           </div>
@@ -30,7 +30,7 @@
 
         <div class="right-link">
           <!-- 搜索框放在右侧导航项前面 -->
-          <div class="navbar-search">
+          <div v-if="isWeb" class="navbar-search">
             <input
               v-model="navbarSearch"
               @keyup.enter="handleNavbarSearch"
@@ -41,13 +41,13 @@
             />
           </div>
           <div class="user-profile">
-            <template v-if="userStore.isLoggedIn && userStore.userProfile?.displayName">
-              <span class="welcome-text">Welcome, {{ userStore.userProfile.displayName }}!</span>
-              <a href="#" @click.prevent="handleLogout" class="logout-link">Logout</a>
-            </template>
-            <template v-else>
+            <div v-if="userStore.isLoggedIn && userStore.userProfile?.displayName" class="avatar-logout">
+              <img :src="userStore.userProfile.photoURL" alt="User Avatar" class="user-avatar" />
+              <a v-if="isWeb" href="#" @click.prevent="handleLogout" class="logout-link">Logout</a>
+            </div>
+            <div v-else>
               <router-link to="/login" class="login-btn">Login</router-link>
-            </template>
+            </div>
           </div>
         </div>
       </div>
@@ -63,8 +63,8 @@ import { useRouter } from 'vue-router';
 
 const userStore = useUserStore()
 const router = useRouter()
-
 const navbarSearch = ref('');
+const isWeb = ref(window.innerWidth > 576);
 
 const handleLogout = async () => {
   try {
@@ -83,21 +83,5 @@ function handleNavbarSearch() {
 }
 </script>
 
-<style scoped>
-.navbar-search {
-  display: inline-block;
-  margin-right: 1.5rem;
-}
-.navbar-search-input {
-  padding: 6px 12px;
-  border-radius: 16px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  width: 160px;
-  outline: none;
-  transition: border 0.2s;
-}
-.navbar-search-input:focus {
-  border: 1.5px solid #6c63ff;
-}
+<style>
 </style>

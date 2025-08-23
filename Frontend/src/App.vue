@@ -3,15 +3,11 @@
     class="app-container"
     :style="isMobile && route.path === '/login' ? { paddingTop: '0' } : { paddingTop: '70px' }"
   >
-    <MobileNav v-if="isMobile" />
-    <Navbar v-else />
+    <!-- <MobileNav v-if="isMobile" /> -->
+    <Navbar />
     <div class="content">
       <router-view></router-view>
     </div>
-    <!-- 全局 DetailCard -->
-    <!-- <div v-if="eventDialogStore.selectedEvent" class="global-detail-card">
-      <DetailCard :event="eventDialogStore.selectedEvent" />
-    </div> -->
   </div>
 </template>
 
@@ -59,7 +55,6 @@ onUnmounted(() => {
 }
 
 .content {
-  /* padding: 10px; 正文和边缘的距离 */
 }
 
 .global-detail-card {

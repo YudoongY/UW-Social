@@ -2,7 +2,8 @@
   <div class="home-page">
     <!-- 背景 SVG -->
     <div class="background-container">
-      <img src="../../public/svg/background4.svg" class="background-svg" :style="{ opacity: backgroundOpacity }" />
+      <img v-if="isMobile" src="../../public/svg/background5.svg" class="background-svg" :style="{ opacity: backgroundOpacity }" />
+      <img v-else src="../../public/svg/background4.svg" class="background-svg" :style="{ opacity: backgroundOpacity }" />
     </div>
 
     <!-- 新增标题和短句子 -->
@@ -19,7 +20,7 @@
     </div>
 
     <div class="events-section">
-      <h2>Recommended for you</h2>
+      <h2>Recommend for you</h2>
       <EventList @open-card="setSelectedEvent" />
     </div>
   </div>
@@ -35,6 +36,8 @@ const homeSearch = ref('');
 const router = useRouter();
 const backgroundOpacity = ref(1); // 背景透明度
 const eventStore = useEventStore();
+
+const isMobile = ref(window.innerWidth <= 576);
 
 function handleHomeSearch() {
   if (homeSearch.value.trim()) {
@@ -82,10 +85,10 @@ onUnmounted(() => {
 
 .background-container {
   position: fixed;
-  top: 380px; /* 留出导航栏的高度，假设导航栏高度为 60px */
+  top: 0px; /* 留出导航栏的高度，假设导航栏高度为 80px */
   left: 0;
-  width: 100%; /* 背景宽度覆盖整个视口 */
-  height: calc(100% - 60px); /* 减去导航栏的高度 */
+  width: 100vw; /* 背景宽度覆盖整个视口 */
+  height: 160vh; /* 背景高度覆盖整个视口 */
   z-index: -1; /* 确保背景在内容后面 */
   display: flex;
   justify-content: center;
@@ -96,7 +99,7 @@ onUnmounted(() => {
 
 .background-svg {
   width: 100%; /* 宽度自动调整 */
-  height: auto; /* 高度覆盖容器 */
+  height: 100%; /* 高度覆盖容器 */
   object-fit: cover; /* 确保背景图像适应容器 */
   opacity: 1;
   transition: opacity 0.2s ease-out; /* 平滑过渡 */
@@ -164,5 +167,29 @@ onUnmounted(() => {
   width: 2.5rem;
   height: 2.5rem;
   vertical-align: middle;
+}
+
+@media (max-width: 576px) {
+  .page-title {
+    top: calc(80px + 2rem); /* 导航栏高度 + 2rem */
+    left: 2rem; /* 距离左侧 2rem */
+  }
+
+  .page-title h1 {
+    font-size: 2.6rem; /* 主标题字体大小 */
+  }
+
+  .page-title p {
+    font-size: 1.8rem; /* 副标题字体大小 */
+  }
+
+  .page-button {
+    margin-top: 6rem; /* 按钮距离标题的间距 */
+  }
+
+  .events-section {
+    margin: 30rem 0;
+    padding: 6rem 0;
+  }
 }
 </style>
