@@ -6,9 +6,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: isMobile()
-      ? () => import('@/views/Home.vue')
-      : () => import('@/views/Home.vue')
+    component: () => import('@/views/Home.vue')
   },
   {
     path: '/login',
@@ -20,7 +18,9 @@ const routes = [
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import('../views/Profile.vue'),
+    component: isMobile() 
+      ? () => import('@/components/mobile/MobileProfile.vue') 
+      : () => import('../views/Profile.vue'),
     meta: { requiresAuth: true }
   },
   {

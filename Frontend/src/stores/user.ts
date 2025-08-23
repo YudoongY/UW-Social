@@ -126,6 +126,29 @@ export const useUserStore = defineStore('user', () => {
     }
   };
 
+  const fetchUserProfile = async (): Promise<UserProfile | null> => {
+    if (!userProfile.value?.uid) {
+      console.error('[UserStore] No user is logged in.');
+      return null;
+    }
+
+    try {
+      const userRef = doc(db, 'users', userProfile.value.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        userProfile.value = userDoc.data() as UserProfile;
+        return userProfile.value;
+      } else {
+        console.error('[UserStore] User profile not found in Firestore.');
+        return null;
+      }
+    } catch (error) {
+      console.error('[UserStore] Failed to fetch user profile:', error);
+      throw error;
+    }
+  };
+
   // 判断是否为当前用户
   const isOwner = (uid: string) => {
     return userProfile.value?.uid === uid;
@@ -159,6 +182,7 @@ export const useUserStore = defineStore('user', () => {
     updateUserProfile,
     loadUser,
     isOwner,
-    setDefaultUserData
+    setDefaultUserData,
+    fetchUserProfile
   };
 });

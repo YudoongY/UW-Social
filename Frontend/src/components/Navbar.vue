@@ -42,7 +42,12 @@
           </div>
           <div class="user-profile">
             <div v-if="userStore.isLoggedIn && userStore.userProfile?.displayName" class="avatar-logout">
-              <img :src="userStore.userProfile.photoURL" alt="User Avatar" class="user-avatar" />
+              <img 
+                :src="userStore.userProfile.photoURL"
+                alt="User Avatar"
+                class="user-avatar"
+                @click="navigateToProfile"
+              />
               <a v-if="isWeb" href="#" @click.prevent="handleLogout" class="logout-link">Logout</a>
             </div>
             <div v-else>
@@ -65,6 +70,10 @@ const userStore = useUserStore()
 const router = useRouter()
 const navbarSearch = ref('');
 const isWeb = ref(window.innerWidth > 576);
+
+const navigateToProfile = () => {
+  router.push('/profile');
+}
 
 const handleLogout = async () => {
   try {
