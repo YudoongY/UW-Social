@@ -20,19 +20,6 @@
         </button>
       </div>
     </div>
-    <div class="category-bar">
-      <button
-        v-for="cat in categories"
-        :key="cat.key"
-        :class="['category-btn', { active: selectedCategory === cat.key }]"
-        @click="selectCategory(cat.key)"
-      >
-        <span class="category-icon">
-          <img :src="`/svg/${cat.icon}`" alt="" class="category-svg" />
-        </span>
-        <span class="category-label">{{ cat.label }}</span>
-      </button>
-    </div>
   </div>
 </template>
 
@@ -40,8 +27,6 @@
 import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
-// 示例：你可以用自己的图标组件或图片
-import { AcademicIcon, ClubIcon, SportsIcon, GameIcon, CultureIcon, InterestIcon, HFSIcon } from "@/components/mobile/icons";
 
 const userStore = useUserStore();
 const defaultAvatar = "/images/mob-default-avatar.jpg";
@@ -66,28 +51,6 @@ function handleProfileClick() {
     router.push("/login");
   }
 }
-
-const categories = [
-  { key: "academic", label: "Academic", icon: "academic.svg" },
-  { key: "club", label: "Club", icon: "club.svg" },
-  { key: "sports", label: "Sports", icon: "sports.svg" },
-  { key: "games", label: "Games", icon: "games.svg" },
-  { key: "culture", label: "Culture", icon: "culture.svg" }, // Problem here
-  { key: "interest", label: "Interest", icon: "interest.svg" },
-  { key: "hfs", label: "HFS", icon: "hfs.svg" },
-];
-
-const selectedCategory = ref(""); // 当前选中的分类
-
-function selectCategory(key: string) {
-  if (selectedCategory.value === key) {
-    selectedCategory.value = "";
-    router.push({ path: '/' }); // 取消筛选，跳转到全部
-  } else {
-    selectedCategory.value = key;
-    router.push({ path: '/', query: { category: key } });
-  }
-}
 </script>
 
 <style>
@@ -106,7 +69,7 @@ function selectCategory(key: string) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 8px;
+  padding: 12px 8px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -162,43 +125,6 @@ function selectCategory(key: string) {
   border-radius: 50%;
   object-fit: cover;
   display: block;
-}
-
-.category-bar {
-  display: flex;
-  gap: 6px;
-  padding: 0 8px 8px 8px;
-  overflow-x: auto;
-  background: #ad8ae6;
-}
-
-.category-btn {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 0 10px;
-  height: 33px;
-  font-size: 14px;
-  color: #222;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.category-btn .category-icon {
-  display: flex;
-  align-items: center;
-  margin-right: 2px;
-  font-size: 18px;
-}
-
-.category-btn.active,
-.category-btn:active {
-  background: #f8db00; /* 姑且用这个颜色 */
-  color: #fff;
 }
 
 @media (max-width: 576px) {

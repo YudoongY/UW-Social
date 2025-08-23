@@ -120,10 +120,13 @@ a:hover {
   color: #ffeb3b;
   text-decoration: none;
   font-weight: bold;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
 }
 
 .logout-link:hover {
   color: #ffd700;
+  text-decoration: underline;
 }
 
 .login-btn {
@@ -141,4 +144,57 @@ a:hover {
 
 .welcome-text {
   font-size: 1.08rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    height: 60px;
+  }
+
+  .nav-left {
+    gap: 0;
+  }
+
+  .logo {
+    height: 40px;
+    width: auto;
+    margin-left: -1rem;
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  .nav-items .left-link a {
+    margin: 0 6px;
+    font-size: 1rem;
+  }
+
+  .profile-log-in {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #fcec61;
+    border: none;
+    padding: 0;
+    margin-left: 8px;
+    cursor: pointer;
+    display: block;
+  }
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
 }

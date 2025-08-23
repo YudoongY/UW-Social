@@ -4,7 +4,7 @@
     <div class="event-card-content">
       <!-- 左侧内容 -->
       <div class="event-card-left">
-        <h3 :class="['event-title', `category-${event.category}`]">{{ event.title }}</h3>
+        <h3 class="event-title">{{ event.title }}</h3>
         <p class="description">{{ event.description }}</p>
         <div v-if="event.link" class="event-link">
           <a :href="event.link" target="_blank" rel="noopener noreferrer">Learn More</a>
@@ -13,7 +13,7 @@
       <!-- 右侧内容 -->
       <div class="event-card-right">
         <p class="event-time">{{ formatEventSchedule(event) }}</p>
-        <p>Location: {{ event.location }}</p>
+        <p class="event-location">Location: {{ event.location }}</p>
         <el-button
           v-if="String(event.organizerId) === String(currentUserId)"
           @click.stop="handleDelete"

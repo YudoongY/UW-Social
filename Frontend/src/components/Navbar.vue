@@ -30,7 +30,7 @@
 
         <div class="right-link">
           <!-- 搜索框放在右侧导航项前面 -->
-          <div class="navbar-search">
+          <div v-if="isWeb" class="navbar-search">
             <input
               v-model="navbarSearch"
               @keyup.enter="handleNavbarSearch"
@@ -42,7 +42,7 @@
           </div>
           <div class="user-profile">
             <template v-if="userStore.isLoggedIn && userStore.userProfile?.displayName">
-              <span class="welcome-text">Welcome, {{ userStore.userProfile.displayName }}!</span>
+              <img :src="userStore.userProfile.photoURL" alt="User Avatar" class="user-avatar" />
               <a href="#" @click.prevent="handleLogout" class="logout-link">Logout</a>
             </template>
             <template v-else>
@@ -63,8 +63,9 @@ import { useRouter } from 'vue-router';
 
 const userStore = useUserStore()
 const router = useRouter()
-
 const navbarSearch = ref('');
+
+const isWeb = ref(window.innerWidth > 576);
 
 const handleLogout = async () => {
   try {

@@ -82,10 +82,10 @@ onUnmounted(() => {
 
 .background-container {
   position: fixed;
-  top: 380px; /* 留出导航栏的高度，假设导航栏高度为 60px */
+  top: 0px; /* 留出导航栏的高度，假设导航栏高度为 80px */
   left: 0;
-  width: 100%; /* 背景宽度覆盖整个视口 */
-  height: calc(100% - 60px); /* 减去导航栏的高度 */
+  width: 100vw; /* 背景宽度覆盖整个视口 */
+  height: 160vh; /* 背景高度覆盖整个视口 */
   z-index: -1; /* 确保背景在内容后面 */
   display: flex;
   justify-content: center;
@@ -96,7 +96,7 @@ onUnmounted(() => {
 
 .background-svg {
   width: 100%; /* 宽度自动调整 */
-  height: auto; /* 高度覆盖容器 */
+  height: 100%; /* 高度覆盖容器 */
   object-fit: cover; /* 确保背景图像适应容器 */
   opacity: 1;
   transition: opacity 0.2s ease-out; /* 平滑过渡 */
