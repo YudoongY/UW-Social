@@ -2,7 +2,8 @@
   <div class="home-page">
     <!-- 背景 SVG -->
     <div class="background-container">
-      <img src="../../public/svg/background4.svg" class="background-svg" :style="{ opacity: backgroundOpacity }" />
+      <img v-if="isMobile" src="../../public/svg/background5.svg" class="background-svg" :style="{ opacity: backgroundOpacity }" />
+      <img v-else src="../../public/svg/background4.svg" class="background-svg" :style="{ opacity: backgroundOpacity }" />
     </div>
 
     <!-- 新增标题和短句子 -->
@@ -19,7 +20,7 @@
     </div>
 
     <div class="events-section">
-      <h2>Recommended for you</h2>
+      <h2>Recommend for you</h2>
       <EventList @open-card="setSelectedEvent" />
     </div>
   </div>
@@ -35,6 +36,8 @@ const homeSearch = ref('');
 const router = useRouter();
 const backgroundOpacity = ref(1); // 背景透明度
 const eventStore = useEventStore();
+
+const isMobile = ref(window.innerWidth <= 576);
 
 function handleHomeSearch() {
   if (homeSearch.value.trim()) {
@@ -164,5 +167,29 @@ onUnmounted(() => {
   width: 2.5rem;
   height: 2.5rem;
   vertical-align: middle;
+}
+
+@media (max-width: 576px) {
+  .page-title {
+    top: calc(80px + 2rem); /* 导航栏高度 + 2rem */
+    left: 2rem; /* 距离左侧 2rem */
+  }
+
+  .page-title h1 {
+    font-size: 2.6rem; /* 主标题字体大小 */
+  }
+
+  .page-title p {
+    font-size: 1.8rem; /* 副标题字体大小 */
+  }
+
+  .page-button {
+    margin-top: 6rem; /* 按钮距离标题的间距 */
+  }
+
+  .events-section {
+    margin: 30rem 0;
+    padding: 6rem 0;
+  }
 }
 </style>
