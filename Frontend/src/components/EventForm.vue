@@ -42,12 +42,11 @@
               </div>
 
               <div class="form-group">
-                <label for="description">Description</label>
+                <label for="description">Description (Optional)</label>
                 <textarea
                   id="description"
                   v-model="formData.description"
                   type="text"
-                  required
                   :placeholder="descriptionPlaceholder"
                   rows="3"
                 ></textarea>
@@ -251,14 +250,21 @@
             <div class="bento-card medium">
               <div class="card-header">
                 <h3>🏷️ Tags</h3>
+                <p>Separate with commas or spaces</p>
               </div>
               <div class="form-group">
                 <input
                   id="tags"
-                  v-model="tagsInput"
+                  v-model="tagsInputValue"
                   type="text"
                   placeholder="e.g., study, social, sports"
+                  @input="handleTagsInput"
+                  @keydown="handleTagsKeydown"
                 >
+                <!-- 实时显示已输入的tags -->
+                <div v-if="formData.tags.length" class="tags-preview">
+                  <span v-for="tag in formData.tags" :key="tag" class="tag-preview-chip">#{{ tag }}</span>
+                </div>
               </div>
             </div>
             
@@ -308,7 +314,7 @@
                 <strong>{{ formData.title }}</strong>
               </div>
               <div class="preview-item">
-                {{ formData.description }}
+                {{ formData.description.trim() || `Come and enjoy ${formData.title}!` }}
               </div>
               <div class="preview-details">
                 <span class="detail-chip">📍 {{ formData.location }}</span>
@@ -372,18 +378,51 @@ const formData = ref({
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-const tagsInput = computed({
-  get: () => formData.value.tags.join(', '),
-  set: (value) => {
-    formData.value.tags = value.split(',').map(tag => tag.trim()).filter(Boolean);
-  }
-});
+// 使用简单的ref来避免computed双向绑定的问题
+const tagsInputValue = ref('');
+
+// 解析tags的函数
+const parseTagsFromInput = (value: string) => {
+  return value.split(/[,，\s]+/).map(tag => tag.trim()).filter(Boolean);
+};
+
+// 处理input事件
+const handleTagsInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  tagsInputValue.value = target.value;
+  
+  // 实时更新tags数组
+  formData.value.tags = parseTagsFromInput(target.value);
+};
 
 const descriptionPlaceholder = computed(() =>
   formData.value.title
     ? `Come and enjoy ${formData.value.title}!`
     : 'Describe your event here...'
 );
+
+// 处理tags输入的键盘事件
+const handleTagsKeydown = (event: KeyboardEvent) => {
+  // 只处理回车键，避免干扰正常输入
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    const target = event.target as HTMLInputElement;
+    const currentValue = target.value;
+    
+    // 在当前光标位置插入逗号和空格
+    const cursorPos = target.selectionStart || 0;
+    const newValue = currentValue.slice(0, cursorPos) + ', ' + currentValue.slice(cursorPos);
+    
+    // 更新值
+    tagsInputValue.value = newValue;
+    formData.value.tags = parseTagsFromInput(newValue);
+    
+    // 设置新的光标位置
+    setTimeout(() => {
+      target.selectionStart = target.selectionEnd = cursorPos + 2;
+    }, 0);
+  }
+};
 
 const handleImageUpload = async (event: InputEvent) => {
   const target = event.target as HTMLInputElement;
@@ -527,7 +566,7 @@ const handleSubmit = async () => {
 
     const eventData: Omit<Event, 'id'> = {
       title: formData.value.title,
-      description: formData.value.description,
+      description: formData.value.description.trim() || `Come and enjoy ${formData.value.title}!`,
       location: formData.value.location,
       category: formData.value.category,
       tags: formData.value.tags,
@@ -865,6 +904,33 @@ input:focus, textarea:focus, select:focus {
 .submit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Tags preview styles */
+.tags-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+  padding: 0.8rem;
+  background: rgba(179, 136, 235, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(179, 136, 235, 0.2);
+}
+
+.tag-preview-chip {
+  background: rgba(179, 136, 235, 0.15);
+  color: #6c63ff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tag-preview-chip:hover {
+  background: rgba(179, 136, 235, 0.25);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 768px) {
