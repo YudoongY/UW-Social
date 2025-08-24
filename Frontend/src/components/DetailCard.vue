@@ -22,23 +22,33 @@
       </el-card>
 
       <el-card class="detail-card-description">
-        <p class="event-description" v-html="formatDescription(event.description)"></p>
-        <p v-if="event.tags && event.tags.length" class="event-tags">🏷️ {{ event.tags.join(', ') }}</p>
-        <p v-if="event.link" class="event-link">
-          <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
-        </p>
+        <div class="scrollable-content" ref="scrollableContent" @scroll="onScroll">
+          <p class="event-description" v-html="formatDescription(event.description)"></p>
+          <p v-if="event.tags && event.tags.length" class="event-tags">🏷️ {{ event.tags.join(', ') }}</p>
+          <p v-if="event.link" class="event-link">
+            <a :href="event.link" target="_blank" rel="noopener noreferrer">{{ event.link }}</a>
+          </p>
+        </div>
+        <!-- 滚动提示 -->
+        <div v-if="showScrollHint" class="scroll-hint">
+          <div class="scroll-indicator">
+            <span>Scroll down for more</span>
+            <div class="scroll-arrow">↓</div>
+          </div>
+        </div>
+        <!-- 底部渐变遮罩 -->
+        <div v-if="showScrollHint" class="scroll-gradient"></div>
       </el-card>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, onMounted, nextTick } from 'vue';
 import { formatEventSchedule, type Event } from '../types/event';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useEventStore } from '../stores/event';
-// import { onMounted } from 'vue';
 
 // onMounted(() => {
 //   console.log('[DetailCard.vue] currentUserId prop:', props.currentUserId);
@@ -52,10 +62,42 @@ const props = defineProps<{
 
 const eventStore = useEventStore();
 
+// 滚动相关状态
+const scrollableContent = ref<HTMLElement>();
+const showScrollHint = ref(true);
+
 // 计算属性判断是否显示删除按钮
 const showDeleteButton = computed(() => {
   console.log('[DetailCard] props:', props);
   return String(props.event.organizerId) === String(props.currentUserId);
+});
+
+// 检查内容是否可滚动
+const checkScrollable = () => {
+  nextTick(() => {
+    if (scrollableContent.value) {
+      const element = scrollableContent.value;
+      showScrollHint.value = element.scrollHeight > element.clientHeight;
+    }
+  });
+};
+
+// 滚动事件处理
+const onScroll = (event: Event) => {
+  const element = event.target as HTMLElement;
+  const scrollTop = element.scrollTop;
+  const scrollHeight = element.scrollHeight;
+  const clientHeight = element.clientHeight;
+  
+  // 如果滚动超过20px或接近底部，隐藏提示
+  if (scrollTop > 20 || scrollTop + clientHeight >= scrollHeight - 10) {
+    showScrollHint.value = false;
+  }
+};
+
+// 组件挂载后检查是否需要显示滚动提示
+onMounted(() => {
+  checkScrollable();
 });
 
 const formatDescription = (desc: string) => {
@@ -75,13 +117,20 @@ const handleDelete = async () => {
 };
 
 console.log('[DetailCard.vue] props.event:', props.event);
+
+// 监听内容变化
+nextTick(() => {
+  checkScrollable();
+});
 </script>
 
 <style scoped>
 .detail-card-container {
   position: relative;
-  width: 1400px; /* 增大容器宽度 */
-  margin-top: 100px;
+  width: min(1400px, 95vw); /* 响应式宽度，最大1400px，但不超过视口宽度的95% */
+  max-height: calc(100vh - 40px); /* 最大高度为视口高度减去padding */
+  margin: 20px auto;
+  overflow-y: auto; /* 允许垂直滚动 */
 }
 
 .detail-card-header {
@@ -105,6 +154,95 @@ console.log('[DetailCard.vue] props.event:', props.event);
   flex: 0.7; /* 增大 description 的宽度 */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.scrollable-content {
+  max-height: 400px; /* 限制描述区域最大高度 */
+  overflow-y: auto; /* 描述内容过长时可滚动 */
+  padding-right: 8px; /* 为滚动条留出空间 */
+}
+
+/* 滚动条样式 */
+.scrollable-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* 滚动提示 */
+.scroll-hint {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.scroll-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(108, 99, 255, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: bounce 2s infinite;
+}
+
+.scroll-arrow {
+  font-size: 1.2rem;
+  margin-top: 2px;
+  animation: bounce-arrow 1.5s infinite;
+}
+
+/* 底部渐变遮罩 */
+.scroll-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.9));
+  pointer-events: none;
+  border-radius: 0 0 8px 8px;
+}
+
+/* 动画 */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes bounce-arrow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
 }
 
 .detail-header {
@@ -155,7 +293,11 @@ console.log('[DetailCard.vue] props.event:', props.event);
 .event-description {
   padding: 0 0.5rem;
   font-size: 1.1rem;
-  color: #555;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  color: #374151;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
   margin-bottom: 1rem;
 }
 
