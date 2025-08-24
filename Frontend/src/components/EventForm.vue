@@ -48,7 +48,7 @@
                   v-model="formData.description"
                   type="text"
                   :placeholder="descriptionPlaceholder"
-                  rows="3"
+                  rows="5"
                 ></textarea>
               </div>
             </div>
@@ -119,7 +119,7 @@
                   </div>
                   <div class="form-group">
                     <label for="startTime">Start Time</label>
-                    <input id="startTime" v-model="formData.startTime" type="time" required>
+                    <input id="startTime" v-model="formData.startTime" type="time" placeholder="Optional - leave empty if TBD">
                   </div>
                 </div>
                 <div class="form-row">
@@ -129,7 +129,7 @@
                   </div>
                   <div class="form-group">
                     <label for="endTime">End Time</label>
-                    <input id="endTime" v-model="formData.endTime" type="time" required>
+                    <input id="endTime" v-model="formData.endTime" type="time" placeholder="Optional - leave empty if TBD">
                   </div>
                 </div>
               </div>
@@ -149,11 +149,11 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label for="dailyStartTime">Start Time</label>
-                    <input id="dailyStartTime" v-model="formData.startTime" type="time" required>
+                    <input id="dailyStartTime" v-model="formData.startTime" type="time" placeholder="Optional - leave empty if TBD">
                   </div>
                   <div class="form-group">
                     <label for="dailyEndTime">End Time</label>
-                    <input id="dailyEndTime" v-model="formData.endTime" type="time" required>
+                    <input id="dailyEndTime" v-model="formData.endTime" type="time" placeholder="Optional - leave empty if TBD">
                   </div>
                 </div>
               </div>
@@ -173,11 +173,11 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label for="weeklyStartTime">Start Time</label>
-                    <input id="weeklyStartTime" v-model="formData.startTime" type="time" required>
+                    <input id="weeklyStartTime" v-model="formData.startTime" type="time" placeholder="Optional - leave empty if TBD">
                   </div>
                   <div class="form-group">
                     <label for="weeklyEndTime">End Time</label>
-                    <input id="weeklyEndTime" v-model="formData.endTime" type="time" required>
+                    <input id="weeklyEndTime" v-model="formData.endTime" type="time" placeholder="Optional - leave empty if TBD">
                   </div>
                 </div>
                 <div class="form-group">
@@ -206,11 +206,11 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label for="monthlyStartTime">Start Time</label>
-                    <input id="monthlyStartTime" v-model="formData.startTime" type="time" required>
+                    <input id="monthlyStartTime" v-model="formData.startTime" type="time" placeholder="Optional - leave empty if TBD">
                   </div>
                   <div class="form-group">
                     <label for="monthlyEndTime">End Time</label>
-                    <input id="monthlyEndTime" v-model="formData.endTime" type="time" required>
+                    <input id="monthlyEndTime" v-model="formData.endTime" type="time" placeholder="Optional - leave empty if TBD">
                   </div>
                 </div>
                 <div class="form-group">
@@ -313,8 +313,7 @@
               <div class="preview-item">
                 <strong>{{ formData.title }}</strong>
               </div>
-              <div class="preview-item">
-                {{ formData.description.trim() || `Come and enjoy ${formData.title}!` }}
+              <div class="preview-item description-preview" v-html="formatPreviewDescription()">
               </div>
               <div class="preview-details">
                 <span class="detail-chip">📍 {{ formData.location }}</span>
@@ -401,6 +400,17 @@ const descriptionPlaceholder = computed(() =>
     : 'Describe your event here...'
 );
 
+// Format description for preview - simple line break to <br> conversion
+const formatPreviewDescription = () => {
+  const desc = formData.value.description.trim();
+  if (!desc) {
+    return `Come and enjoy ${formData.value.title}!`;
+  }
+  
+  // Simply convert all line breaks to <br> tags
+  return desc.replace(/\n/g, '<br>');
+};
+
 // 处理tags输入的键盘事件
 const handleTagsKeydown = (event: KeyboardEvent) => {
   // 只处理回车键，避免干扰正常输入
@@ -454,26 +464,52 @@ const handleSubmit = async () => {
     let schedule;
     const recurrenceType = formData.value.recurrenceType;
     if (recurrenceType === RecurrenceType.ONE_TIME) {
-      const start = new Date(`${formData.value.startDate}T${formData.value.startTime}`);
-      const end = new Date(`${formData.value.endDate}T${formData.value.endTime}`);
+      // Use provided times or null if not provided
+      const startTime = formData.value.startTime || null;
+      const endTime = formData.value.endTime || null;
+      
+      let start, end;
+      if (startTime) {
+        start = new Date(`${formData.value.startDate}T${startTime}`);
+      } else {
+        // Create date without time component - will be handled in display
+        start = new Date(formData.value.startDate);
+        start.setHours(0, 0, 0, 0);
+      }
+      
+      if (endTime) {
+        end = new Date(`${formData.value.endDate}T${endTime}`);
+      } else {
+        // Create date without time component - will be handled in display  
+        end = new Date(formData.value.endDate);
+        end.setHours(23, 59, 59, 999);
+      }
+      
+      // Store whether times were provided for display purposes
+      (start as any)._hasTime = !!startTime;
+      (end as any)._hasTime = !!endTime;
+      
       if (start.toDateString() !== end.toDateString()) {
         alert('Start and end must be on the same day for a one-time event.');
         isSubmitting.value = false;
         return;
       }
-      if (start >= end) {
+      
+      // Only validate time order if both times are provided
+      if (startTime && endTime && start >= end) {
         alert('End time must be after start time.');
         isSubmitting.value = false;
         return;
       }
+      
       schedule = {
         type: RecurrenceType.ONE_TIME as const,
         startDatetime: start,
         endDatetime: end,
       };
     } else if (recurrenceType === RecurrenceType.DAILY) {
-      if (!formData.value.startDate || !formData.value.startTime || !formData.value.endTime) {
-        alert('Please fill in all required fields.');
+      if (!formData.value.startDate) {
+        alert('Please fill in the start date.');
         isSubmitting.value = false;
         return;
       }
@@ -486,12 +522,12 @@ const handleSubmit = async () => {
         type: RecurrenceType.DAILY as const,
         startDate: new Date(formData.value.startDate),
         endDate: formData.value.endDate ? new Date(formData.value.endDate) : undefined,
-        startTimeOfDay: formData.value.startTime,
-        endTimeOfDay: formData.value.endTime,
+        startTimeOfDay: formData.value.startTime || undefined,
+        endTimeOfDay: formData.value.endTime || undefined,
       };
     } else if (recurrenceType === RecurrenceType.WEEKLY) {
-      if (!formData.value.startDate || !formData.value.startTime || !formData.value.endTime || formData.value.daysOfWeek.length === 0) {
-        alert('Please fill in all required fields and select at least one day of week.');
+      if (!formData.value.startDate || formData.value.daysOfWeek.length === 0) {
+        alert('Please fill in the start date and select at least one day of week.');
         isSubmitting.value = false;
         return;
       }
@@ -504,13 +540,13 @@ const handleSubmit = async () => {
         type: RecurrenceType.WEEKLY as const,
         startDate: new Date(formData.value.startDate),
         endDate: formData.value.endDate ? new Date(formData.value.endDate) : undefined,
-        startTimeOfDay: formData.value.startTime,
-        endTimeOfDay: formData.value.endTime,
+        startTimeOfDay: formData.value.startTime || undefined,
+        endTimeOfDay: formData.value.endTime || undefined,
         daysOfWeek: formData.value.daysOfWeek.map(Number),
       };
     } else if (recurrenceType === RecurrenceType.MONTHLY) {
-      if (!formData.value.startDate || !formData.value.startTime || !formData.value.endTime || !formData.value.daysOfMonthInput) {
-        alert('Please fill in all required fields and enter days of month.');
+      if (!formData.value.startDate || !formData.value.daysOfMonthInput) {
+        alert('Please fill in the start date and enter days of month.');
         isSubmitting.value = false;
         return;
       }
@@ -529,8 +565,8 @@ const handleSubmit = async () => {
         type: RecurrenceType.MONTHLY as const,
         startDate: new Date(formData.value.startDate),
         endDate: formData.value.endDate ? new Date(formData.value.endDate) : undefined,
-        startTimeOfDay: formData.value.startTime,
-        endTimeOfDay: formData.value.endTime,
+        startTimeOfDay: formData.value.startTime || undefined,
+        endTimeOfDay: formData.value.endTime || undefined,
         daysOfMonth,
       };
     }
@@ -554,10 +590,15 @@ const handleSubmit = async () => {
       if (formData.value.startTime) {
         const [hours, minutes] = formData.value.startTime.split(':');
         startDate.setHours(parseInt(hours), parseInt(minutes));
+      } else {
+        startDate.setHours(0, 0, 0, 0); // Set to beginning of day if no time
       }
+      
       if (formData.value.endTime) {
         const [hours, minutes] = formData.value.endTime.split(':');
         endDate.setHours(parseInt(hours), parseInt(minutes));
+      } else {
+        endDate.setHours(23, 59, 59, 999); // Set to end of day if no time
       }
       
       startTime = startDate;
@@ -581,7 +622,10 @@ const handleSubmit = async () => {
       imageUrl: formData.value.imageUrl,
       startTime: startTime,
       endtime: endtime,
-    };
+      // Store original time info for display
+      _hasStartTime: !!formData.value.startTime,
+      _hasEndTime: !!formData.value.endTime,
+    } as any;
 
     await addDoc(collection(db, 'events'), eventData);
     alert('Successfully published!');
@@ -735,9 +779,18 @@ input, textarea, select {
   border: 2px solid #e1e5e9;
   border-radius: 10px;
   font-size: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   box-sizing: border-box;
   transition: all 0.3s ease;
   background: #fafbfc;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
 }
 
 input:focus, textarea:focus, select:focus {
@@ -843,12 +896,24 @@ input:focus, textarea:focus, select:focus {
 .preview-item {
   margin-bottom: 1rem;
   font-size: 1.1rem;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .preview-item strong {
   color: #333;
   font-size: 1.4rem;
+}
+
+.description-preview {
+  color: #374151;
+  line-height: 1.7;
+  white-space: normal;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  word-spacing: 0.05em;
 }
 
 .preview-details {
