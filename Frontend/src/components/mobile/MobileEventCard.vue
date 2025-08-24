@@ -12,21 +12,25 @@
         />
         <!-- Favorite/Action Button (on image) -->
         <button class="action-button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
           </svg>
         </button>
       </div>
       
-      <!-- Tags (bottom left) -->
+      <!-- Tags (below image) -->
       <div class="tags-container">
-        <span 
-          v-for="tag in displayTags" 
-          :key="tag" 
-          class="tag"
-        >
-          #{{ tag }}
-        </span>
+        <div class="tags-wrapper">
+          <span 
+            v-for="tag in displayTags" 
+            :key="tag" 
+            class="tag"
+          >
+            #{{ tag }}
+          </span>
+          <!-- Gradient fade for overflow tags -->
+          <div class="tags-gradient" v-if="hasMoreTags"></div>
+        </div>
       </div>
     </div>
 
@@ -41,14 +45,14 @@
       <!-- Time and Location at bottom right -->
       <div class="event-meta">
         <div class="time-info">
-          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12,6 12,12 16,14"></polyline>
           </svg>
           <span>{{ formattedTime }}</span>
         </div>
         <div class="location-info">
-          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="m3 11 18-9v18l-18-9z"></path>
             <path d="m11 11 7-4v8l-7-4z"></path>
           </svg>
@@ -90,7 +94,12 @@ const truncatedDescription = computed(() => {
 // Display limited number of tags
 const displayTags = computed(() => {
   if (!props.event.tags || props.event.tags.length === 0) return [];
-  return props.event.tags.slice(0, 6); // Show more tags since we have more space
+  return props.event.tags.slice(0, 6); // Show limited tags with fade effect
+});
+
+// Check if there are more tags than displayed
+const hasMoreTags = computed(() => {
+  return props.event.tags && props.event.tags.length > 6;
 });
 
 // Format time using existing utility
@@ -145,39 +154,67 @@ const truncatedLocation = computed(() => {
   max-height: 200px;
 }
 
+.left-container {
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+  flex-shrink: 0;
+}
+
 .image-section {
-  flex: 0 0 160px; /* Fixed width for image section - larger */
   position: relative;
+  width: 100%;
+  height: 120px;
+  margin-bottom: 8px;
 }
 
 .event-image {
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 12px 0 0 12px;
+  border-radius: 8px;
 }
 
 .tags-container {
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  right: 8px;
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+}
+
+.tags-wrapper {
+  position: relative;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
-  max-height: 40px; /* Allow more height for multiple rows */
+  gap: 4px;
+  max-height: 52px;
   overflow: hidden;
 }
 
+.tags-gradient {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 20px;
+  background: linear-gradient(to right, transparent, white);
+  pointer-events: none;
+}
+
 .tag {
-  background: rgba(173, 138, 230, 0.95);
-  color: white;
+  background: #f0f0f0;
+  color: #666;
   font-size: 9px;
   font-weight: 500;
-  padding: 2px 5px;
-  border-radius: 3px;
+  padding: 3px 6px;
+  border-radius: 10px;
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.tag:first-child {
+  background: rgba(173, 138, 230, 0.95);
+  color: white;
 }
 
 .info-section {
@@ -224,15 +261,15 @@ const truncatedLocation = computed(() => {
 .location-info {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  gap: 4px;
+  font-size: 11px;
   color: #777;
 }
 
 .icon {
   flex-shrink: 0;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   stroke-width: 2;
 }
 
@@ -245,13 +282,13 @@ const truncatedLocation = computed(() => {
 
 .action-button {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 6px;
+  right: 6px;
   background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -266,22 +303,23 @@ const truncatedLocation = computed(() => {
 }
 
 .action-button svg {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
 }
 
 @media (max-width: 360px) {
-  .image-section {
-    flex: 0 0 100px;
+  .left-container {
+    width: 120px;
   }
   
-  .event-image {
-    height: 100px;
+  .image-section {
+    height: 90px;
+    margin-bottom: 6px;
   }
   
   .mobile-event-card {
-    min-height: 100px;
-    max-height: 120px;
+    min-height: 140px;
+    max-height: 160px;
   }
   
   .info-section {
@@ -294,6 +332,15 @@ const truncatedLocation = computed(() => {
   
   .event-description {
     font-size: 12px;
+  }
+  
+  .tags-wrapper {
+    max-height: 40px;
+  }
+  
+  .tag {
+    font-size: 8px;
+    padding: 2px 4px;
   }
 }
 </style>
