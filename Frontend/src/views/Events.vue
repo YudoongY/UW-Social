@@ -235,8 +235,10 @@ h1 {
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   z-index: 1000;
+  overflow-y: auto;
+  padding: 20px 0;
 }
 
 @media (max-width: 576px) {

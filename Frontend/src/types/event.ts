@@ -97,6 +97,8 @@ export interface Event {
   maxParticipants: number | null;
   tags: string[];
   link?: string;
+  _hasStartTime?: boolean; // Whether original form had start time
+  _hasEndTime?: boolean; // Whether original form had end time
 }
 
 function formatDate(date: any): string {
@@ -155,10 +157,20 @@ export function formatEventSchedule(event: Event): string {
 
   const pad = (n: number) => n.toString().padStart(2, '0');
   const getDate = (d: any) => (d && typeof d.toDate === 'function') ? d.toDate() : new Date(d);
-  const formatTime = (t?: string | Date) => {
+  const formatTime = (t?: string | Date, hasTime?: boolean) => {
     if (!t) return '';
     if (typeof t === 'string') return t;
-    if (t instanceof Date && !isNaN(t.getTime())) return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+    if (t instanceof Date && !isNaN(t.getTime())) {
+      // If explicitly told this date doesn't have time, return empty
+      if (hasTime === false) return '';
+      // Don't show midnight (00:00) or end-of-day times when no time was provided
+      const hours = t.getHours();
+      const minutes = t.getMinutes();
+      if ((hours === 0 && minutes === 0) || (hours === 23 && minutes === 59)) {
+        if (hasTime === undefined) return ''; // No explicit time info, don't show default
+      }
+      return `${pad(hours)}:${pad(minutes)}`;
+    }
     return '';
   };
 
@@ -175,13 +187,35 @@ export function formatEventSchedule(event: Event): string {
       const start = getDate(schedule.startDatetime);
       const end = getDate(schedule.endDatetime);
 
-      return `${safeFormatDate(start)} ${formatTime(start)} - ${formatTime(end)}`;
+      // Check if event has time info stored
+      const hasStartTime = event._hasStartTime;
+      const hasEndTime = event._hasEndTime;
+      
+      const startTimeStr = formatTime(start, hasStartTime);
+      const endTimeStr = formatTime(end, hasEndTime);
+      
+      if (startTimeStr && endTimeStr) {
+        return `${safeFormatDate(start)} ${startTimeStr} - ${endTimeStr}`;
+      } else if (startTimeStr) {
+        return `${safeFormatDate(start)} from ${startTimeStr}`;
+      } else if (endTimeStr) {
+        return `${safeFormatDate(start)} until ${endTimeStr}`;
+      } else {
+        return `${safeFormatDate(start)}, time TBD`;
+      }
     }
 
     case RecurrenceType.DAILY: {
       let str = `Daily`;
-      if (schedule.startTimeOfDay && schedule.endTimeOfDay)
+      if (schedule.startTimeOfDay && schedule.endTimeOfDay) {
         str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
+      } else if (schedule.startTimeOfDay) {
+        str += `, from ${schedule.startTimeOfDay}`;
+      } else if (schedule.endTimeOfDay) {
+        str += `, until ${schedule.endTimeOfDay}`;
+      } else {
+        str += `, time TBD`;
+      }
       if (schedule.startDate)
         str += ` from ${safeFormatDate(getDate(schedule.startDate))}`;
       if (schedule.endDate)
@@ -192,8 +226,15 @@ export function formatEventSchedule(event: Event): string {
     case RecurrenceType.WEEKLY: {
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       let str = `Weekly on ${schedule.daysOfWeek?.map(d => days[d]).join(', ')}`;
-      if (schedule.startTimeOfDay && schedule.endTimeOfDay)
+      if (schedule.startTimeOfDay && schedule.endTimeOfDay) {
         str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
+      } else if (schedule.startTimeOfDay) {
+        str += `, from ${schedule.startTimeOfDay}`;
+      } else if (schedule.endTimeOfDay) {
+        str += `, until ${schedule.endTimeOfDay}`;
+      } else {
+        str += `, time TBD`;
+      }
       if (schedule.startDate)
         str += ` from ${safeFormatDate(getDate(schedule.startDate))}`;
       if (schedule.endDate)
@@ -203,8 +244,15 @@ export function formatEventSchedule(event: Event): string {
 
     case RecurrenceType.MONTHLY: {
       let str = `Monthly on the ${schedule.daysOfMonth?.join(', ')}${schedule.daysOfMonth?.length === 1 ? 'th' : 'ths'}`;
-      if (schedule.startTimeOfDay && schedule.endTimeOfDay)
+      if (schedule.startTimeOfDay && schedule.endTimeOfDay) {
         str += `, ${schedule.startTimeOfDay} - ${schedule.endTimeOfDay}`;
+      } else if (schedule.startTimeOfDay) {
+        str += `, from ${schedule.startTimeOfDay}`;
+      } else if (schedule.endTimeOfDay) {
+        str += `, until ${schedule.endTimeOfDay}`;
+      } else {
+        str += `, time TBD`;
+      }
       if (schedule.startDate)
         str += ` from ${safeFormatDate(getDate(schedule.startDate))}`;
       if (schedule.endDate)
