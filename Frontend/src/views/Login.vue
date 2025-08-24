@@ -64,7 +64,7 @@ const handleGoogleLogin = async () => {
   isLoading.value = true
   try {
     await userStore.loginWithGoogle()
-    router.push('/')
+    router.push('/profile')
   } catch (error) {
     console.error('Login failed:', error)
   } finally {
