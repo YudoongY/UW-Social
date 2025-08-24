@@ -36,6 +36,12 @@ const routes = [
       : () => import('../views/Events.vue')
   },
   {
+    path: '/events/:id',
+    name: 'EventDetail',
+    component: () => import('@/components/mobile/MobileEventDetail.vue'),
+    props: true
+  },
+  {
     path: '/publish',
     name: 'Publish',
     component: () => import('../views/Publish.vue'),

@@ -3,6 +3,12 @@
     <!-- Search Bar -->
     <div class="search-container">
       <div class="search-bar">
+        <div class="search-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ad8ae6" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
         <input
           v-model="searchQuery"
           type="text"
@@ -10,17 +16,11 @@
           class="search-input"
           @keyup.enter="handleSearch"
         />
-        <button class="filter-button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="4" y1="21" x2="4" y2="14"></line>
-            <line x1="4" y1="10" x2="4" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12" y2="3"></line>
-            <line x1="20" y1="21" x2="20" y2="16"></line>
-            <line x1="20" y1="12" x2="20" y2="3"></line>
-            <line x1="1" y1="14" x2="7" y2="14"></line>
-            <line x1="9" y1="8" x2="15" y2="8"></line>
-            <line x1="17" y1="16" x2="23" y2="16"></line>
+        <button class="menu-button" @click="showFilterModal = true">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
           </svg>
         </button>
       </div>
@@ -39,6 +39,14 @@
         />
       </div>
     </div>
+
+    <!-- Filter Modal -->
+    <MobileFilterModal
+      :isVisible="showFilterModal"
+      :selectedCategories="selectedCategories"
+      @close="showFilterModal = false"
+      @updateCategories="updateSelectedCategories"
+    />
   </div>
 </template>
 
@@ -49,6 +57,7 @@ import { useEventStore } from '../../stores/event';
 import { useUserStore } from '../../stores/user';
 import Fuse from 'fuse.js';
 import MobileEventCard from './MobileEventCard.vue';
+import MobileFilterModal from './MobileFilterModal.vue';
 import type { Event } from '../../types/event';
 
 const eventStore = useEventStore();
@@ -58,6 +67,8 @@ const route = useRoute();
 const searchQuery = ref('');
 const isLoading = ref(true);
 const events = ref<Event[]>([]);
+const showFilterModal = ref(false);
+const selectedCategories = ref<string[]>([]);
 
 // Load events from Firebase
 onMounted(async () => {
@@ -89,13 +100,23 @@ onMounted(async () => {
   }
 });
 
-// Filter events based on search query
+// Filter events based on search query and selected categories
 const filteredEvents = computed(() => {
-  if (!searchQuery.value.trim()) {
-    return events.value;
+  let filteredList = events.value;
+  
+  // First filter by categories
+  if (selectedCategories.value.length > 0) {
+    filteredList = filteredList.filter(event => 
+      selectedCategories.value.includes(event.category)
+    );
   }
   
-  const fuse = new Fuse(events.value, {
+  // Then filter by search query if exists
+  if (!searchQuery.value.trim()) {
+    return filteredList;
+  }
+  
+  const fuse = new Fuse(filteredList, {
     keys: ['title', 'description', 'location', 'tags', 'organizerName'],
     threshold: 0.4,
     ignoreLocation: true,
@@ -111,10 +132,19 @@ const handleSearch = () => {
   console.log('Searching for:', searchQuery.value);
 };
 
-// Handle event click (can be used to navigate to event details)
+// Handle event click - navigate to event details
 const handleEventClick = (event: Event) => {
   console.log('Event clicked:', event);
-  // TODO: Navigate to event details or show modal
+  if (event.id) {
+    // Navigate to event detail page with event ID
+    window.location.href = `#/events/${event.id}`;
+  }
+};
+
+// Handle category filter updates
+const updateSelectedCategories = (categories: string[]) => {
+  selectedCategories.value = categories;
+  console.log('Selected categories updated:', categories);
 };
 
 // Watch for URL query changes to set initial search
@@ -132,15 +162,19 @@ watch(
 <style scoped>
 .mobile-event-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-image: url('/images/image.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   padding-bottom: 80px; /* Space for bottom navigation if needed */
 }
 
 .search-container {
-  padding: 16px;
-  background-color: #ad8ae6;
+  padding: 12px 20px;
+  background-color: transparent;
   position: sticky;
-  top: 0;
+  top: 60px;
   z-index: 100;
 }
 
@@ -151,7 +185,9 @@ watch(
   border-radius: 25px;
   padding: 8px 16px;
   gap: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  height: 44px;
 }
 
 .search-input {
@@ -167,19 +203,29 @@ watch(
   color: #999;
 }
 
-.filter-button {
+.search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.menu-button {
   background: none;
   border: none;
-  color: #666;
+  color: #333;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 12px;
+  flex-shrink: 0;
+  min-width: 40px;
+  min-height: 40px;
 }
 
-.filter-button:hover {
-  color: #ad8ae6;
+.menu-button:hover {
+  opacity: 0.7;
 }
 
 .event-list-container {

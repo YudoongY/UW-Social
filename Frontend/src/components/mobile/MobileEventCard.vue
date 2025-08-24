@@ -28,8 +28,6 @@
           >
             #{{ tag }}
           </span>
-          <!-- Gradient fade for overflow tags -->
-          <div class="tags-gradient" v-if="hasMoreTags"></div>
         </div>
       </div>
     </div>
@@ -91,16 +89,12 @@ const truncatedDescription = computed(() => {
     : props.event.description;
 });
 
-// Display limited number of tags
+// Display limited number of tags with fade effect
 const displayTags = computed(() => {
   if (!props.event.tags || props.event.tags.length === 0) return [];
-  return props.event.tags.slice(0, 6); // Show limited tags with fade effect
+  return props.event.tags.slice(0, 6); // Show up to 6 tags
 });
 
-// Check if there are more tags than displayed
-const hasMoreTags = computed(() => {
-  return props.event.tags && props.event.tags.length > 6;
-});
 
 // Format time using existing utility
 const formattedTime = computed(() => {
@@ -150,8 +144,8 @@ const truncatedLocation = computed(() => {
 
 .mobile-event-card {
   display: flex;
-  min-height: 180px;
-  max-height: 200px;
+  min-height: 210px;
+  max-height: 210px;
 }
 
 .left-container {
@@ -164,7 +158,7 @@ const truncatedLocation = computed(() => {
 .image-section {
   position: relative;
   width: 100%;
-  height: 120px;
+  height: 110px;
   margin-bottom: 8px;
 }
 
@@ -179,6 +173,7 @@ const truncatedLocation = computed(() => {
   flex: 1;
   display: flex;
   align-items: flex-start;
+  padding: 0 8px;
 }
 
 .tags-wrapper {
@@ -187,18 +182,8 @@ const truncatedLocation = computed(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  max-height: 52px;
+  max-height: 100px;
   overflow: hidden;
-}
-
-.tags-gradient {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 30px;
-  height: 20px;
-  background: linear-gradient(to right, transparent, white);
-  pointer-events: none;
 }
 
 .tag {
@@ -210,12 +195,14 @@ const truncatedLocation = computed(() => {
   border-radius: 10px;
   white-space: nowrap;
   flex-shrink: 0;
+  transition: opacity 0.2s ease;
 }
 
 .tag:first-child {
   background: rgba(173, 138, 230, 0.95);
   color: white;
 }
+
 
 .info-section {
   flex: 1;
@@ -232,10 +219,8 @@ const truncatedLocation = computed(() => {
   color: #333;
   margin: 0 0 6px 0;
   line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .event-description {
@@ -245,7 +230,7 @@ const truncatedLocation = computed(() => {
   line-height: 1.4;
   flex: 1;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
