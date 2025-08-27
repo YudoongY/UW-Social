@@ -292,12 +292,11 @@ nextTick(() => {
 
 .event-description {
   padding: 0 0.5rem;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
   color: #374151;
-  line-height: 1.7;
-  letter-spacing: 0.01em;
+  line-height: 1.25;
   margin-bottom: 1rem;
 }
 
@@ -308,7 +307,9 @@ nextTick(() => {
 }
 
 .event-link a {
-  color: #1c6fc1;
+  font-size: 0.9rem;
+  line-height: 1.25;
+  color: #8358D8;
   text-decoration: underline;
 }
 
