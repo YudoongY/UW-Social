@@ -24,8 +24,8 @@ async function bootstrap() {
   await userStore.loadUser();
 
   router.beforeEach((to, from, next) => {
-    if (typeof gtag === 'function') {
-      gtag('event', 'page_view', {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'page_view', {
         'page_path': location.pathname + location.hash,
         'page_title': to.name || 'Unknown Page',
       });

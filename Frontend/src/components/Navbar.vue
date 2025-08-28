@@ -115,8 +115,8 @@ function handleNavbarSearch() {
 function showPopover() {
   isPopConfirmVisible.value = true;
    // Google Analytics 事件追踪
-  if (typeof gtag === 'function') {
-    gtag('event', 'click', {
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'click', {
       'event_category': 'Navigation',
       'event_label': 'CLUBS',
       'value': 1
