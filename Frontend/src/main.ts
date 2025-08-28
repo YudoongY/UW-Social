@@ -23,6 +23,16 @@ async function bootstrap() {
   const userStore = useUserStore();
   await userStore.loadUser();
 
+  router.beforeEach((to, from, next) => {
+    if (typeof gtag === 'function') {
+      gtag('event', 'page_view', {
+        'page_path': location.pathname + location.hash,
+        'page_title': to.name || 'Unknown Page',
+      });
+    }
+    next();
+  });
+
   app.mount('#app');
 }
 

@@ -17,7 +17,26 @@
               <li><router-link to="/events">EVENTS</router-link></li>
             </div>
             <div :class="{ active: $route.path === '/clubs' }">
-              <li><router-link to="/clubs">CLUBS</router-link></li>
+              <li>
+                <el-popover
+                  width="200"
+                  trigger="click"
+                  v-model="isPopConfirmVisible"
+                  popper-class="custom-popover"
+                >
+                  <template #reference>
+                    <div @click.prevent="showPopover">
+                      <router-link to="#">CLUBS</router-link>
+                    </div>
+                  </template>
+                  <template #default>
+                    <div class="popover-content">
+                      <p class="popover-text">This feature is under development</p>
+                      <button class="popover-button" @click="isPopConfirmVisible = false">OK</button>
+                    </div>
+                  </template>
+                </el-popover>
+              </li>
             </div>
             <div :class="{ active: $route.path === '/publish' }">
               <li><router-link to="/publish">PUBLISH</router-link></li>
@@ -61,6 +80,7 @@
 </template>
 
 <script setup lang="ts">
+import { el, fa } from 'element-plus/es/locales.mjs';
 import '../assets/navbar.css';
 import { useUserStore } from '../stores/user'
 import { ref } from 'vue';
@@ -70,6 +90,7 @@ const userStore = useUserStore()
 const router = useRouter()
 const navbarSearch = ref('');
 const isWeb = ref(window.innerWidth > 576);
+const isPopConfirmVisible = ref(false);
 
 const navigateToProfile = () => {
   router.push('/profile');
@@ -90,7 +111,55 @@ function handleNavbarSearch() {
     navbarSearch.value = '';
   }
 }
+
+function showPopover() {
+  isPopConfirmVisible.value = true;
+   // Google Analytics 事件追踪
+  if (typeof gtag === 'function') {
+    gtag('event', 'click', {
+      'event_category': 'Navigation',
+      'event_label': 'CLUBS',
+      'value': 1
+    });
+  } else {
+    console.warn('Google Analytics gtag is not defined.');
+  }
+}
 </script>
 
 <style>
+.popover-content {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  justify-content: center;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.popover-icon {
+  font-size: 2rem;
+  color: #f56c6c;
+  margin-bottom: 0.5rem;
+}
+
+.popover-text {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.popover-button {
+  background-color: #6c63ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.popover-button:hover {
+  background-color: #9c6ad6;
+}
 </style>
