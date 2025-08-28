@@ -6,11 +6,13 @@ import {
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
-  User
+  User,
+  setPersistence,
+  browserLocalPersistence,
+  signInWithRedirect
 } from 'firebase/auth';
 import { doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { setPersistence, browserLocalPersistence } from 'firebase/auth';
 import type { UserProfile } from '../types/user';
 
 export const useUserStore = defineStore('user', () => {
@@ -27,9 +29,11 @@ export const useUserStore = defineStore('user', () => {
 
     return new Promise((resolve) => {
       onAuthStateChanged(auth, async (user: User | null) => {
+        console.log('Auth state changed:', user);
         isLoggedIn.value = !!user;
 
         if (user) {
+          console.log('User logged in:', user);
           try {
             const userRef = doc(db, 'users', user.uid);
             const userDoc = await getDoc(userRef);
@@ -81,15 +85,9 @@ export const useUserStore = defineStore('user', () => {
     try {
       const provider = new GoogleAuthProvider();
 
-      // Force local persistence before login
       await setPersistence(auth, browserLocalPersistence);
 
-      const result = await signInWithPopup(auth, provider);
-      
-      // 不要直接设置userProfile，让onAuthStateChanged处理
-      // 这样可以确保正确的用户文档创建和photoURL保存
-      
-      return result.user;
+      await signInWithRedirect(auth, provider);
     } catch (error) {
       console.error('登录失败:', error);
       throw error;

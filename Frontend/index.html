@@ -7,7 +7,9 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-11HKQKD2NV');
+      gtag('config', 'G-11HKQKD2NV', {
+        'page_path': location.pathname + location.hash
+      });
     </script>
     <!-- Hotjar Tracking Code for Site 6455109 (name missing) -->
     <script>
